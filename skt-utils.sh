@@ -1,6 +1,6 @@
 # useful code by Sakitin(GitHub@GunRain 酷安@芙洛洛 bilibili@安音咲汀)
 
-# GitHub link: https://github.com/GunRain/Magisk-Module-EG/blob/aaa/mod-root/skt-utils.sh
+# GitHub link: https://github.com/GunRain/SKT-Utils/blob/aaa/skt-utils.sh
 
 alias del=rm # for rm check
 
@@ -80,29 +80,20 @@ get_work_dir() {
   dirname "`readlink -f "$1"`"
 }
 
-get_target_bin() {
-  local targetDir="$1"
-  local fileName="$2"
-  local targetArch="$3"
-  mv -f "$targetDir/$fileName.$targetArch" "$targetDir/$fileName" || skt_abort "Arch \"$targetArch\" is not supported!"
-  find "$targetDir" -name "$fileName.*" -delete
-  chmod a+x "$targetDir/$fileName"
-}
-
 run_bin() {
-  local file="$1"
-  [ -f "$file" ] || return
-  chmod a+x "$file" 2>/dev/null
+  local bin="$1"
+  [ -f "$bin" ] || return
+  chmod a+x "$bin" 2>/dev/null
   shift
-  eval "\"$file\" $@"
+  eval "\"$bin\" $@"
 }
 
 nohup_bin() {
-  local file="$1"
-  [ -f "$file" ] || return
-  chmod a+x "$file" 2>/dev/null
+  local bin="$1"
+  [ -f "$bin" ] || return
+  chmod a+x "$bin" 2>/dev/null
   shift
-  eval "nohup \"$file\" $@ >/dev/null 2>&1 &" &
+  eval "nohup \"$bin\" $@ >/dev/null 2>&1 &" &
 }
 
 until_boot() {
@@ -142,6 +133,15 @@ set_system_file() {
   chcon -R u:object_r:system_file:s0 ${@}
 }
 
+get_target_bin() {
+  [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
+
+  local binName="$1"
+  local targetArch="$2"
+  mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || skt_abort "Arch \"$targetArch\" is not supported!"
+  chmod a+x "$targetDir/$binName"
+}
+
 skt_install_init() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
 
@@ -161,6 +161,9 @@ skt_install_init() {
 skt_install_done() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
   [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
+
+  # Clean bins
+  [ -d "$MODPATH/bin" ] && del -f "$MODPATH/bin"
 
   # For overlyfs
   [ -d "$MODPATH/system" ] && {
