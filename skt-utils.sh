@@ -133,6 +133,12 @@ set_system_file() {
   chcon -R u:object_r:system_file:s0 ${@}
 }
 
+print_lines() {
+  for value in $@; do
+    echo "$value"
+  done
+}
+
 get_target_bin() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
   [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
@@ -153,13 +159,14 @@ run_install_list() {
 
   for num in `seq 1 $func_num`; do
     local i=1
-    for value in `eval "$func_head$num"`; do
+    eval "$func_head$num" | while IFS= read line; do
+      [ -z "$line" ] && continue
       case $i in
-        1) local target_func_head=$value;;
-        2) local opt_name=$value;;
-        3) local opt_num=$value;;
-        4) local cancel=$value;;
-        *) eval "local opt_name_$((i-3))=$value";;
+        1) local target_func_head="$line";;
+        2) local opt_name="$line";;
+        3) local opt_num="$line";;
+        4) local cancel="$line";;
+        *) eval "local opt_name_$((i-3))=\"$line\"";;
       esac
       let i++
     done
