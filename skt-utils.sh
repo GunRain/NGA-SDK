@@ -231,7 +231,7 @@ skt_install_done() {
   [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
 
   # Clean bins
-  [ -d "$MODPATH/bin" ] && del -f "$MODPATH/bin"
+  [ -d "$MODPATH/bin" ] && del -rf "$MODPATH/bin"
 
   # For overlyfs
   [ -d "$MODPATH/system" ] && {
