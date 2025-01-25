@@ -156,6 +156,7 @@ run_install_list() {
 
   newline
   skt_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
+  newline
 
   for num in `seq 1 $func_num`; do
     eval "$(
@@ -174,7 +175,7 @@ run_install_list() {
         done
       }
     )"
-    newline 2
+    newline
     skt_print "抉择$num: $opt_name"
     newline
     for num in `seq 1 $opt_num`; do
