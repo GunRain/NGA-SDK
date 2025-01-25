@@ -134,7 +134,7 @@ set_system_file() {
 }
 
 print_lines() {
-  for value in $@; do
+  for value in "$@"; do
     echo "$value"
   done
 }
@@ -158,18 +158,22 @@ run_install_list() {
   skt_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
 
   for num in `seq 1 $func_num`; do
-    local i=1
-    eval "$func_head$num" | while IFS= read line; do
-      [ -z "$line" ] && continue
-      case $i in
-        1) local target_func_head="$line";;
-        2) local opt_name="$line";;
-        3) local opt_num="$line";;
-        4) local cancel="$line";;
-        *) eval "local opt_name_$((i-3))=\"$line\"";;
-      esac
-      let i++
-    done
+    eval "$(
+      eval "$func_head$num" | {
+        i=1
+        while IFS= read line; do
+          [ -z "$line" ] && continue
+          case $i in
+            1) echo "local target_func_head=\"$line\"";;
+            2) echo "local opt_name=\"$line\"";;
+            3) echo "local opt_num=\"$line\"";;
+            4) echo "local cancel=\"$line\"";;
+            *) echo "local opt_name_$((i-4))=\"$line\"";;
+          esac
+          let i++
+        done
+      }
+    )"
     newline 2
     skt_print "抉择$num: $opt_name"
     newline
