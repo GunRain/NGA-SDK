@@ -143,6 +143,50 @@ get_target_bin() {
   chmod a+x "$targetDir/$binName"
 }
 
+# 此函数较为特殊，用于批量安装模块功能，请完整阅读并理解此函数的代码后再使用此函数
+run_install_list() {
+  local func_head="$1"
+  local func_num="$2"
+
+  newline
+  skt_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
+
+  for num in `seq 1 $func_num`; do
+    local i=1
+    for value in `eval "$func_head$num"`; do
+      case $i in
+        1) local target_func_head=$value;;
+        2) local opt_name=$value;;
+        3) local opt_num=$value;;
+        *) eval "local opt_name_$((i-3))=$value";;
+      esac
+      let i++
+    done
+    newline 2
+    skt_print "抉择$num: $opt_name"
+    newline
+    for num in `seq 1 $opt_num`; do
+      skt_print "内容$num: $(eval "echo -n \"\$opt_name_$num\"")"
+    done
+    newline
+    local target_opt=1
+    skt_print "当前选择内容: 内容1"
+    while :; do
+      [ `until_key_up_down` = down ] && {
+        newline
+        skt_print "已确定选择内容: 内容1"
+        newline
+        eval "$target_func_head$target_opt"
+        break
+      } || {
+        let target_opt++
+        [ $target_opt -gt $opt_num ] && target_opt=1
+        skt_print "当前选择内容: 内容$target_opt"
+      }
+    done
+  done
+}
+
 skt_install_init() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
 
