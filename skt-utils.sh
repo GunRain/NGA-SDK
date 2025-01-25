@@ -158,6 +158,7 @@ run_install_list() {
         1) local target_func_head=$value;;
         2) local opt_name=$value;;
         3) local opt_num=$value;;
+        4) local cancel=$value;;
         *) eval "local opt_name_$((i-3))=$value";;
       esac
       let i++
@@ -174,13 +175,24 @@ run_install_list() {
     while :; do
       [ `until_key_up_down` = down ] && {
         newline
-        skt_print "已确定选择内容: 内容1"
+        [ $target_opt -eq 0 ] && {
+          skt_print "已确定选择内容: 取消此抉择"
+          true
+        } || {
+          skt_print "已确定选择内容: 内容$target_opt"
+          eval "$target_func_head$target_opt"
+        }
         newline
-        eval "$target_func_head$target_opt"
         break
       } || {
         let target_opt++
-        [ $target_opt -gt $opt_num ] && target_opt=1
+        [ $target_opt -gt $opt_num ] && {
+          [ $cancel = true ] && {
+            target_opt=0
+            skt_print "当前选择内容: 取消此抉择"
+            continue
+          } || target_opt=1
+        }
         skt_print "当前选择内容: 内容$target_opt"
       }
     done
