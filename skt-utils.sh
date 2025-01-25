@@ -135,9 +135,10 @@ set_system_file() {
 
 get_target_bin() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
+  [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
 
   local binName="$1"
-  local targetArch="$2"
+  [ -z "$2" ] && local targetArch="$ARCH" || local targetArch="$2"
   mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || skt_abort "Arch \"$targetArch\" is not supported!"
   chmod a+x "$targetDir/$binName"
 }
