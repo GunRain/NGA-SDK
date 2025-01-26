@@ -80,10 +80,22 @@ get_work_dir() {
   dirname "`readlink -f "$1"`"
 }
 
-run_bin() {
+pre_bin() {
   local bin="$1"
   [ -f "$bin" ] || return
   chmod a+x "$bin" 2>/dev/null
+}
+
+pre_bins() {
+  for bin in "$@"; do
+    pre_bin "$bin"
+  done
+}
+
+run_bin() {
+  local bin="$1"
+  [ -f "$bin" ] || return
+  pre_bin "$bin"
   shift
   eval "\"$bin\" $@"
 }
@@ -91,7 +103,7 @@ run_bin() {
 nohup_bin() {
   local bin="$1"
   [ -f "$bin" ] || return
-  chmod a+x "$bin" 2>/dev/null
+  pre_bin "$bin"
   shift
   eval "nohup \"$bin\" $@ >/dev/null 2>&1 &" &
 }
@@ -134,8 +146,8 @@ set_system_file() {
 }
 
 print_lines() {
-  for value in "$@"; do
-    echo "$value"
+  for line in "$@"; do
+    echo "$line"
   done
 }
 
@@ -147,6 +159,12 @@ get_target_bin() {
   [ -z "$2" ] && local targetArch="$ARCH" || local targetArch="$2"
   mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || skt_abort "Arch \"$targetArch\" is not supported!"
   chmod a+x "$targetDir/$binName"
+}
+
+get_target_bins() {
+  for binName in "$@"; do
+    get_target_bin "$binName"
+  done
 }
 
 # 此函数较为特殊，用于批量安装模块功能，请完整阅读并理解此函数的代码后再使用此函数
