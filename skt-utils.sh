@@ -196,13 +196,18 @@ run_install_list() {
     newline
     skt_print "抉择$num: $opt_name"
     newline
+    [ $cancel = true ] && skt_print "内容0: 取消此抉择"
     for num in `seq 1 $opt_num`; do
       skt_print "内容$num: $(eval "echo -n \"\$opt_name_$num\"")"
     done
-    skt_print "内容$((opt_num+1)): 取消此抉择"
     newline
-    local target_opt=1
-    skt_print "当前选择内容: 内容1"
+    [ $cancel = true ] && {
+      local target_opt=0
+      skt_print "当前选择内容: 取消此抉择"
+    } || {
+      local target_opt=1
+      skt_print "当前选择内容: 内容1"
+    }
     while :; do
       [ `until_key_up_down` = down ] && {
         newline
