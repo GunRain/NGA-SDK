@@ -158,7 +158,7 @@ get_target_bin() {
   local binName="$1"
   [ -z "$2" ] && local targetArch="$ARCH" || local targetArch="$2"
   mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || skt_abort "Arch \"$targetArch\" is not supported!"
-  chmod a+x "$targetDir/$binName"
+  chmod a+x "$MODPATH/$binName"
 }
 
 get_target_bins() {
