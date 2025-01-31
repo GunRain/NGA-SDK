@@ -4,6 +4,10 @@
 
 alias del=rm # for rm check
 
+run2null() {
+  eval "$@" >/dev/null 2>&1
+}
+
 until_key() {
   while :; do
     local eventCode=`getevent -qlc 1 | awk '{if ($2=="EV_KEY" && $4=="DOWN") {print $3; exit}}'`
@@ -14,6 +18,10 @@ until_key() {
       KEY_F[1-9]|KEY_F1[0-9]|KEY_F2[0-4]) printf ${eventCode/KEY_F/f}; return;;
     esac
   done
+}
+
+until_key_any() {
+  run2null until_key
 }
 
 until_key_up_down() {
@@ -54,26 +62,26 @@ until_key_power() {
 
 goto_url() {
   [ ! -z "$1" ] || return
-  am start -a android.intent.action.VIEW -d "$1" >/dev/null 2>&1
+  run2null am start -a android.intent.action.VIEW -d \"$1\"
 }
 
 goto_app() {
   [ ! -z "$1" ] || return
-  am start "$1" >/dev/null 2>&1
+  run2null am start \"$1\"
 }
 
 skt_abort() {
-  type abort >/dev/null 2>&1 && abort "! $@" || { echo -e "! $@"; exit 1; }
+  run2null type abort && abort "! $@" || { echo -e "! $@"; exit 1; }
 }
 
 skt_print() {
-  type ui_print >/dev/null 2>&1 && ui_print "- $@" || echo -e "- $@"
+  run2null type ui_print && ui_print "- $@" || echo -e "- $@"
 }
 
 newline() {
-  local method=`type ui_print >/dev/null 2>&1 && printf 'ui_print ""' || printf 'echo ""'`
+  local method=`run2null type ui_print && printf 'ui_print ""' || printf 'echo ""'`
   [ -z "$1" ] && { eval "$method"; return; }
-  for _ in $(seq 1 "$1"); do eval "$method"; done
+  for _ in `seq 1 "$1"`; do eval "$method"; done
 }
 
 get_work_dir() {
@@ -83,7 +91,7 @@ get_work_dir() {
 pre_bin() {
   local bin="$1"
   [ -f "$bin" ] || return
-  chmod a+x "$bin" 2>/dev/null
+  chmod a+x "$bin"
 }
 
 pre_bins() {
@@ -105,11 +113,11 @@ nohup_bin() {
   [ -f "$bin" ] || return
   pre_bin "$bin"
   shift
-  eval "nohup \"$bin\" $@ >/dev/null 2>&1 &" &
+  nohup "$bin" $@ >/dev/null 2>&1 &
 }
 
 until_boot() {
-  resetprop -w sys.boot_completed 0 >/dev/null 2>&1
+  run2null resetprop -w sys.boot_completed 0  
   [ -z "$1" ] || sleep "$1"
 }
 
@@ -132,7 +140,7 @@ not_magisk() {
 }
 
 magisk_run_completed() {
-  not_magisk || { [ -f "$1/boot-completed.sh" ] && exec "$1/boot-completed.sh"; }
+  not_magisk || { [ -f "$1/boot-completed.sh" ] && { . "$1/boot-completed.sh"; exit; }; }
 }
 
 set_dir_perm() {
