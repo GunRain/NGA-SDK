@@ -70,6 +70,13 @@ goto_app() {
   run2null am start \"$1\"
 }
 
+str_eq() {
+  local str="$1"
+  shift
+  for target in "$@"; do [ "$target" = "$str" ] && return; done
+  return 1
+}
+
 skt_abort() {
   run2null type abort && abort "! $@" || { echo -e "! $@"; exit 1; }
 }
@@ -257,7 +264,7 @@ skt_install_init() {
   [ -f "$hashListFile" ] || skt_abort 'File "hashList.dat" does not exist!'
   local hashList="`cat "$hashListFile" | zcat | base64 -d`"
   for file in $(find "$MODPATH/" -type f -not -path '*META-INF*' -not -name hashList.dat); do
-    for target in "$@"; do [ "$target" = "${file#$MODPATH/}" ] && continue; done
+    str_eq "${file#$MODPATH/}" "$@" && continue
     [ "$(echo -n "$hashList" | grep -E " ${file#$MODPATH/}$" | awk '{print $1}')" = "$(sha1sum "$file" | awk '{print $1}')" ] || skt_abort "Failed to verify file \"${file#$MODPATH/}\"!"
   done
   del -f "$hashListFile"
