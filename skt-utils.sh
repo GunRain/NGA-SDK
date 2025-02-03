@@ -257,7 +257,7 @@ skt_install_init() {
   [ -f "$hashListFile" ] || skt_abort 'File "hashList.dat" does not exist!'
   local hashList="`cat "$hashListFile" | zcat | base64 -d`"
   for file in $(find "$MODPATH/" -type f -not -path '*META-INF*' -not -name hashList.dat); do
-    for target in "$@"; do [ "$target" = "$file" ] && continue; done
+    for target in "$@"; do [ "$target" = "${file#$MODPATH/}" ] && continue; done
     [ "$(echo -n "$hashList" | grep -E " ${file#$MODPATH/}$" | awk '{print $1}')" = "$(sha1sum "$file" | awk '{print $1}')" ] || skt_abort "Failed to verify file \"${file#$MODPATH/}\"!"
   done
   del -f "$hashListFile"
