@@ -246,17 +246,21 @@ run_install_list() {
 skt_install_init() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
 
+  # For Sakitin
+  [ "$1" = official ] && {
+    ui_print '- Official website: https://www.mod.latestfile.zip'
+    shift
+  }
+
   # Check files
   local hashListFile="$MODPATH/hashList.dat"
   [ -f "$hashListFile" ] || skt_abort 'File "hashList.dat" does not exist!'
   local hashList="`cat "$hashListFile" | zcat | base64 -d`"
   for file in $(find "$MODPATH/" -type f -not -path '*META-INF*' -not -name hashList.dat); do
+    for target in "$@"; do [ "$target" = "$file" ] && continue; done
     [ "$(echo -n "$hashList" | grep -E " ${file#$MODPATH/}$" | awk '{print $1}')" = "$(sha1sum "$file" | awk '{print $1}')" ] || skt_abort "Failed to verify file \"${file#$MODPATH/}\"!"
   done
   del -f "$hashListFile"
-
-  # For Sakitin
-  [ "$1" = official ] && ui_print '- Official website: https://www.mod.latestfile.zip'
 }
 
 skt_install_done() {
