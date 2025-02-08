@@ -78,7 +78,7 @@ str_eq() {
 }
 
 skt_abort() {
-  run2null type abort && abort "⚠️ $@" || { [ -z "$OUTFD" ] && { echo -e "⚠️ $@"; exit 1; } || { echo -e "ui_print ⚠️ $@\nui_print" >> "/proc/self/fd/$OUTFD"; exit 1; }; }
+  run2null type abort && abort "⚠️ $@" || { [ -z "$OUTFD" ] && { echo -e "⚠️ $@"; [ ! -z "$TMPDIR" ] && del -rf "$TMPDIR"; exit 1; } || { echo -e "ui_print ⚠️ $@\nui_print" >> "/proc/self/fd/$OUTFD"; [ ! -z "$TMPDIR" ] && del -rf "$TMPDIR"; exit 1; }; }
 }
 
 skt_print() {
@@ -303,3 +303,13 @@ skt_install_done() {
 }
 
 ps -A 2>/dev/null | grep zygote | grep -vq grep && BOOTMODE=true || BOOTMODE=false
+
+
+ABI="`getprop ro.product.cpu.abi`"
+case "$ABI" in
+  arm64-v8a) ARCH=arm64; ABI32=armeabi-v7a; IS64BIT=true ;;
+  armeabi-v7a) ARCH=arm; ABI32=armeabi-v7a; IS64BIT=false ;;
+  x86_64) ARCH=x64; ABI32=x86; IS64BIT=true ;;
+  x86) ARCH=x86; ABI32=x86; IS64BIT=false ;;
+  riscv64) ARCH=riscv64; ABI32=riscv32; IS64BIT=true ;;
+esac
