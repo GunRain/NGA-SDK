@@ -78,15 +78,15 @@ str_eq() {
 }
 
 skt_abort() {
-  run2null type abort && abort "! $@" || { echo -e "! $@"; exit 1; }
+  run2null type abort && abort "⚠️ $@" || { [ -z "$OUTFD" ] && { echo -e "⚠️ $@"; exit 1; } || { echo -e "ui_print ⚠️ $@\nui_print" >> "/proc/self/fd/$OUTFD"; exit 1; }; }
 }
 
 skt_print() {
-  run2null type ui_print && ui_print "- $@" || echo -e "- $@"
+  run2null type ui_print && ui_print "> $@" || { [ -z "$OUTFD" ] && echo -e "> $@" || echo -e "ui_print > $@\nui_print" >> "/proc/self/fd/$OUTFD"; }
 }
 
 newline() {
-  local method=`run2null type ui_print && printf 'ui_print ""' || printf 'echo ""'`
+  local method="$(run2null type ui_print && printf 'ui_print ""' || { [ -z "$OUTFD" ] && printf 'echo ""' || printf 'echo -e "ui_print \nui_print" >> "/proc/self/fd/$OUTFD"'; })"
   [ -z "$1" ] && { eval "$method"; return; }
   for _ in `seq 1 "$1"`; do eval "$method"; done
 }
@@ -301,3 +301,5 @@ skt_install_done() {
     done
   done
 }
+
+ps -A 2>/dev/null | grep zygote | grep -vq grep && BOOTMODE=true || BOOTMODE=false
