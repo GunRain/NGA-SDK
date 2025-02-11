@@ -8,6 +8,10 @@ run2null() {
   eval "$@" >/dev/null 2>&1
 }
 
+run22null() {
+  eval "$@" 2>/dev/null
+}
+
 until_key() {
   while :; do
     local eventCode=`getevent -qlc 1 | awk '{if ($2=="EV_KEY" && $4=="DOWN") {print $3; exit}}'`
@@ -180,6 +184,27 @@ get_target_bins() {
   for binName in "$@"; do
     get_target_bin "$binName"
   done
+}
+
+get_arch() {
+  case "`getprop ro.product.cpu.abi`" in
+    arm64-v8a) echo -n arm64 ;;
+    armeabi-v7a) echo -n arm ;;
+    armeabi) echo -n arm ;;
+    x86_64) echo -n x86_64 ;;
+    x86) echo -n x86 ;;
+    riscv64) echo -n riscv64 ;;
+    mips64) echo -n mips64 ;;
+    mips) echo -n mips ;;
+  esac
+}
+
+get_app_lib() {
+  local packageName="$1"
+  local libName="$2"
+  local apkDir="`run22null pm path $packageName | head -n 1 | sed 's/^package://;s/base.apk$//'`"
+  [ ! -z "$apkDir" ] || return
+  echo -n "${apkDir}lib/`get_arch`/lib$libName.so"
 }
 
 # 此函数较为特殊，用于批量安装模块功能，请完整阅读并理解此函数的代码后再使用此函数
