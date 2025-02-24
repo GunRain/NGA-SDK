@@ -275,6 +275,29 @@ run_install_list() {
   done
 }
 
+skt_install_module() {
+  local zipPath="$1"
+
+  run2null which magisk && {
+    magisk --install-module "$zipPath"
+    return $?
+  }
+  test -f /data/adb/apd && {
+    /data/adb/apd module install "$zipPath"
+    return $?
+  }
+  test -f /data/adb/ksud && {
+    /data/adb/ksud module install "$zipPath"
+    return $?
+  }
+}
+
+skt_install_modules() {
+  for zipPath in "$@"; do
+    skt_install_module "$zipPath"
+  done
+}
+
 skt_install_init() {
   [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
 
