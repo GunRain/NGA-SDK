@@ -1,6 +1,6 @@
-# useful code by Sakitin(GitHub@GunRain 酷安@芙洛洛 bilibili@安音咲汀)
+# NGA SDK - Shell Utils by Sakitin(GitHub@GunRain 酷安@芙洛洛 bilibili@安音咲汀)
 
-# GitHub link: https://github.com/GunRain/SKT-Utils/blob/aaa/skt-utils.sh
+# GitHub link: https://github.com/GunRain/NGA-SDK
 
 alias del=rm # for rm check
 
@@ -81,11 +81,11 @@ str_eq() {
   return 1
 }
 
-skt_abort() {
+nga_abort() {
   run2null type abort && abort "⚠️ $@" || { [ -z "$OUTFD" ] && { echo -e "⚠️ $@"; [ ! -z "$TMPDIR" ] && del -rf "$TMPDIR"; exit 1; } || { echo -e "ui_print ⚠️ $@\nui_print" >> "/proc/self/fd/$OUTFD"; [ ! -z "$TMPDIR" ] && del -rf "$TMPDIR"; exit 1; }; }
 }
 
-skt_print() {
+nga_print() {
   run2null type ui_print && ui_print "> $@" || { [ -z "$OUTFD" ] && echo -e "> $@" || echo -e "ui_print > $@\nui_print" >> "/proc/self/fd/$OUTFD"; }
 }
 
@@ -171,12 +171,12 @@ print_lines() {
 }
 
 get_target_bin() {
-  [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
-  [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
+  [ -z "$MODPATH" ] && nga_abort 'Value "MODPATH" does not exist!'
+  [ -z "$ARCH" ] && nga_abort 'Value "ARCH" does not exist!'
 
   local binName="$1"
   [ -z "$2" ] && local targetArch="$ARCH" || local targetArch="$2"
-  mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || skt_abort "Arch \"$targetArch\" is not supported!"
+  mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || nga_abort "Arch \"$targetArch\" is not supported!"
   chmod a+x "$MODPATH/$binName"
 }
 
@@ -213,7 +213,7 @@ run_install_list() {
   local func_num="$2"
 
   newline
-  skt_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
+  nga_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
   newline
 
   for num in `seq 1 $func_num`; do
@@ -234,28 +234,28 @@ run_install_list() {
       }
     )"
     newline
-    skt_print "抉择$num: $opt_name"
+    nga_print "抉择$num: $opt_name"
     newline
-    [ $cancel = true ] && skt_print "内容0: 取消此抉择"
+    [ $cancel = true ] && nga_print "内容0: 取消此抉择"
     for num in `seq 1 $opt_num`; do
-      skt_print "内容$num: $(eval "echo -n \"\$opt_name_$num\"")"
+      nga_print "内容$num: $(eval "echo -n \"\$opt_name_$num\"")"
     done
     newline
     [ $cancel = true ] && {
       local target_opt=0
-      skt_print "当前选择内容: 取消此抉择"
+      nga_print "当前选择内容: 取消此抉择"
     } || {
       local target_opt=1
-      skt_print "当前选择内容: 内容1"
+      nga_print "当前选择内容: 内容1"
     }
     while :; do
       [ `until_key_up_down` = down ] && {
         newline
         [ $target_opt -eq 0 ] && {
-          skt_print "已确定选择内容: 取消此抉择"
+          nga_print "已确定选择内容: 取消此抉择"
           true
         } || {
-          skt_print "已确定选择内容: 内容$target_opt"
+          nga_print "已确定选择内容: 内容$target_opt"
           eval "$target_func_head$target_opt"
         }
         newline
@@ -265,17 +265,17 @@ run_install_list() {
         [ $target_opt -gt $opt_num ] && {
           [ $cancel = true ] && {
             target_opt=0
-            skt_print "当前选择内容: 取消此抉择"
+            nga_print "当前选择内容: 取消此抉择"
             continue
           } || target_opt=1
         }
-        skt_print "当前选择内容: 内容$target_opt"
+        nga_print "当前选择内容: 内容$target_opt"
       }
     done
   done
 }
 
-skt_install_module() {
+nga_install_module() {
   local zipPath="$1"
 
   run2null which magisk && {
@@ -292,14 +292,14 @@ skt_install_module() {
   }
 }
 
-skt_install_modules() {
+nga_install_modules() {
   for zipPath in "$@"; do
-    skt_install_module "$zipPath"
+    nga_install_module "$zipPath"
   done
 }
 
-skt_install_init() {
-  [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
+nga_install_init() {
+  [ -z "$MODPATH" ] && nga_abort 'Value "MODPATH" does not exist!'
 
   # For Sakitin
   [ "$1" = official ] && {
@@ -309,18 +309,18 @@ skt_install_init() {
 
   # Check files
   local hashListFile="$MODPATH/hashList.dat"
-  [ -f "$hashListFile" ] || skt_abort 'File "hashList.dat" does not exist!'
+  [ -f "$hashListFile" ] || nga_abort 'File "hashList.dat" does not exist!'
   local hashList="`cat "$hashListFile" | zcat | base64 -d`"
   for file in $(find "$MODPATH/" -type f -not -path '*META-INF*' -not -name hashList.dat); do
     str_eq "${file#$MODPATH/}" "$@" && continue
-    [ "$(echo -n "$hashList" | grep -E " ${file#$MODPATH/}$" | awk '{print $1}')" = "$(sha1sum "$file" | awk '{print $1}')" ] || skt_abort "Failed to verify file \"${file#$MODPATH/}\"!"
+    [ "$(echo -n "$hashList" | grep -E " ${file#$MODPATH/}$" | awk '{print $1}')" = "$(sha1sum "$file" | awk '{print $1}')" ] || nga_abort "Failed to verify file \"${file#$MODPATH/}\"!"
   done
   del -f "$hashListFile"
 }
 
-skt_install_done() {
-  [ -z "$MODPATH" ] && skt_abort 'Value "MODPATH" does not exist!'
-  [ -z "$ARCH" ] && skt_abort 'Value "ARCH" does not exist!'
+nga_install_done() {
+  [ -z "$MODPATH" ] && nga_abort 'Value "MODPATH" does not exist!'
+  [ -z "$ARCH" ] && nga_abort 'Value "ARCH" does not exist!'
 
   # Clean bins
   [ -d "$MODPATH/bin" ] && del -rf "$MODPATH/bin"
@@ -351,7 +351,6 @@ skt_install_done() {
 }
 
 ps -A 2>/dev/null | grep zygote | grep -vq grep && BOOTMODE=true || BOOTMODE=false
-
 
 ABI="`getprop ro.product.cpu.abi`"
 case "$ABI" in
