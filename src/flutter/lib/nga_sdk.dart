@@ -127,40 +127,39 @@ class NGA {
     }
     OverlayEntry toastOverlayEntry(Tween<Offset> tween) {
       return OverlayEntry(
-        builder:
-            (context) => Positioned(
-              top: MediaQuery.of(context).size.height * 0.075,
-              left: MediaQuery.of(context).size.width * 0.1,
-              right: MediaQuery.of(context).size.width * 0.1,
-              child: TweenAnimationBuilder<Offset>(
-                tween: tween,
-                duration: Duration(milliseconds: 300),
-                builder: (context, offset, child) {
-                  return Transform.translate(offset: offset * MediaQuery.of(context).size.height, child: child);
-                },
-                child: Material(
-                  color: Colors.transparent,
-                  child: Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                        child: Container(
-                          padding: EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(color: Colors.white.withAlpha(128), borderRadius: BorderRadius.circular(16.0)),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [Icon(icon, color: color), SizedBox(width: 12), Text(txt, style: TextStyle(color: color))],
-                          ),
-                        ),
+        builder: (context) => Positioned(
+          top: MediaQuery.of(context).size.height * 0.075,
+          left: MediaQuery.of(context).size.width * 0.1,
+          right: MediaQuery.of(context).size.width * 0.1,
+          child: TweenAnimationBuilder<Offset>(
+            tween: tween,
+            duration: Duration(milliseconds: 300),
+            builder: (context, offset, child) {
+              return Transform.translate(offset: offset * MediaQuery.of(context).size.height, child: child);
+            },
+            child: Material(
+              color: Colors.transparent,
+              child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                    child: Container(
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(color: Colors.white.withAlpha(128), borderRadius: BorderRadius.circular(16.0)),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Icon(icon, color: color), SizedBox(width: 12), Text(txt, style: TextStyle(color: color))],
                       ),
                     ),
                   ),
                 ),
               ),
             ),
+          ),
+        ),
       );
     }
 
