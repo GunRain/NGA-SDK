@@ -32,7 +32,11 @@ class NGA {
               borderRadius: BorderRadius.circular(radius),
               border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
             ),
-            child: InkWell(onTap: onTap, child: Padding(padding: EdgeInsets.all(padding), child: child)),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(radius),
+              child: InkWell(onTap: onTap, child: Padding(padding: EdgeInsets.all(padding), child: child)),
+            ),
           ),
         ),
       ),
