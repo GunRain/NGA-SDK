@@ -1,6 +1,6 @@
 name: nga_sdk
 description: "NGA SDK is an auxiliary SDK for Android(and Flutter for Android) development, aiming to provide a better development experience for NGAs."
-version: 1.7.0
+version: 1.7.1
 repository: https://github.com/GunRain/NGA-SDK
 
 environment:
