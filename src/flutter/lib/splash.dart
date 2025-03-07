@@ -48,7 +48,9 @@ class NGASplash {
                                 ? Color(0xFFFFFFFF)
                                 : Color(0xFF000000));
                         final targetTxtStyle = TextStyle(
-                            fontFamily: 'BOOT', color: targetTxtColor);
+                            fontFamily: 'BOOT',
+                            package: 'nga_sdk',
+                            color: targetTxtColor);
                         return Container(
                           color: targetBgColor,
                           alignment: Alignment.center,
