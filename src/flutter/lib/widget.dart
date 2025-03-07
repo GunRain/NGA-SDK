@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 enum NGAMsg { info, err, warn, ok }
 
-class NGA {
+class NGAWidget {
   static Widget card(
     BuildContext context,
     Widget child, {
@@ -23,28 +23,30 @@ class NGA {
     return Padding(
       padding: isAllPadding
           ? EdgeInsets.all(outPadding)
-          : EdgeInsets.only(left: outPadding, right: outPadding),
+          : EdgeInsets.symmetric(horizontal: outPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-              borderRadius: BorderRadius.circular(radius),
-              border: Border.all(
-                  color: Theme.of(context).colorScheme.outlineVariant),
-            ),
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Material(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(radius),
               child: InkWell(
-                  onTap: onTap,
-                  child:
-                      Padding(padding: EdgeInsets.all(padding), child: child)),
-            ),
-          ),
-        ),
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(radius),
+                child: Container(
+                  padding: EdgeInsets.all(padding),
+                  decoration: BoxDecoration(
+                    color: (useWhite ? Colors.white : Colors.grey)
+                        .withAlpha(alpha),
+                    borderRadius: BorderRadius.circular(radius),
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.outlineVariant),
+                  ),
+                  child: child,
+                ),
+              ),
+            )),
       ),
     );
   }
@@ -62,11 +64,11 @@ class NGA {
     return Padding(
       padding: isAllPadding
           ? EdgeInsets.all(outPadding)
-          : EdgeInsets.only(left: outPadding, right: outPadding),
+          : EdgeInsets.symmetric(horizontal: outPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             decoration: BoxDecoration(
               color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
@@ -80,7 +82,7 @@ class NGA {
                 SizedBox(height: padding),
                 for (int i = 0; i < children.length; i++) ...[
                   Padding(
-                      padding: EdgeInsets.only(left: padding, right: padding),
+                      padding: EdgeInsets.symmetric(horizontal: padding),
                       child: children[i]),
                   if (i < children.length - 1) Divider(),
                 ],
@@ -98,32 +100,34 @@ class NGA {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(radius),
-            child: IntrinsicWidth(
-              child: Container(
-                decoration: BoxDecoration(
-                  color:
-                      (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                  borderRadius: BorderRadius.circular(radius),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(radius),
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: (useWhite ? Colors.white : Colors.grey)
+                        .withAlpha(alpha),
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  child: Center(child: txt),
                 ),
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Center(child: txt)),
               ),
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }
 
   static void msg(BuildContext context,
-      {required String txt, required NGAMsg type, int s = 3}) {
+      {void Function()? onTap,
+      required String txt,
+      required NGAMsg type,
+      int s = 3}) {
     if (!context.mounted) return;
     final overlayState = Overlay.of(context);
     IconData icon;
@@ -159,30 +163,31 @@ class NGA {
                   offset: offset * MediaQuery.of(context).size.height,
                   child: child);
             },
-            child: Material(
-              color: Colors.transparent,
-              child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                    child: Container(
-                      padding: EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(128),
-                          borderRadius: BorderRadius.circular(16.0)),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(icon, color: color),
-                          SizedBox(width: 12),
-                          Text(txt, style: TextStyle(color: color))
-                        ],
-                      ),
-                    ),
-                  ),
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(16),
+                      child: InkWell(
+                          onTap: onTap,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                                color: Colors.white.withAlpha(128),
+                                borderRadius: BorderRadius.circular(16)),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(icon, color: color),
+                                SizedBox(width: 12),
+                                Text(txt, style: TextStyle(color: color))
+                              ],
+                            ),
+                          ))),
                 ),
               ),
             ),
