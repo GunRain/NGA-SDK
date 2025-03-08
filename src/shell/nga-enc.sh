@@ -9,7 +9,7 @@
 # unless required by applicable law or agreed to in writing.                                                     =
 #                                                                                                                =
 # For full information about the NGA project, please visit: http://app.niggergo.work.                            =
-# For full information about the F2DLPR License terms and policies, please visit: http://license.fileto.download.    =
+# For full information about the F2DLPR License terms and conditions, please visit: http://license.fileto.download.    =
 #=================================================================================================================
 
 for file in "$@"; do
