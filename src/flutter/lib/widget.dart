@@ -21,9 +21,7 @@ class NGAWidget {
     void Function()? onTap,
   }) {
     return Padding(
-      padding: isAllPadding
-          ? EdgeInsets.all(outPadding)
-          : EdgeInsets.symmetric(horizontal: outPadding),
+      padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
@@ -37,11 +35,9 @@ class NGAWidget {
                 child: Container(
                   padding: EdgeInsets.all(padding),
                   decoration: BoxDecoration(
-                    color: (useWhite ? Colors.white : Colors.grey)
-                        .withAlpha(alpha),
+                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
                     borderRadius: BorderRadius.circular(radius),
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.outlineVariant),
+                    border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                   ),
                   child: child,
                 ),
@@ -62,9 +58,7 @@ class NGAWidget {
     bool isAllPadding = true,
   }) {
     return Padding(
-      padding: isAllPadding
-          ? EdgeInsets.all(outPadding)
-          : EdgeInsets.symmetric(horizontal: outPadding),
+      padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
@@ -73,17 +67,14 @@ class NGAWidget {
             decoration: BoxDecoration(
               color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
               borderRadius: BorderRadius.circular(radius),
-              border: Border.all(
-                  color: Theme.of(context).colorScheme.outlineVariant),
+              border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: padding),
                 for (int i = 0; i < children.length; i++) ...[
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: padding),
-                      child: children[i]),
+                  Padding(padding: EdgeInsets.symmetric(horizontal: padding), child: children[i]),
                   if (i < children.length - 1) Divider(),
                 ],
                 SizedBox(height: padding),
@@ -95,39 +86,8 @@ class NGAWidget {
     );
   }
 
-  static Widget txtButton(Widget txt, void Function() onTap,
-      {double radius = 24, int alpha = 22, bool useWhite = false}) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Material(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(radius),
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(radius),
-              child: IntrinsicWidth(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: (useWhite ? Colors.white : Colors.grey)
-                        .withAlpha(alpha),
-                    borderRadius: BorderRadius.circular(radius),
-                  ),
-                  child: Center(child: txt),
-                ),
-              ),
-            )),
-      ),
-    );
-  }
-
   static void msg(BuildContext context,
-      {void Function()? onTap,
-      required String txt,
-      required NGAMsg type,
-      int s = 3}) {
+      {void Function()? onTap, required String txt, required NGAMsg type, int s = 3}) {
     if (!context.mounted) return;
     final overlayState = Overlay.of(context);
     IconData icon;
@@ -159,9 +119,7 @@ class NGAWidget {
             tween: tween,
             duration: Duration(milliseconds: 300),
             builder: (context, offset, child) {
-              return Transform.translate(
-                  offset: offset * MediaQuery.of(context).size.height,
-                  child: child);
+              return Transform.translate(offset: offset * MediaQuery.of(context).size.height, child: child);
             },
             child: Center(
               child: ClipRRect(
@@ -177,8 +135,7 @@ class NGAWidget {
                           child: Container(
                             padding: EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                                color: Colors.white.withAlpha(128),
-                                borderRadius: BorderRadius.circular(16)),
+                                color: Colors.white.withAlpha(128), borderRadius: BorderRadius.circular(16)),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -196,15 +153,40 @@ class NGAWidget {
       );
     }
 
-    OverlayEntry goEntry = toastOverlayEntry(
-        Tween<Offset>(begin: Offset(0, -1), end: Offset(0, 0)));
+    OverlayEntry goEntry = toastOverlayEntry(Tween<Offset>(begin: Offset(0, -1), end: Offset(0, 0)));
     overlayState.insert(goEntry);
     Future.delayed(Duration(seconds: s), () {
-      OverlayEntry backEntry = toastOverlayEntry(
-          Tween<Offset>(begin: Offset(0, 0), end: Offset(0, -1)));
+      OverlayEntry backEntry = toastOverlayEntry(Tween<Offset>(begin: Offset(0, 0), end: Offset(0, -1)));
       overlayState.insert(backEntry);
       goEntry.remove();
       Future.delayed(Duration(milliseconds: 300), () => backEntry.remove());
     });
+  }
+
+  static Widget txtButton(Widget txt, void Function() onTap,
+      {double radius = 24, int alpha = 22, bool useWhite = false}) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(radius),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(radius),
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  child: Center(child: txt),
+                ),
+              ),
+            )),
+      ),
+    );
   }
 }

@@ -12,15 +12,26 @@ class NGASplash {
   static final indexDot = ValueNotifier<String>("");
   static late Timer indexCharTimer;
   static late Timer indexDotTimer;
+  static void remove() {
+    ok.value = true;
+  }
+
+  static void removeAll() {
+    indexCharTimer.cancel();
+    indexDotTimer.cancel();
+    ok.value = true;
+  }
+
+  static void show() {
+    ok.value = false;
+  }
+
   static Widget view(Widget child, {Color? bgColor, Color? txtColor}) {
-    indexCharTimer = Timer.periodic(
-        Duration(milliseconds: 25),
-        (timer) => indexChar.value =
-            indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1);
+    indexCharTimer = Timer.periodic(Duration(milliseconds: 25),
+        (timer) => indexChar.value = indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1);
     indexDotTimer = Timer.periodic(
       Duration(milliseconds: 500),
-      (timer) => indexDot.value =
-          (indexDot.value.length > 2) ? "" : ("${indexDot.value}."),
+      (timer) => indexDot.value = (indexDot.value.length > 2) ? "" : ("${indexDot.value}."),
     );
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -36,21 +47,11 @@ class NGASplash {
                   : Builder(
                       key: ValueKey("nga_splash_view"),
                       builder: (context) {
-                        final isDarkMode =
-                            MediaQuery.of(context).platformBrightness ==
-                                Brightness.dark;
-                        final targetBgColor = bgColor ??
-                            (isDarkMode
-                                ? Color(0xFF000000)
-                                : Color(0xFFFFFFFF));
-                        final targetTxtColor = txtColor ??
-                            (isDarkMode
-                                ? Color(0xFFFFFFFF)
-                                : Color(0xFF000000));
-                        final targetTxtStyle = TextStyle(
-                            fontFamily: 'BOOT',
-                            package: 'nga_sdk',
-                            color: targetTxtColor);
+                        final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                        final targetBgColor = bgColor ?? (isDarkMode ? Color(0xFF000000) : Color(0xFFFFFFFF));
+                        final targetTxtColor = txtColor ?? (isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF000000));
+                        final targetTxtStyle =
+                            TextStyle(fontFamily: 'BOOT', package: 'nga_sdk', color: targetTxtColor);
                         return Container(
                           color: targetBgColor,
                           alignment: Alignment.center,
@@ -59,17 +60,14 @@ class NGASplash {
                             children: [
                               ValueListenableBuilder<int>(
                                 valueListenable: indexChar,
-                                builder: (_, char, __) => Text(
-                                    String.fromCharCode(char),
-                                    style:
-                                        targetTxtStyle.copyWith(fontSize: 40)),
+                                builder: (_, char, __) =>
+                                    Text(String.fromCharCode(char), style: targetTxtStyle.copyWith(fontSize: 40)),
                               ),
                               SizedBox(height: 10),
                               ValueListenableBuilder<String>(
                                 valueListenable: indexDot,
-                                builder: (_, dot, __) => Text("Loading$dot",
-                                    style:
-                                        targetTxtStyle.copyWith(fontSize: 20)),
+                                builder: (_, dot, __) =>
+                                    Text("Loading$dot", style: targetTxtStyle.copyWith(fontSize: 20)),
                               ),
                             ],
                           ),
@@ -81,19 +79,5 @@ class NGASplash {
         ],
       ),
     );
-  }
-
-  static void show() {
-    ok.value = false;
-  }
-
-  static void remove() {
-    ok.value = true;
-  }
-
-  static void removeAll() {
-    indexCharTimer.cancel();
-    indexDotTimer.cancel();
-    ok.value = true;
   }
 }

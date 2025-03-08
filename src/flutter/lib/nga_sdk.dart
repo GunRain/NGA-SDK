@@ -4,6 +4,6 @@
 
 library nga_sdk;
 
-export 'widget.dart';
 export 'ext.dart';
 export 'splash.dart';
+export 'widget.dart';
