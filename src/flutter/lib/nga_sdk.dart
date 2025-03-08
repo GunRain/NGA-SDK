@@ -8,8 +8,8 @@
 // Provided "AS IS", WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,                                               =
 // unless required by applicable law or agreed to in writing.                                                    =
 //                                                                                                               =
-// For full information about the NGA project, please visit: http://app.niggergo.work.                           =
-// For full information about the F2DLPR License terms and conditions, please visit: http://license.fileto.download.   =
+// For details about the NGA project, visit: http://app.niggergo.work.                                           =
+// For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download.             =
 //================================================================================================================
 
 library nga_sdk;
