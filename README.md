@@ -1,4 +1,4 @@
-# NGA SDK ([LICENSE](LICENSE))
+# NGA SDK ([LICENSE](LICENSE.txt))
 
 NGA SDK是面向Android开发的辅助SDK，内容涵盖应用安全、前端组件、实用代码等。
 
@@ -7,7 +7,7 @@ NGA SDK是面向Android开发的辅助SDK，内容涵盖应用安全、前端组
 `任何使用NGA SDK的代码的行为都应该注明来源，我本人除外`
 
 
-## [Flutter](src/flutter/)
+## [Flutter](src/flutter/) ([Pub](https://pub-web.flutter-io.cn/packages/nga_sdk))
 
 ### [文档](https://pub-web.flutter-io.cn/documentation/nga_sdk/latest/nga_sdk/)
 
