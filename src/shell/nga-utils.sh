@@ -382,3 +382,5 @@ nga_install_done() {
     riscv64) export ARCH=riscv64; export ABI32=riscv32; export IS64BIT=true ;;
   esac
 }
+
+true # Okay!
