@@ -16,6 +16,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+extension NGASplashExt on Widget {
+  Widget withLoadingView({Color? bgColor, Color? txtColor}) {
+    return NGASplash.view(this, bgColor: bgColor, txtColor: txtColor);
+  }
+}
+
 class NGASplash {
   static final ok = ValueNotifier<bool>(false);
   static final indexChar = ValueNotifier<int>(0xE000);
@@ -47,7 +53,7 @@ class NGASplash {
       textDirection: TextDirection.ltr,
       child: Stack(
         children: [
-          child,
+          RepaintBoundary(child: child),
           ValueListenableBuilder<bool>(
             valueListenable: ok,
             builder: (_, ok, __) => AnimatedSwitcher(
