@@ -17,8 +17,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 extension NGASplashExt on Widget {
-  Widget withLoadingView({Color? bgColor, Color? txtColor}) {
-    return NGASplash.view(this, bgColor: bgColor, txtColor: txtColor);
+  Widget withLoadingView({Color? bgColor, Color? txtColor, Future<void>? func}) {
+    return NGASplash.view(this, bgColor: bgColor, txtColor: txtColor, func: func);
   }
 }
 
@@ -42,7 +42,7 @@ class NGASplash {
     ok.value = false;
   }
 
-  static Widget view(Widget child, {Color? bgColor, Color? txtColor}) {
+  static Widget view(Widget child, {Color? bgColor, Color? txtColor, Future<void>? func}) {
     indexCharTimer = Timer.periodic(Duration(milliseconds: 25),
         (timer) => indexChar.value = indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1);
     indexDotTimer = Timer.periodic(
@@ -53,7 +53,11 @@ class NGASplash {
       textDirection: TextDirection.ltr,
       child: Stack(
         children: [
-          RepaintBoundary(child: child),
+          RepaintBoundary(
+              child: FutureBuilder(
+                  future: func,
+                  builder: (_, snapshot) =>
+                      snapshot.connectionState == ConnectionState.done ? child : SizedBox.shrink())),
           ValueListenableBuilder<bool>(
             valueListenable: ok,
             builder: (_, ok, __) => AnimatedSwitcher(
