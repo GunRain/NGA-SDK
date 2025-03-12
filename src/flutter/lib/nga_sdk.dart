@@ -12,8 +12,6 @@
 // For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download.             =
 //================================================================================================================
 
-library nga_sdk;
-
 export 'ext.dart';
 export 'splash.dart';
 export 'widget.dart';

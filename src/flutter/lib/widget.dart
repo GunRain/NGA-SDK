@@ -100,15 +100,14 @@ class NGACard extends StatelessWidget {
   final bool useWhite, isAllPadding;
   final VoidCallback? onTap;
   const NGACard(this.child,
-      {Key? key,
+      {super.key,
       this.radius = 24,
       this.padding = 16,
       this.outPadding = 0,
       this.alpha = 22,
       this.useWhite = false,
       this.isAllPadding = true,
-      this.onTap})
-      : super(key: key);
+      this.onTap});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -146,14 +145,14 @@ class NGACards extends StatelessWidget {
   final bool useWhite, isAllPadding;
   const NGACards(
     this.children, {
-    Key? key,
+    super.key,
     this.radius = 24,
     this.padding = 16,
     this.outPadding = 0,
     this.alpha = 22,
     this.useWhite = false,
     this.isAllPadding = true,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -191,8 +190,7 @@ class NGATxtButton extends StatelessWidget {
   final double radius;
   final int alpha;
   final bool useWhite;
-  const NGATxtButton(this.txt, this.onTap, {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false})
-      : super(key: key);
+  const NGATxtButton(this.txt, this.onTap, {super.key, this.radius = 24, this.alpha = 22, this.useWhite = false});
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
