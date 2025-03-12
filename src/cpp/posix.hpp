@@ -14,7 +14,6 @@
 
 #pragma once
 
-#include <cstdio>
 #include <cstring>
 #include <ctime>
 #include <dirent.h>
@@ -22,7 +21,9 @@
 #include <filesystem>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <sys/stat.h>
+#include <system_error>
 #include <unistd.h>
 #include <vector>
 
@@ -176,7 +177,7 @@ namespace NGA {
               tmp_path /= item;
             else {
               vector<string> tmp_paths;
-              for (const auto& path : rets)
+              for (const str& path : rets)
                 if (const str target = (fs::path(path) / item).string(); ok(target))
                   tmp_paths.push_back(target);
               if (tmp_paths.empty())
@@ -185,7 +186,7 @@ namespace NGA {
             }
           else {
             vector<string> tmp_paths;
-            for (const auto& dir_path : rets.empty() ? (vector<string>){tmp_path.string()} : rets)
+            for (const str& dir_path : rets.empty() ? (vector<string>){tmp_path.string()} : rets)
               if (DIR* dir = opendir(dir_path.data())) {
                 struct dirent* entry;
                 while ((entry = readdir(dir)))

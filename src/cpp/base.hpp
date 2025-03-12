@@ -18,7 +18,7 @@
 #include <cctype>
 #include <sstream>
 #include <string>
-#include <vector>
+#include <string_view>
 
 #ifndef NGA_INLINE
 #if defined(__GNUC__)
@@ -34,8 +34,6 @@ namespace NGA {
   using namespace std;
   using str = string;
   using strv = string_view;
-  template <typename T>
-  using vec = vector<T>;
 
   namespace s {
     /// @brief    不分大小写地判断两个字符串是否相同
