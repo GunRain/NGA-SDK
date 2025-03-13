@@ -16,83 +16,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-extension RowMinSize on Row {
-  Row min() {
-    return Row(
-      key: key,
-      mainAxisAlignment: mainAxisAlignment,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: crossAxisAlignment,
-      textDirection: textDirection,
-      verticalDirection: verticalDirection,
-      textBaseline: textBaseline,
-      spacing: spacing,
-      children: children,
-    );
-  }
-}
-
-extension ColumnMinSize on Column {
-  Column min() {
-    return Column(
-      key: key,
-      mainAxisAlignment: mainAxisAlignment,
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: crossAxisAlignment,
-      textDirection: textDirection,
-      verticalDirection: verticalDirection,
-      textBaseline: textBaseline,
-      spacing: spacing,
-      children: children,
-    );
-  }
-}
-
-extension NGACardExt on Widget {
-  Widget toNGACard({
-    double radius = 24,
-    double padding = 16,
-    double outPadding = 0,
-    int alpha = 22,
-    bool useWhite = false,
-    bool isAllPadding = true,
-    VoidCallback? onTap,
-  }) {
-    return NGACard(this,
-        radius: radius,
-        padding: padding,
-        outPadding: outPadding,
-        alpha: alpha,
-        useWhite: useWhite,
-        isAllPadding: isAllPadding,
-        onTap: onTap);
-  }
-}
-
-extension NGACardsExt on List<Widget> {
-  Widget toNGACards({
-    double radius = 24,
-    double padding = 16,
-    double outPadding = 0,
-    int alpha = 22,
-    bool useWhite = false,
-    bool isAllPadding = true,
-    VoidCallback? onTap,
-  }) {
-    return NGACards(
-      this,
-      radius: radius,
-      padding: padding,
-      outPadding: outPadding,
-      alpha: alpha,
-      useWhite: useWhite,
-      isAllPadding: isAllPadding,
-    );
-  }
-}
-
-enum NGAMsg { info, err, warn, ok }
-
 class NGACard extends StatelessWidget {
   final Widget child;
   final double radius, padding, outPadding;
@@ -100,14 +23,15 @@ class NGACard extends StatelessWidget {
   final bool useWhite, isAllPadding;
   final VoidCallback? onTap;
   const NGACard(this.child,
-      {super.key,
+      {Key? key,
       this.radius = 24,
       this.padding = 16,
       this.outPadding = 0,
       this.alpha = 22,
       this.useWhite = false,
       this.isAllPadding = true,
-      this.onTap});
+      this.onTap})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -145,14 +69,14 @@ class NGACards extends StatelessWidget {
   final bool useWhite, isAllPadding;
   const NGACards(
     this.children, {
-    super.key,
+    Key? key,
     this.radius = 24,
     this.padding = 16,
     this.outPadding = 0,
     this.alpha = 22,
     this.useWhite = false,
     this.isAllPadding = true,
-  });
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -184,62 +108,27 @@ class NGACards extends StatelessWidget {
   }
 }
 
-class NGATxtButton extends StatelessWidget {
-  final Widget txt;
-  final VoidCallback onTap;
-  final double radius;
-  final int alpha;
-  final bool useWhite;
-  const NGATxtButton(this.txt, this.onTap, {super.key, this.radius = 24, this.alpha = 22, this.useWhite = false});
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Material(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(radius),
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(radius),
-              child: IntrinsicWidth(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                    borderRadius: BorderRadius.circular(radius),
-                  ),
-                  child: Center(child: txt),
-                ),
-              ),
-            )),
-      ),
-    );
-  }
-}
-
-class NGA {
-  static void msg(BuildContext context,
-      {void Function()? onTap, required String txt, required NGAMsg type, int s = 3}) {
+class NGAMsg {
+  static void show(BuildContext context,
+      {void Function()? onTap, required String txt, required NGAMsgType type, int s = 3}) {
     if (!context.mounted) return;
     final overlayState = Overlay.of(context);
     IconData icon;
     Color color;
     switch (type) {
-      case NGAMsg.err:
+      case NGAMsgType.err:
         icon = Icons.error_rounded;
         color = Colors.redAccent;
         break;
-      case NGAMsg.warn:
+      case NGAMsgType.warn:
         icon = Icons.warning_rounded;
         color = Colors.orangeAccent;
         break;
-      case NGAMsg.ok:
+      case NGAMsgType.ok:
         icon = Icons.check_circle_rounded;
         color = Colors.greenAccent;
         break;
-      case NGAMsg.info:
+      case NGAMsgType.info:
         icon = Icons.info_rounded;
         color = Colors.blueAccent;
     }
@@ -294,5 +183,75 @@ class NGA {
       goEntry.remove();
       Future.delayed(Duration(milliseconds: 300), () => backEntry.remove());
     });
+  }
+}
+
+enum NGAMsgType { info, err, warn, ok }
+
+class NGATxtButton extends StatelessWidget {
+  final Widget txt;
+  final VoidCallback onTap;
+  final double radius;
+  final int alpha;
+  final bool useWhite;
+  const NGATxtButton(this.txt, this.onTap, {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(radius),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(radius),
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  child: Center(child: txt),
+                ),
+              ),
+            )),
+      ),
+    );
+  }
+}
+
+extension ColumnMinSize on Column {
+  Column min() {
+    return Column(
+      key: key,
+      mainAxisAlignment: mainAxisAlignment,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: crossAxisAlignment,
+      textDirection: textDirection,
+      verticalDirection: verticalDirection,
+      textBaseline: textBaseline,
+      spacing: spacing,
+      children: children,
+    );
+  }
+}
+
+extension RowMinSize on Row {
+  Row min() {
+    return Row(
+      key: key,
+      mainAxisAlignment: mainAxisAlignment,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: crossAxisAlignment,
+      textDirection: textDirection,
+      verticalDirection: verticalDirection,
+      textBaseline: textBaseline,
+      spacing: spacing,
+      children: children,
+    );
   }
 }

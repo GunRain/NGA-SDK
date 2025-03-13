@@ -16,12 +16,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-extension NGASplashExt on Widget {
-  Widget withLoadingView({Color? bgColor, Color? txtColor, Future<void>? func}) {
-    return NGASplash.view(this, bgColor: bgColor, txtColor: txtColor, func: func);
-  }
-}
-
 class NGASplash {
   static final ok = ValueNotifier<bool>(false);
   static final indexChar = ValueNotifier<int>(0xE000);
@@ -68,8 +62,8 @@ class NGASplash {
                       key: ValueKey("nga_splash_view"),
                       builder: (context) {
                         final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-                        final targetBgColor = bgColor ?? (isDarkMode ? Color(0xFF000000) : Color(0xFFFFFFFF));
-                        final targetTxtColor = txtColor ?? (isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF000000));
+                        final targetBgColor = bgColor ?? (isDarkMode ? Color(0xFF000000) : Color(0xFFF8F8F8));
+                        final targetTxtColor = txtColor ?? (isDarkMode ? Color(0xFFF8F8F8) : Color(0xFF000000));
                         final targetTxtStyle =
                             TextStyle(fontFamily: 'BOOT', package: 'nga_sdk', color: targetTxtColor);
                         return Container(
@@ -99,5 +93,11 @@ class NGASplash {
         ],
       ),
     );
+  }
+}
+
+extension NGASplashExt on Widget {
+  Widget withLoadingView({Color? bgColor, Color? txtColor, Future<void>? func}) {
+    return NGASplash.view(this, bgColor: bgColor, txtColor: txtColor, func: func);
   }
 }
