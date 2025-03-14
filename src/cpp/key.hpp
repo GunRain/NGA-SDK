@@ -44,7 +44,7 @@ namespace NGA {
   namespace fs = filesystem;
 
   namespace key {
-    vec<str> getInputs(int TYPE) {
+    NGA_INLINE vec<str> getInputs(int TYPE) {
       vec<str> targets;
       for (const fs::directory_entry& entry : fs::directory_iterator("/dev/input"))
         if (const str input = entry.path().string(); entry.is_character_file())
@@ -59,13 +59,13 @@ namespace NGA {
     }
     class listener {
   public:
-      static listener& getInstance() {
+      NGA_INLINE static listener& getInstance() {
         static listener instance;
         return instance;
       }
-      listener(const listener&) = delete;
-      listener& operator=(const listener&) = delete;
-      bool listen(int TYPE) {
+      NGA_INLINE listener(const listener&) = delete;
+      NGA_INLINE listener& operator=(const listener&) = delete;
+      NGA_INLINE bool listen(int TYPE) {
         if (fds.empty())
           for (const str& eventPath : getInputs(TYPE))
             if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
@@ -84,13 +84,14 @@ namespace NGA {
             }
         }
       }
-
-  private:
-      listener() = default;
-      ~listener() {
+      NGA_INLINE void free(void) {
         for (pollfd& pfd : fds)
           close(pfd.fd);
       }
+
+  private:
+      NGA_INLINE listener() = default;
+      NGA_INLINE ~listener() { free(); }
       vec<struct pollfd> fds;
     };
   } // namespace key
