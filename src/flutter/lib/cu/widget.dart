@@ -31,9 +31,7 @@ class CUCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
             color: color ??
-                (MediaQuery.of(context).platformBrightness == Brightness.light
-                    ? Color(0xFFFFFFFF)
-                    : Color(0xFF202020)),
+                (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
             borderRadius: BorderRadius.circular(15),
             child: Tooltip(
               message: tip,
@@ -76,9 +74,7 @@ class CUListTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
             color: color ??
-                (MediaQuery.of(context).platformBrightness == Brightness.light
-                    ? Color(0xFFFFFFFF)
-                    : Color(0xFF202020)),
+                (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
             borderRadius: BorderRadius.circular(15),
             child: Tooltip(
               message: tip,
@@ -112,23 +108,6 @@ class CUListTile extends StatelessWidget {
   }
 }
 
-class CUWidget {
-  static const lightColorScheme = ColorScheme.light(
-    primary: Color(0xFF000000),
-    secondary: Color(0xFF888888),
-    surface: Color(0xFFF8F8F8),
-    tertiary: Color(0xFFE0E0E0),
-    outline: Color(0xFF888888),
-  );
-  static const darkColorScheme = ColorScheme.dark(
-    primary: Color(0xFFFFFFFF),
-    secondary: Color(0xFF888888),
-    surface: Color(0xFF000000),
-    tertiary: Color(0xFF404040),
-    outline: Color(0xFF888888),
-  );
-}
-
 class CUTxtButton extends StatelessWidget {
   final Widget txt;
   final VoidCallback onTap;
@@ -155,4 +134,23 @@ class CUTxtButton extends StatelessWidget {
               ),
             )));
   }
+}
+
+class CUWidget {
+  static const white = Color(0xFFFFFFFF);
+  static const black = Color(0xFF202020);
+  static const lightColorScheme = ColorScheme.light(
+    primary: Color(0xFF000000),
+    secondary: Color(0xFF888888),
+    surface: Color(0xFFF8F8F8),
+    tertiary: Color(0xFFE0E0E0),
+    outline: Color(0xFF888888),
+  );
+  static const darkColorScheme = ColorScheme.dark(
+    primary: Color(0xFFFFFFFF),
+    secondary: Color(0xFF888888),
+    surface: Color(0xFF000000),
+    tertiary: Color(0xFF404040),
+    outline: Color(0xFF888888),
+  );
 }
