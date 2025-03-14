@@ -21,8 +21,9 @@ class CUCard extends StatelessWidget {
   final double padding, outPadding;
   final VoidCallback? onTap;
   final Color? color;
-  final String? tip;
-  const CUCard(this.child, {Key? key, this.padding = 10, this.outPadding = 20, this.onTap, this.color, this.tip})
+  final String tip;
+  const CUCard(this.child,
+      {Key? key, this.padding = 10, this.outPadding = 20, this.onTap, this.color, this.tip = ''})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class CUListTile extends StatelessWidget {
   final double padding, outPadding;
   final VoidCallback? onTap;
   final Color? color;
-  final String? tip;
+  final String tip;
   const CUListTile(this.title,
       {Key? key,
       this.subtitle,
@@ -67,7 +68,7 @@ class CUListTile extends StatelessWidget {
       this.outPadding = 20,
       this.onTap,
       this.color,
-      this.tip})
+      this.tip = ''})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

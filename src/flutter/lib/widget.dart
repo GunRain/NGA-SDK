@@ -22,7 +22,7 @@ class NGACard extends StatelessWidget {
   final int alpha;
   final bool useWhite, isAllPadding;
   final VoidCallback? onTap;
-  final String? tip;
+  final String tip;
   const NGACard(this.child,
       {Key? key,
       this.radius = 24,
@@ -32,7 +32,7 @@ class NGACard extends StatelessWidget {
       this.useWhite = false,
       this.isAllPadding = true,
       this.onTap,
-      this.tip})
+      this.tip = ''})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ class NGACards extends StatelessWidget {
 
 class NGAMsg {
   static void show(BuildContext context,
-      {void Function()? onTap, required String txt, required NGAMsgType type, int s = 3, String? tip}) {
+      {void Function()? onTap, required String txt, required NGAMsgType type, int s = 3, String tip = ''}) {
     if (!context.mounted) return;
     final overlayState = Overlay.of(context);
     IconData icon;
@@ -200,9 +200,9 @@ class NGATxtButton extends StatelessWidget {
   final double radius;
   final int alpha;
   final bool useWhite;
-  final String? tip;
+  final String tip;
   const NGATxtButton(this.txt, this.onTap,
-      {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false, this.tip})
+      {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false, this.tip = ''})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
