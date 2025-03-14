@@ -128,3 +128,31 @@ class CUWidget {
     outline: Color(0xFF888888),
   );
 }
+
+class CUTxtButton extends StatelessWidget {
+  final Widget txt;
+  final VoidCallback onTap;
+  final String tip;
+  const CUTxtButton(this.txt, this.onTap, {Key? key, this.tip = ''}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+        color: Colors.grey.withAlpha(22),
+        borderRadius: BorderRadius.circular(15),
+        child: Tooltip(
+            message: tip,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(15),
+              child: IntrinsicWidth(
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Center(child: txt),
+                ),
+              ),
+            )));
+  }
+}
