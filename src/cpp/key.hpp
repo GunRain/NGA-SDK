@@ -59,7 +59,7 @@ namespace NGA {
     }
     class listener {
   public:
-      NGA_INLINE static listener& getInstance() {
+      NGA_INLINE static listener& getInstance(void) {
         static listener instance;
         return instance;
       }
@@ -90,8 +90,8 @@ namespace NGA {
       }
 
   private:
-      NGA_INLINE listener() = default;
-      NGA_INLINE ~listener() { free(); }
+      NGA_INLINE listener(void) = default;
+      NGA_INLINE ~listener(void) { free(); }
       vec<struct pollfd> fds;
     };
   } // namespace key
