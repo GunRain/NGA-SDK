@@ -22,6 +22,7 @@ class NGACard extends StatelessWidget {
   final int alpha;
   final bool useWhite, isAllPadding;
   final VoidCallback? onTap;
+  final String? tip;
   const NGACard(this.child,
       {Key? key,
       this.radius = 24,
@@ -30,7 +31,8 @@ class NGACard extends StatelessWidget {
       this.alpha = 22,
       this.useWhite = false,
       this.isAllPadding = true,
-      this.onTap})
+      this.onTap,
+      this.tip})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -41,22 +43,24 @@ class NGACard extends StatelessWidget {
         child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(radius),
-              child: InkWell(
-                onTap: onTap,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(radius),
-                child: Container(
-                  padding: EdgeInsets.all(padding),
-                  decoration: BoxDecoration(
-                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                child: Tooltip(
+                  message: tip,
+                  child: InkWell(
+                    onTap: onTap,
                     borderRadius: BorderRadius.circular(radius),
-                    border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                    child: Container(
+                      padding: EdgeInsets.all(padding),
+                      decoration: BoxDecoration(
+                        color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                        borderRadius: BorderRadius.circular(radius),
+                        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                      ),
+                      child: child,
+                    ),
                   ),
-                  child: child,
-                ),
-              ),
-            )),
+                ))),
       ),
     );
   }
@@ -110,7 +114,7 @@ class NGACards extends StatelessWidget {
 
 class NGAMsg {
   static void show(BuildContext context,
-      {void Function()? onTap, required String txt, required NGAMsgType type, int s = 3}) {
+      {void Function()? onTap, required String txt, required NGAMsgType type, int s = 3, String? tip}) {
     if (!context.mounted) return;
     final overlayState = Overlay.of(context);
     IconData icon;
@@ -152,21 +156,23 @@ class NGAMsg {
                   child: Material(
                       color: Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
-                      child: InkWell(
-                          onTap: onTap,
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                color: Colors.white.withAlpha(128), borderRadius: BorderRadius.circular(16)),
-                            child: Row(
-                              children: [
-                                Icon(icon, color: color),
-                                SizedBox(width: 12),
-                                Text(txt, style: TextStyle(color: color))
-                              ],
-                            ).min(),
-                          ))),
+                      child: Tooltip(
+                          message: tip,
+                          child: InkWell(
+                              onTap: onTap,
+                              borderRadius: BorderRadius.circular(16),
+                              child: Container(
+                                padding: EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                    color: Colors.white.withAlpha(128), borderRadius: BorderRadius.circular(16)),
+                                child: Row(
+                                  children: [
+                                    Icon(icon, color: color),
+                                    SizedBox(width: 12),
+                                    Text(txt, style: TextStyle(color: color))
+                                  ],
+                                ).min(),
+                              )))),
                 ),
               ),
             ),
@@ -194,7 +200,9 @@ class NGATxtButton extends StatelessWidget {
   final double radius;
   final int alpha;
   final bool useWhite;
-  const NGATxtButton(this.txt, this.onTap, {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false})
+  final String? tip;
+  const NGATxtButton(this.txt, this.onTap,
+      {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false, this.tip})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -205,20 +213,22 @@ class NGATxtButton extends StatelessWidget {
         child: Material(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(radius),
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(radius),
-              child: IntrinsicWidth(
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                    borderRadius: BorderRadius.circular(radius),
+            child: Tooltip(
+                message: tip,
+                child: InkWell(
+                  onTap: onTap,
+                  borderRadius: BorderRadius.circular(radius),
+                  child: IntrinsicWidth(
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                        borderRadius: BorderRadius.circular(radius),
+                      ),
+                      child: Center(child: txt),
+                    ),
                   ),
-                  child: Center(child: txt),
-                ),
-              ),
-            )),
+                ))),
       ),
     );
   }
