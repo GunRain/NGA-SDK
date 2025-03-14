@@ -50,12 +50,19 @@ class CUCard extends StatelessWidget {
 
 class CUListTile extends StatelessWidget {
   final Widget title;
-  final Widget? subtitle, leading;
+  final Widget? subtitle, leading, trailing;
   final double padding, outPadding;
   final VoidCallback? onTap;
   final Color? color;
   const CUListTile(this.title,
-      {Key? key, this.subtitle, this.leading, this.padding = 10, this.outPadding = 20, this.onTap, this.color})
+      {Key? key,
+      this.subtitle,
+      this.leading,
+      this.trailing,
+      this.padding = 10,
+      this.outPadding = 20,
+      this.onTap,
+      this.color})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -79,13 +86,14 @@ class CUListTile extends StatelessWidget {
                 leading: leading,
                 title: title,
                 subtitle: subtitle,
-                trailing: onTap != null
-                    ? SvgPicture(
-                        AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
-                        width: 16,
-                        height: 16,
-                      )
-                    : null,
+                trailing: trailing ??
+                    (onTap != null
+                        ? SvgPicture(
+                            AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
+                            width: 16,
+                            height: 16,
+                          )
+                        : null),
               ),
             ),
           ),
