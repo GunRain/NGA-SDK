@@ -96,11 +96,14 @@ class CUListTile extends StatelessWidget {
                     subtitle: subtitle,
                     trailing: trailing ??
                         (onTap != null
-                            ? SvgPicture(
-                                AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
-                                width: 16,
-                                height: 16,
-                              )
+                            ? Row(mainAxisSize: MainAxisSize.min, children: [
+                                SvgPicture(
+                                  AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
+                                  width: 16,
+                                  height: 16,
+                                ),
+                                SizedBox(width: 15)
+                              ])
                             : null),
                   ),
                 ),
