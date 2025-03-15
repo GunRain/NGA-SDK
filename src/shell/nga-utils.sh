@@ -78,12 +78,12 @@ until_key_power() {
 }
 
 goto_url() {
-  [ -z "$1" ] && return
+  [ -n "$1" ] || return
   run2null am start -a android.intent.action.VIEW -d "$1"
 }
 
 goto_app() {
-  [ -z "$1" ] && return
+  [ -n "$1" ] || return
   run2null am start "$1"
 }
 
@@ -356,7 +356,7 @@ nga_install_done() {
     case "$ARCH" in
       arm64) find "$MODPATH/zygisk" \( -name "riscv*.so" -o -name "x*.so" \) -delete;;
       arm) find "$MODPATH/zygisk" \( -name "riscv*.so" -o -name "x*.so" -o -name "*64*.so" \) -delete;;
-      x64) find "$MODPATH/zygisk" \( -name "riscv*.so" \) -delete;;
+      x64) find "$MODPATH/zygisk" -name "riscv*.so" -delete;;
       x86) find "$MODPATH/zygisk" \( -name "riscv*.so" -o -name "*64*.so" \) -delete;;
       riscv64) find "$MODPATH/zygisk" \( -name "arm*.so" -o -name "x*.so" \) -delete;;
     esac
