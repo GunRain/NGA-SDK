@@ -345,10 +345,12 @@ nga_install_done() {
   # Clean bins
   [ -d "$MODPATH/bin" ] && del -rf "$MODPATH/bin"
 
-  # For overlyfs
   [ -d "$MODPATH/system" ] && {
+    # For overlyfs
     set_dir_perm "$MODPATH/system"
     set_system_file "$MODPATH/system"
+
+    [ -d "$MODPATH/system/vendor/odm" ] && mv -f "$MODPATH/system/vendor/odm" "$MODPATH/system/odm"
   }
 
   # Clean zygisk libs
