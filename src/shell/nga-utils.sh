@@ -323,7 +323,7 @@ nga_install_init() {
 
   # For Sakitin
   [ "$1" = official ] && {
-    ui_print '- Official website: https://www.mod.latestfile.zip'
+    nga_print 'Official website: https://www.mod.latestfile.zip'
     shift
   }
 
