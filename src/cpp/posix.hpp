@@ -28,7 +28,7 @@
 #include <vector>
 
 #ifndef NGA_INLINE
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define NGA_INLINE __attribute__((always_inline)) inline
 #elif defined(_MSC_VER)
 #define NGA_INLINE __forceinline
