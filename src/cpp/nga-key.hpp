@@ -62,7 +62,7 @@ namespace NGA {
       NGA_INLINE listener(const listener&) = delete;
       NGA_INLINE listener& operator=(const listener&) = delete;
       NGA_INLINE ~listener(void) { free(); }
-      NGA_INLINE static listener* create(int TYPE) { return new listener(TYPE); }
+      NGA_INLINE static unique_ptr<listener> create(int TYPE) { return unique_ptr<listener>(new listener(TYPE)); }
       NGA_INLINE bool listen(void) {
         if (_fds.empty())
           return false;
