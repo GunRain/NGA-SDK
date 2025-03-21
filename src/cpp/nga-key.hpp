@@ -59,40 +59,41 @@ namespace NGA {
     }
     class listener {
   public:
-      NGA_INLINE static listener& getInstance(void) {
-        static listener instance;
-        return instance;
-      }
       NGA_INLINE listener(const listener&) = delete;
       NGA_INLINE listener& operator=(const listener&) = delete;
-      NGA_INLINE bool listen(int TYPE) {
-        if (fds.empty())
-          for (const str& eventPath : getInputs(TYPE))
-            if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
-              fds.push_back({fd, POLLIN, 0});
-        if (fds.empty())
+      NGA_INLINE ~listener(void) { free(); }
+      NGA_INLINE static listener* create(int TYPE) { return new listener(TYPE); }
+      NGA_INLINE bool listen(void) {
+        if (_fds.empty())
           return false;
-        while (1) {
-          if (poll(fds.data(), fds.size(), -1) < 0)
+        for (;;) {
+          if (poll(_fds.data(), _fds.size(), -1) < 0)
             return false;
-          for (pollfd& pfd : fds)
+          for (pollfd& pfd : _fds)
             if (pfd.revents & POLLIN) {
               struct input_event event;
               ssize_t bytesRead = read(pfd.fd, &event, sizeof(event));
-              if (bytesRead > 0 && event.type == EV_KEY && event.code == TYPE && event.value == 1)
+              if (bytesRead > 0 && event.type == EV_KEY && event.code == _type && event.value == 1)
                 return true;
             }
         }
       }
       NGA_INLINE void free(void) {
-        for (pollfd& pfd : fds)
+        if (_fds.empty())
+          return;
+        for (pollfd& pfd : _fds)
           close(pfd.fd);
+        _fds.clear();
       }
 
   private:
-      NGA_INLINE listener(void) = default;
-      NGA_INLINE ~listener(void) { free(); }
-      vec<struct pollfd> fds;
+      NGA_INLINE listener(int TYPE) : _type(TYPE) {
+        for (const str& eventPath : getInputs(TYPE))
+          if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
+            _fds.push_back({fd, POLLIN, 0});
+      }
+      vec<struct pollfd> _fds;
+      int _type;
     };
   } // namespace key
 } // namespace NGA
