@@ -45,8 +45,7 @@ namespace NGA {
                 return false;
             else
                 for (size_t i = 0; i < s1.size(); ++i)
-                    if (tolower(s1[i]) != tolower(s2[i]))
-                        return false;
+                    if (tolower(s1[i]) != tolower(s2[i])) return false;
             return true;
         }
         /// @brief    不分大小写且支持通配符*地判断前源字符串是否包含指定字符串
@@ -92,8 +91,7 @@ namespace NGA {
         /// @param t 要替换到的内容
         /// @return  替换后的源字符串
         NGA_INLINE static str replace_head(str s, const strv& f, const strv& t) {
-            if (s.starts_with(f))
-                s.replace(0, f.length(), t);
+            if (s.starts_with(f)) s.replace(0, f.length(), t);
             return s;
         }
         /// @brief   替换全部字符串
@@ -119,5 +117,5 @@ namespace NGA {
             else
                 return eq(s.substr(s.size() - t.size()), t);
         }
-    } // namespace s
-} // namespace NGA
+    }  // namespace s
+}  // namespace NGA

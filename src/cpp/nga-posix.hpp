@@ -52,8 +52,7 @@ namespace NGA {
         if (FILE* fp = popen(c.data(), "r")) {
             ostringstream stm;
             int           c;
-            while ((c = fgetc(fp)) != EOF)
-                stm.put(c);
+            while ((c = fgetc(fp)) != EOF) stm.put(c);
             pclose(fp);
             return stm.str();
         }
@@ -72,8 +71,7 @@ namespace NGA {
         /// @return 路径为目录时返回true，否则为false
         NGA_INLINE static bool dok(const strv& p) {
             struct stat stat_buf;
-            if (!stat(p.data(), &stat_buf))
-                return S_ISDIR(stat_buf.st_mode);
+            if (!stat(p.data(), &stat_buf)) return S_ISDIR(stat_buf.st_mode);
             return false;
         }
         /// @brief  判断路径是否为文件
@@ -103,8 +101,7 @@ namespace NGA {
         /// @return 路径为空文件时返回true，否则为false
         NGA_INLINE static bool fmt(const strv& p) {
             struct stat st;
-            if (stat(p.data(), &st))
-                return false;
+            if (stat(p.data(), &st)) return false;
             return st.st_size == 0;
         }
         /// @brief  获取文件内容为字符串
@@ -114,8 +111,7 @@ namespace NGA {
             if (FILE* f = fopen(p.data(), "r")) {
                 str ret;
                 int c;
-                while ((c = fgetc(f)) != EOF)
-                    ret.push_back(c);
+                while ((c = fgetc(f)) != EOF) ret.push_back(c);
                 fclose(f);
                 return ret;
             }
@@ -128,11 +124,9 @@ namespace NGA {
         NGA_INLINE static bool mv(const strv& s, const strv& d) {
             error_code ec;
             if (const str dp = fs::path(d).parent_path().string(); !ok(dp))
-                if (fs::create_directories(dp, ec); ec)
-                    return false;
+                if (fs::create_directories(dp, ec); ec) return false;
             struct stat si;
-            if (stat(s.data(), &si))
-                return false;
+            if (stat(s.data(), &si)) return false;
             struct timespec dt[2] = {{si.st_atime, 0}, {si.st_mtime, 0}};
             if (rename(s.data(), d.data()))
                 if (fs::copy(s, d, ec); !ec)
@@ -151,8 +145,7 @@ namespace NGA {
         /// @return %Y-%m-%d格式的修改时间
         NGA_INLINE static str time(const strv& p) {
             struct stat fileInfo;
-            if (stat(p.data(), &fileInfo))
-                return "";
+            if (stat(p.data(), &fileInfo)) return "";
             time_t        time     = fileInfo.st_mtime;
             tm*           timeInfo = localtime(&time);
             ostringstream oss;
@@ -184,8 +177,7 @@ namespace NGA {
                             for (const str& path : rets)
                                 if (const str target = (fs::path(path) / item).string(); ok(target))
                                     tmp_paths.push_back(target);
-                            if (tmp_paths.empty())
-                                return {};
+                            if (tmp_paths.empty()) return {};
                             rets = tmp_paths;
                         }
                     else {
@@ -222,12 +214,11 @@ namespace NGA {
                                         continue;
                                 closedir(dir);
                             }
-                        if (tmp_paths.empty())
-                            return {};
+                        if (tmp_paths.empty()) return {};
                         rets = tmp_paths;
                     }
                 return rets;
             }
         }
-    } // namespace f
-} // namespace NGA
+    }  // namespace f
+}  // namespace NGA

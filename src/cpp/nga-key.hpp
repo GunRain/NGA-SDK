@@ -51,8 +51,7 @@ namespace NGA {
                     if (int fd = open(input.data(), O_RDONLY); fd >= 0) {
                         unsigned char evBits[(KEY_MAX + 7) / 8] = {0};
                         ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(evBits)), evBits);
-                        if (evBits[TYPE / 8] & (1 << (TYPE % 8)))
-                            targets.push_back(input);
+                        if (evBits[TYPE / 8] & (1 << (TYPE % 8))) targets.push_back(input);
                         close(fd);
                     }
             return targets;
@@ -66,11 +65,9 @@ namespace NGA {
                 return unique_ptr<listener>(new listener(TYPE));
             }
             NGA_INLINE bool listen(void) {
-                if (_fds.empty())
-                    return false;
+                if (_fds.empty()) return false;
                 for (;;) {
-                    if (poll(_fds.data(), _fds.size(), -1) < 0)
-                        return false;
+                    if (poll(_fds.data(), _fds.size(), -1) < 0) return false;
                     for (pollfd& pfd : _fds)
                         if (pfd.revents & POLLIN) {
                             struct input_event event;
@@ -81,21 +78,18 @@ namespace NGA {
                 }
             }
             NGA_INLINE void free(void) {
-                if (_fds.empty())
-                    return;
-                for (pollfd& pfd : _fds)
-                    close(pfd.fd);
+                if (_fds.empty()) return;
+                for (pollfd& pfd : _fds) close(pfd.fd);
                 _fds.clear();
             }
 
         private:
             NGA_INLINE listener(int TYPE) : _type(TYPE) {
                 for (const str& eventPath : getInputs(TYPE))
-                    if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
-                        _fds.push_back({fd, POLLIN, 0});
+                    if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0) _fds.push_back({fd, POLLIN, 0});
             }
             vec<struct pollfd> _fds;
             int                _type;
         };
-    } // namespace key
-} // namespace NGA
+    }  // namespace key
+}  // namespace NGA
