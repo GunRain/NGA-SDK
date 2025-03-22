@@ -335,14 +335,15 @@ nga_install_module() {
         magisk --install-module "$zipPath"
         return $?
     }
-    test -f /data/adb/apd && {
-        /data/adb/apd module install "$zipPath"
-        return $?
-    }
-    test -f /data/adb/ksud && {
-        /data/adb/ksud module install "$zipPath"
-        return $?
-    }
+    for us in apd ksud; do
+        { run2null which $us && {
+            $us module install "$zipPath"
+            return $?
+        }; } || { [ -f /data/adb/$us ] && {
+            /data/adb/$us module install "$zipPath"
+            return $?
+        }; }
+    done
 }
 
 nga_install_modules() {
