@@ -28,3 +28,8 @@ NGA SDK是面向Android开发的辅助SDK，内容涵盖应用安全、前端组
 ### [POSIX通用](src/cpp/posix.hpp)
 
 ### [按键事件监听](src/cpp/key.hpp)
+
+
+## Go (`Go1.18`)
+
+### [日志记录](src/go/logger.go)
