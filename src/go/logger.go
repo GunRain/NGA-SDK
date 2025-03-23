@@ -68,7 +68,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 		for {
 			select {
 			case logMessage := <-logger.queue:
-				logger.file.WriteString(logMessage + "\n")
+				_, _ = logger.file.WriteString(logMessage + "\n")
 				logger.wg.Done()
 			case <-logger.close:
 				return
