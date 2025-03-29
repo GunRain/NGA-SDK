@@ -25,21 +25,21 @@ import (
 type LogLevel uint8
 
 const (
-	NONE LogLevel = iota
-	ERROR
-	WARN
-	INFO
-	DEBUG
-	VERBOSE
+	LOG_NONE LogLevel = iota
+	LOG_ERROR
+	LOG_WARN
+	LOG_INFO
+	LOG_DEBUG
+	LOG_VERBOSE
 )
 
 var logLevelStrs = map[LogLevel]string{
-	NONE:    "?",
-	ERROR:   "E",
-	WARN:    "W",
-	INFO:    "I",
-	DEBUG:   "D",
-	VERBOSE: "V",
+	LOG_NONE:    "?",
+	LOG_ERROR:   "E",
+	LOG_WARN:    "W",
+	LOG_INFO:    "I",
+	LOG_DEBUG:   "D",
+	LOG_VERBOSE: "V",
 }
 
 type Logger struct {
@@ -86,27 +86,27 @@ func (l *Logger) log(lv LogLevel, msg string) {
 }
 
 func (l *Logger) LogN(msg string, o ...any) {
-	l.log(NONE, fmt.Sprintf(msg, o...))
+	l.log(LOG_NONE, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) LogE(msg string, o ...any) {
-	l.log(ERROR, fmt.Sprintf(msg, o...))
+	l.log(LOG_ERROR, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) LogW(msg string, o ...any) {
-	l.log(WARN, fmt.Sprintf(msg, o...))
+	l.log(LOG_WARN, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) LogI(msg string, o ...any) {
-	l.log(INFO, fmt.Sprintf(msg, o...))
+	l.log(LOG_INFO, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) LogD(msg string, o ...any) {
-	l.log(DEBUG, fmt.Sprintf(msg, o...))
+	l.log(LOG_DEBUG, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) LogV(msg string, o ...any) {
-	l.log(VERBOSE, fmt.Sprintf(msg, o...))
+	l.log(LOG_VERBOSE, fmt.Sprintf(msg, o...))
 }
 
 func (l *Logger) Flush() {
