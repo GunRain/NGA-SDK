@@ -25,15 +25,15 @@ func exist(fileName string) bool {
 	return !os.IsNotExist(err)
 }
 
-func MvFile(src, dst string) bool {
+func MvFile(src, dst string) (bool, error) {
 	if dstDir := filepath.Dir(dst); !exist(dstDir) {
 		if err := os.MkdirAll(dstDir, os.ModePerm); err != nil {
-			return false
+			return false, err
 		}
 	}
 	srcInfo, err := os.Stat(src)
 	if err != nil {
-		return false
+		return false, err
 	}
 	atime, mtime := srcInfo.ModTime(), srcInfo.ModTime()
 	defer func() {
@@ -43,30 +43,30 @@ func MvFile(src, dst string) bool {
 	}()
 	err = os.Rename(src, dst)
 	if err == nil {
-		return true
+		return true, nil
 	}
-	if !func() bool {
+	if ok, err := func() (bool, error) {
 		srcFile, err := os.Open(src)
 		if err != nil {
-			return false
+			return false, err
 		}
 		defer srcFile.Close()
 		dstFile, err := os.Create(dst)
 		if err != nil {
-			return false
+			return false, err
 		}
 		defer dstFile.Close()
 		_, err = io.Copy(dstFile, srcFile)
 		if err != nil {
 			_ = os.Remove(dst)
-			return false
+			return false, err
 		}
-		return true
-	}() {
-		return false
+		return true, nil
+	}(); !ok {
+		return false, err
 	}
 	if err = os.Remove(src); err != nil {
-		return false
+		return false, err
 	}
-	return true
+	return true, nil
 }
