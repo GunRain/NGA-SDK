@@ -35,8 +35,7 @@ func MvFile(src, dst string) bool {
 	if err != nil {
 		return false
 	}
-	atime := srcInfo.ModTime()
-	mtime := srcInfo.ModTime()
+	atime, mtime := srcInfo.ModTime(), srcInfo.ModTime()
 	defer func() {
 		if exist(dst) {
 			_ = os.Chtimes(dst, atime, mtime)
