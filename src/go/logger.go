@@ -33,7 +33,7 @@ const (
 	LOG_VERBOSE
 )
 
-var logLevelStrs = map[LogLevel]string{
+var logLv2Str = map[LogLevel]string{
 	LOG_NONE:    "?",
 	LOG_ERROR:   "E",
 	LOG_WARN:    "W",
@@ -47,7 +47,6 @@ type Logger struct {
 	lv    LogLevel
 	queue chan string
 	wg    sync.WaitGroup
-	close chan struct{}
 }
 
 func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
@@ -61,60 +60,37 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 	logger := &Logger{
 		file:  file,
 		lv:    lv,
-		queue: make(chan string, 100),
-		close: make(chan struct{}),
+		queue: make(chan string, 114),
 	}
 	go func() {
-		for {
-			select {
-			case logMessage := <-logger.queue:
-				_, _ = logger.file.WriteString(logMessage + "\n")
-				logger.wg.Done()
-			case <-logger.close:
-				return
-			}
+		for msg := range logger.queue {
+			_, _ = logger.file.WriteString(msg + "\n")
+			logger.wg.Done()
 		}
 	}()
 	return logger, nil
 }
 
-func (l *Logger) log(lv LogLevel, msg string) {
-	if lv <= l.lv {
-		l.wg.Add(1)
-		l.queue <- fmt.Sprintf("%s [%s] %s", time.Now().Format("01-02 15:04:05"), logLevelStrs[lv], msg)
+func (_logger *Logger) log(lv LogLevel, msg string, o ...any) {
+	if lv <= _logger.lv {
+		_logger.wg.Add(1)
+		_logger.queue <- time.Now().Format("01-02 15:04:05.000") + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
 	}
 }
 
-func (l *Logger) LogN(msg string, o ...any) {
-	l.log(LOG_NONE, fmt.Sprintf(msg, o...))
+func (_logger *Logger) LogN(msg string, o ...any) { _logger.log(LOG_NONE, msg, o...) }
+func (_logger *Logger) LogE(msg string, o ...any) { _logger.log(LOG_ERROR, msg, o...) }
+func (_logger *Logger) LogW(msg string, o ...any) { _logger.log(LOG_WARN, msg, o...) }
+func (_logger *Logger) LogI(msg string, o ...any) { _logger.log(LOG_INFO, msg, o...) }
+func (_logger *Logger) LogD(msg string, o ...any) { _logger.log(LOG_DEBUG, msg, o...) }
+func (_logger *Logger) LogV(msg string, o ...any) { _logger.log(LOG_VERBOSE, msg, o...) }
+
+func (_logger *Logger) Flush() {
+	_logger.wg.Wait()
 }
 
-func (l *Logger) LogE(msg string, o ...any) {
-	l.log(LOG_ERROR, fmt.Sprintf(msg, o...))
-}
-
-func (l *Logger) LogW(msg string, o ...any) {
-	l.log(LOG_WARN, fmt.Sprintf(msg, o...))
-}
-
-func (l *Logger) LogI(msg string, o ...any) {
-	l.log(LOG_INFO, fmt.Sprintf(msg, o...))
-}
-
-func (l *Logger) LogD(msg string, o ...any) {
-	l.log(LOG_DEBUG, fmt.Sprintf(msg, o...))
-}
-
-func (l *Logger) LogV(msg string, o ...any) {
-	l.log(LOG_VERBOSE, fmt.Sprintf(msg, o...))
-}
-
-func (l *Logger) Flush() {
-	l.wg.Wait()
-}
-
-func (l *Logger) Close() {
-	l.Flush()
-	close(l.close)
-	l.file.Close()
+func (_logger *Logger) Close() {
+	_logger.Flush()
+	close(_logger.queue)
+	_logger.file.Close()
 }
