@@ -1,4 +1,3 @@
-# shellcheck disable=SC2148
 #=================================================================================================================
 # Copyright (c) 2023-present Anne Sakitin (Tianwan Ayana).                                                       =
 #                                                                                                                =
@@ -12,6 +11,8 @@
 # For details about the NGA project, visit: http://app.niggergo.work.                                            =
 # For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download.              =
 #=================================================================================================================
+
+# shellcheck shell=ash
 
 alias del=rm # for rm check
 
@@ -29,11 +30,11 @@ until_key() {
         eventCode=$(getevent -qlc 1 | awk '{if ($2=="EV_KEY" && $4=="DOWN") {print $3; exit}}')
         case "$eventCode" in
         KEY_VOLUMEUP)
-            echo -n up
+            printf up
             return
             ;;
         KEY_VOLUMEDOWN)
-            echo -n down
+            printf down
             return
             ;;
         KEY_POWER)
@@ -41,7 +42,7 @@ until_key() {
             return
             ;;
         KEY_F[1-9] | KEY_F1[0-9] | KEY_F2[0-4])
-            echo -n "${eventCode/KEY_F/f}"
+            echo -n "$eventCode" | sed 's/KEY_F/f/g'
             return
             ;;
         esac
@@ -115,18 +116,18 @@ str_eq() {
 
 nga_abort() {
     { run2null type abort && abort "⚠️ $1"; } || { { [ -z "$OUTFD" ] && {
-        echo -e "⚠️ $1"
+        printf "%s\n" "⚠️ $1"
         [ -n "$TMPDIR" ] && del -rf "$TMPDIR"
         exit 1
     }; } || {
-        echo -e "ui_print ⚠️ $1\nui_print" >>"/proc/self/fd/$OUTFD"
+        printf "%s\n" "ui_print ⚠️ $1\nui_print" >>"/proc/self/fd/$OUTFD"
         [ -n "$TMPDIR" ] && del -rf "$TMPDIR"
         exit 1
     }; }
 }
 
 nga_print() {
-    { run2null type ui_print && ui_print "> $1"; } || { [ -z "$OUTFD" ] && echo -e "> $1" || echo -e "ui_print > $1\nui_print" >>"/proc/self/fd/$OUTFD"; }
+    { run2null type ui_print && ui_print "> $1"; } || { [ -z "$OUTFD" ] && printf "%s\n" "> $1" || printf "%s\n" "ui_print > $1\nui_print" >>"/proc/self/fd/$OUTFD"; }
 }
 
 # shellcheck disable=SC2120,SC2028,SC2016
@@ -273,7 +274,7 @@ run_install_list() {
                 4) echo "local cancel=\"$line\"" ;;
                 *) echo "local opt_name_$((type - 4))=\"$line\"" ;;
                 esac
-                _=$(( type++ ))
+                type=$((type+1))
             done
         })"
         newline
@@ -309,7 +310,7 @@ run_install_list() {
                 newline
                 break
             }; } || {
-                _=$(( target_opt++ ))
+                target_opt=$((target_opt+1))
                 [ $target_opt -gt "$opt_num" ] && {
                     [ "$cancel" = true ] && {
                         target_opt=0
