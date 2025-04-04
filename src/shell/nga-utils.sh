@@ -289,31 +289,28 @@ run_install_list() {
             nga_print "内容$index_num: $(eval "echo -n \"\$opt_name_$index_num\"")"
         done
         newline
-        {
-            [ "$cancel" = true ] && {
-                local target_opt=0
-                nga_print "当前选择内容: 取消此抉择"
-            }
-        } || {
-            local target_opt=1
+        local target_opt
+        { [ "$cancel" = true ] && {
+            target_opt=0
+            nga_print "当前选择内容: 取消此抉择"
+        }; } || {
+            target_opt=1
             nga_print "当前选择内容: 内容1"
         }
         while :; do
-            {
-                [ "$(until_key_up_down)" = down ] && {
-                    newline
-                    [ "$target_opt" -eq 0 ] && {
-                        nga_print "已确定选择内容: 取消此抉择"
-                        true
-                    } || {
-                        nga_print "已确定选择内容: 内容$target_opt"
-                        # shellcheck disable=SC2154
-                        eval "$target_func_head$target_opt"
-                    }
-                    newline
-                    break
+            { [ "$(until_key_up_down)" = down ] && {
+                newline
+                [ "$target_opt" -eq 0 ] && {
+                    nga_print "已确定选择内容: 取消此抉择"
+                    true
+                } || {
+                    nga_print "已确定选择内容: 内容$target_opt"
+                    # shellcheck disable=SC2154
+                    eval "$target_func_head$target_opt"
                 }
-            } || {
+                newline
+                break
+            }; } || {
                 ((target_opt = target_opt + 1))
                 [ $target_opt -gt "$opt_num" ] && {
                     [ "$cancel" = true ] && {
