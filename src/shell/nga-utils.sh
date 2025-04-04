@@ -264,7 +264,7 @@ run_install_list() {
     for num in $(seq 1 "$func_num"); do
         eval "$(
             eval "$func_head$num" | {
-                i=1
+                local i=1
                 while IFS= read -r line; do
                     [ -z "$line" ] && continue
                     case "$i" in
