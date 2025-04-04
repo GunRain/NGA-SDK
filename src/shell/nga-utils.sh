@@ -263,18 +263,17 @@ run_install_list() {
 
     for num in $(seq 1 "$func_num"); do
         eval "$(eval "$func_head$num" | {
-            local i=1
-            # shellcheck disable=SC2162
-            while IFS= read line; do
+            local type=1
+            while IFS= read -r line; do
                 [ -z "$line" ] && continue
-                case "$i" in
+                case "$type" in
                 1) echo "local target_func_head=\"$line\"" ;;
                 2) echo "local opt_name=\"$line\"" ;;
                 3) echo "local opt_num=\"$line\"" ;;
                 4) echo "local cancel=\"$line\"" ;;
-                *) echo "local opt_name_$((i - 4))=\"$line\"" ;;
+                *) echo "local opt_name_$((type - 4))=\"$line\"" ;;
                 esac
-                ((i = i + 1))
+                _=$(( type++ ))
             done
         })"
         newline
@@ -310,7 +309,7 @@ run_install_list() {
                 newline
                 break
             }; } || {
-                ((target_opt = target_opt + 1))
+                _=$(( target_opt++ ))
                 [ $target_opt -gt "$opt_num" ] && {
                     [ "$cancel" = true ] && {
                         target_opt=0
