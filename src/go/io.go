@@ -20,13 +20,13 @@ import (
 	"path/filepath"
 )
 
-func exist(fileName string) bool {
+func PathExist(fileName string) bool {
 	_, err := os.Stat(fileName)
 	return !os.IsNotExist(err)
 }
 
 func MvFile(src, dst string) (bool, error) {
-	if dstDir := filepath.Dir(dst); !exist(dstDir) {
+	if dstDir := filepath.Dir(dst); !PathExist(dstDir) {
 		if err := os.MkdirAll(dstDir, os.ModePerm); err != nil {
 			return false, err
 		}
@@ -37,7 +37,7 @@ func MvFile(src, dst string) (bool, error) {
 	}
 	atime, mtime := srcInfo.ModTime(), srcInfo.ModTime()
 	defer func() {
-		if exist(dst) {
+		if PathExist(dst) {
 			_ = os.Chtimes(dst, atime, mtime)
 		}
 	}()
@@ -69,4 +69,41 @@ func MvFile(src, dst string) (bool, error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func IsDir(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return info.IsDir()
+}
+
+func IsEmptyDir(path string) bool {
+	dir, err := os.Open(path)
+	if err != nil {
+		return false
+	}
+	defer dir.Close()
+	entries, err := dir.Readdirnames(0)
+	if err != nil {
+		return false
+	}
+	return len(entries) == 0
+}
+
+func IsFile(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func IsEmptyFile(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return !info.IsDir() && info.Size() == 0
 }
