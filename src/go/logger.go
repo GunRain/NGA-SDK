@@ -74,7 +74,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 func (_logger *Logger) log(lv LogLevel, msg string, o ...any) {
 	if lv <= _logger.lv {
 		_logger.wg.Add(1)
-		_logger.queue <- time.Now().Format("01-02 15:04:05.000") + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
+		_logger.queue <- time.Now().Local().Format("01-02 15:04:05.000") + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
 	}
 }
 
