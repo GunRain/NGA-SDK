@@ -17,9 +17,12 @@ package nga
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
+	_ "time/tzdata"
 )
 
 type LogLevel uint8
@@ -43,10 +46,11 @@ var logLv2Str = map[LogLevel]string{
 }
 
 type Logger struct {
-	file  *os.File
-	lv    LogLevel
-	queue chan string
-	wg    sync.WaitGroup
+	file    *os.File
+	lv      LogLevel
+	queue   chan string
+	wg      sync.WaitGroup
+	TimeLoc *time.Location
 }
 
 func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
@@ -58,9 +62,19 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 		return nil, err
 	}
 	logger := &Logger{
-		file:  file,
-		lv:    lv,
-		queue: make(chan string, 114),
+		file:    file,
+		lv:      lv,
+		queue:   make(chan string, 114),
+		TimeLoc: time.Local,
+	}
+	if PathExist("/system/bin/getprop") {
+		out, err := exec.Command("/system/bin/getprop", "persist.sys.timezone").Output()
+		if err == nil {
+			loc, err := time.LoadLocation(strings.TrimSpace(string(out)))
+			if err == nil {
+				logger.TimeLoc = loc
+			}
+		}
 	}
 	go func() {
 		for msg := range logger.queue {
@@ -74,7 +88,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 func (_logger *Logger) log(lv LogLevel, msg string, o ...any) {
 	if lv <= _logger.lv {
 		_logger.wg.Add(1)
-		_logger.queue <- time.Now().Local().Format("01-02 15:04:05.000") + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
+		_logger.queue <- time.Now().In(_logger.TimeLoc).Format("01-02 15:04:05.000") + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
 	}
 }
 
