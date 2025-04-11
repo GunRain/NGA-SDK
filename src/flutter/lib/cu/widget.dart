@@ -63,7 +63,7 @@ class CUHeadLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 45, top: 25, bottom: 10),
+      padding: EdgeInsets.fromLTRB(42.5, 20, 0, 7.5),
       child: Text(
         label,
         style: TextStyle(
@@ -129,6 +129,96 @@ class CUListTitle extends StatelessWidget {
                 ),
               ),
             )));
+  }
+}
+
+class CUProCard extends StatelessWidget {
+  final Widget title;
+  final Widget? subtitle, leading, trailing;
+  final double padding, outPadding;
+  final VoidCallback? onTap;
+  final Color? color;
+  final String tip;
+  const CUProCard(
+    this.title, {
+    Key? key,
+    this.subtitle,
+    this.leading,
+    this.trailing,
+    this.padding = 22.5,
+    this.outPadding = 20,
+    this.onTap,
+    this.color,
+    this.tip = '',
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: outPadding),
+      child: Material(
+        color: color ??
+            (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
+        borderRadius: BorderRadius.circular(15),
+        child: Tooltip(
+          message: tip,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(15),
+            child: Container(
+              padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              child: Row(
+                children: [
+                  if (leading != null) ...[
+                    DefaultTextStyle(
+                      style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                          ListTileThemeData().leadingAndTrailingTextStyle ??
+                          TextStyle(),
+                      child: leading!,
+                    ),
+                    SizedBox(width: 15),
+                  ],
+                  Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultTextStyle(
+                        style: Theme.of(context).listTileTheme.titleTextStyle ??
+                            ListTileThemeData().titleTextStyle ??
+                            TextStyle(),
+                        child: title,
+                      ),
+                      if (subtitle != null) ...[
+                        SizedBox(height: 3),
+                        DefaultTextStyle(
+                          style: Theme.of(context).textTheme.bodySmall ??
+                              Theme.of(context).listTileTheme.subtitleTextStyle ??
+                              ListTileThemeData().subtitleTextStyle ??
+                              TextStyle(),
+                          child: subtitle!,
+                        ),
+                      ],
+                    ],
+                  )),
+                  DefaultTextStyle(
+                    style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                        ListTileThemeData().leadingAndTrailingTextStyle ??
+                        TextStyle(),
+                    child: trailing ??
+                        SvgPicture(
+                          AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
+                          width: 16,
+                          height: 16,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
