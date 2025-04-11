@@ -1,98 +1,103 @@
+## 3.2.0
+
+- Up.
+
+
 ## 3.1.0
 
-Opt.
+- Opt.
 
 
 ## 2.9.0
 
-Opt.
+- Opt.
 
 
 ## 2.8.0
 
-Fix.
+- Fix.
 
 
 ## 2.7.0
 
-Opt.
+- Opt.
 
 
 ## 2.6.0
 
-Opt.
+- Opt.
 
 
 ## 2.5.0
 
-CUWidget.
+- CUWidget.
 
 
 ## 2.4.0
 
-Opt.
+- Opt.
 
 
 ## 2.3.0
 
-Opt.
+- Opt.
 
 
 ## 2.2.0
 
-Opt.
+- Opt.
 
 
 ## 2.1.0
 
-Nothing.
+- Nothing.
 
 
 ## 1.9.0
 
-Fmt.
+- Fmt.
 
 
 ## 1.8.0
 
-Opt.
+- Opt.
 
 
 ## 1.7.1
 
-Nothing.
+- Nothing.
 
 
 ## 1.7.0
 
-Fix.
+- Fix.
 
 
 ## 1.6.0
 
-Fix.
+- Fix.
 
 
 ## 1.5.0
 
-Fmt.
+- Fmt.
 
 
 ## 1.4.0
 
-Splash.
+- Splash.
 
 
 ## 1.3.0
 
-Fix.
+- Fix.
 
 
 ## 1.2.0
 
-Ext.
+- Ext.
 
 
 ## 1.1.0
 
-Nothing.
+- Nothing.

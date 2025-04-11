@@ -12,6 +12,8 @@
 // For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download.             =
 //================================================================================================================
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
@@ -105,6 +107,42 @@ class CUListTile extends StatelessWidget {
                 ),
               ),
             )));
+  }
+}
+
+class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
+  final Widget? leading, icon, title;
+  final List<Widget>? actions;
+  const CUTopBar({Key? key, this.leading, this.icon, this.title, this.actions}) : super(key: key);
+  @override
+  Size get preferredSize => Size.fromHeight(60);
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(22),
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          titleSpacing: 24,
+          leading: leading,
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                icon!,
+                SizedBox(width: 16),
+              ],
+              if (title != null) ...[
+                title!,
+              ],
+            ],
+          ),
+          actions: actions,
+        ),
+      ),
+    );
   }
 }
 
