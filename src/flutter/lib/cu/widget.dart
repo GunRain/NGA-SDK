@@ -116,14 +116,9 @@ class CUListTitle extends StatelessWidget {
                     subtitle: subtitle,
                     trailing: trailing ??
                         (onTap != null
-                            ? Row(mainAxisSize: MainAxisSize.min, children: [
-                                SvgPicture(
-                                  AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
-                                  width: 16,
-                                  height: 16,
-                                ),
-                                SizedBox(width: 15)
-                              ])
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [CUWidget.arrowForward, SizedBox(width: 15)])
                             : null),
                   ),
                 ),
@@ -144,7 +139,7 @@ class CUProCard extends StatelessWidget {
     Key? key,
     this.subtitle,
     this.leading,
-    this.trailing,
+    this.trailing = CUWidget.arrowForward,
     this.padding = 22.5,
     this.outPadding = 20,
     this.onTap,
@@ -201,17 +196,14 @@ class CUProCard extends StatelessWidget {
                       ],
                     ],
                   )),
-                  DefaultTextStyle(
-                    style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
-                        ListTileThemeData().leadingAndTrailingTextStyle ??
-                        TextStyle(),
-                    child: trailing ??
-                        SvgPicture(
-                          AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
-                          width: 16,
-                          height: 16,
-                        ),
-                  ),
+                  if (trailing != null) ...[
+                    DefaultTextStyle(
+                      style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                          ListTileThemeData().leadingAndTrailingTextStyle ??
+                          TextStyle(),
+                      child: trailing!,
+                    ),
+                  ]
                 ],
               ),
             ),
@@ -305,5 +297,10 @@ class CUWidget {
     surface: Color(0xFF000000),
     tertiary: Color(0xFF404040),
     outline: Color(0xFF888888),
+  );
+  static const arrowForward = SvgPicture(
+    AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
+    width: 16,
+    height: 16,
   );
 }
