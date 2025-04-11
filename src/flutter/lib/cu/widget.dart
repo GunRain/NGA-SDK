@@ -64,12 +64,14 @@ class CUHeadLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.fromLTRB(42.5, 20, 0, 7.5),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-        ),
-      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: color,
+            ),
+          )),
     );
   }
 }
