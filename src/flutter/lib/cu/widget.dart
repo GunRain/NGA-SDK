@@ -160,6 +160,7 @@ class CUProCard extends StatelessWidget {
             onTap: onTap,
             borderRadius: BorderRadius.circular(15),
             child: Container(
+              constraints: BoxConstraints(minHeight: 50),
               padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
               child: Row(
@@ -171,7 +172,7 @@ class CUProCard extends StatelessWidget {
                           TextStyle(),
                       child: leading!,
                     ),
-                    SizedBox(width: 15),
+                    SizedBox(width: 20),
                   ],
                   Expanded(
                       child: Column(
@@ -179,7 +180,8 @@ class CUProCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DefaultTextStyle(
-                        style: Theme.of(context).listTileTheme.titleTextStyle ??
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold) ??
+                            Theme.of(context).listTileTheme.titleTextStyle ??
                             ListTileThemeData().titleTextStyle ??
                             TextStyle(),
                         child: title,
