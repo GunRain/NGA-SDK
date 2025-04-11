@@ -139,7 +139,7 @@ class CUProCard extends StatelessWidget {
     Key? key,
     this.subtitle,
     this.leading,
-    this.trailing = CUWidget.arrowForward,
+    this.trailing,
     this.padding = 22.5,
     this.outPadding = 20,
     this.onTap,
@@ -196,14 +196,12 @@ class CUProCard extends StatelessWidget {
                       ],
                     ],
                   )),
-                  if (trailing != null) ...[
-                    DefaultTextStyle(
-                      style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
-                          ListTileThemeData().leadingAndTrailingTextStyle ??
-                          TextStyle(),
-                      child: trailing!,
-                    ),
-                  ]
+                  DefaultTextStyle(
+                    style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                        ListTileThemeData().leadingAndTrailingTextStyle ??
+                        TextStyle(),
+                    child: trailing ?? (onTap != null ? CUWidget.arrowForward : SizedBox.shrink()),
+                  ),
                 ],
               ),
             ),
