@@ -167,7 +167,8 @@ class CUProCard extends StatelessWidget {
                 children: [
                   if (leading != null) ...[
                     DefaultTextStyle(
-                      style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                      style: Theme.of(context).textTheme.bodyMedium ??
+                          Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
                           ListTileThemeData().leadingAndTrailingTextStyle ??
                           TextStyle(),
                       child: leading!,
@@ -180,7 +181,7 @@ class CUProCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DefaultTextStyle(
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold) ??
+                        style: Theme.of(context).textTheme.bodyMedium ??
                             Theme.of(context).listTileTheme.titleTextStyle ??
                             ListTileThemeData().titleTextStyle ??
                             TextStyle(),
@@ -199,7 +200,8 @@ class CUProCard extends StatelessWidget {
                     ],
                   )),
                   DefaultTextStyle(
-                    style: Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                    style: Theme.of(context).textTheme.bodyMedium ??
+                        Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
                         ListTileThemeData().leadingAndTrailingTextStyle ??
                         TextStyle(),
                     child: trailing ?? (onTap != null ? CUWidget.arrowForward : SizedBox.shrink()),
