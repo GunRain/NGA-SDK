@@ -52,14 +52,36 @@ class CUCard extends StatelessWidget {
   }
 }
 
-class CUListTile extends StatelessWidget {
+class CUHeadLabel extends StatelessWidget {
+  final String label;
+  final Color color;
+  const CUHeadLabel(
+    this.label, {
+    Key? key,
+    this.color = CUWidget.red,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 45, top: 25, bottom: 10),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class CUListTitle extends StatelessWidget {
   final Widget title;
   final Widget? subtitle, leading, trailing;
   final double padding, outPadding;
   final VoidCallback? onTap;
   final Color? color;
   final String tip;
-  const CUListTile(this.title,
+  const CUListTitle(this.title,
       {Key? key,
       this.subtitle,
       this.leading,
@@ -177,6 +199,9 @@ class CUTxtButton extends StatelessWidget {
 class CUWidget {
   static const white = Color(0xFFFFFFFF);
   static const black = Color(0xFF202020);
+  static const yellow = Color(0x80BA8A5A);
+  static const purple = Color(0xFF5746A6);
+  static const red = Color(0xFFC7372C);
   static const lightColorScheme = ColorScheme.light(
     primary: Color(0xFF000000),
     secondary: Color(0xFF888888),
