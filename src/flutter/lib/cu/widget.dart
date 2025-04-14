@@ -137,7 +137,6 @@ class CUNavBar extends StatelessWidget {
   final ValueNotifier<List<int>> _history = ValueNotifier<List<int>>([]);
   final ValueNotifier<int> index;
   final void Function(int)? onChanged, onBacked;
-  final String menu, back;
 
   CUNavBar({
     Key? key,
@@ -148,25 +147,16 @@ class CUNavBar extends StatelessWidget {
     this.onBacked,
     this.maxHeight,
     this.duration,
-    this.menu = '菜单',
-    this.back = '返回',
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [];
-    final List<IconData> icons = [];
-    for (final group in groups) {
-      for (final sub in group.sub) {
-        pages.add(sub.page);
-        icons.add(sub.icon);
-      }
+    final List<CUNavBarGroupSub> subs = [];
+    for (var group in groups) {
+      subs.addAll(group.sub);
     }
-    for (final group in constGroups) {
-      for (final sub in group.sub) {
-        pages.add(sub.page);
-        icons.add(sub.icon);
-      }
+    for (var group in constGroups) {
+      subs.addAll(group.sub);
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,13 +318,13 @@ class CUNavBar extends StatelessWidget {
                       });
                     },
                     icon: Icon(Icons.menu),
-                    tooltip: menu,
+                    tooltip: MaterialLocalizations.of(context).showMenuTooltip,
                   ),
                   Flexible(
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children: icons
+                        children: subs
                             .asMap()
                             .entries
                             .map(
@@ -347,7 +337,8 @@ class CUNavBar extends StatelessWidget {
                                     index.value = entry.key;
                                     if (onChanged != null) onChanged!(entry.key);
                                   },
-                                  icon: Icon(entry.value),
+                                  icon: Icon(entry.value.icon),
+                                  tooltip: entry.value.name,
                                   color: value == entry.key ? CUWidget.red : null,
                                 ),
                               ),
@@ -368,7 +359,7 @@ class CUNavBar extends StatelessWidget {
                           if (onBacked != null) onBacked!(index.value);
                         },
                         icon: Icon(Icons.arrow_back, color: value.isEmpty ? Colors.grey : null),
-                        tooltip: back,
+                        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                       ),
                     ),
                   ),
@@ -383,11 +374,11 @@ class CUNavBar extends StatelessWidget {
         Expanded(
           child: ValueListenableBuilder<int>(
             valueListenable: index,
-            builder: (_, value, __) => pages.isEmpty
+            builder: (_, value, __) => subs.isEmpty
                 ? SizedBox.shrink()
                 : AnimatedSwitcher(
                     duration: duration ?? Duration(milliseconds: 300),
-                    child: SizedBox(key: ValueKey<int>(value), child: pages[value]),
+                    child: SizedBox(key: ValueKey<int>(value), child: subs[value].page),
                   ),
           ),
         ),
