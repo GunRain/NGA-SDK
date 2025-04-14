@@ -129,6 +129,286 @@ class CUListTitle extends StatelessWidget {
   }
 }
 
+class CUNavBar extends StatelessWidget {
+  final Duration? duration;
+  final double? maxHeight;
+  final List<CUNavBarGroup> groups;
+  final List<CUNavBarGroup> constGroups;
+  final ValueNotifier<List<int>> _history = ValueNotifier<List<int>>([]);
+  final ValueNotifier<int> index;
+  final void Function(int)? onChanged, onBacked;
+  final String menu, back;
+
+  CUNavBar({
+    Key? key,
+    required this.groups,
+    required this.constGroups,
+    required this.index,
+    this.onChanged,
+    this.onBacked,
+    this.maxHeight,
+    this.duration,
+    this.menu = '菜单',
+    this.back = '返回',
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> pages = [];
+    final List<IconData> icons = [];
+    for (final group in groups) {
+      for (final sub in group.sub) {
+        pages.add(sub.page);
+        icons.add(sub.icon);
+      }
+    }
+    for (final group in constGroups) {
+      for (final sub in group.sub) {
+        pages.add(sub.page);
+        icons.add(sub.icon);
+      }
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: CUCard(
+            Container(
+              constraints: BoxConstraints(maxHeight: maxHeight ?? MediaQuery.of(context).size.height / 2.5),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      int nowIndex = 0;
+                      double pos = -(MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
+                          ? MediaQuery.of(context).size.width / 3
+                          : MediaQuery.of(context).size.width * 0.75);
+                      OverlayEntry? overlayEntry;
+                      overlayEntry = OverlayEntry(
+                        builder: (context) => Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: () => overlayEntry?.remove(),
+                              child: Container(color: Colors.black.withAlpha(127)),
+                            ),
+                            AnimatedPositioned(
+                              duration: duration ?? Duration(milliseconds: 150),
+                              left: pos,
+                              top: 0,
+                              bottom: 0,
+                              child: SafeArea(
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
+                                        ? MediaQuery.of(context).size.width / 3
+                                        : MediaQuery.of(context).size.width * 0.75,
+                                    child: CUCard(
+                                      Column(
+                                        children: [
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                children: groups
+                                                    .map(
+                                                      (group) => Column(
+                                                        children: [
+                                                          if (group.name.isNotEmpty)
+                                                            CUHeadLabel(group.name, left: 27.5),
+                                                          CUCard(
+                                                            Column(
+                                                              children: group.sub.asMap().entries.map((entry) {
+                                                                final targetIndex = nowIndex++;
+                                                                return CUProCard(
+                                                                  Text(entry.value.name),
+                                                                  leading: ValueListenableBuilder<int>(
+                                                                    valueListenable: index,
+                                                                    builder: (_, value, __) => Icon(
+                                                                      entry.value.icon,
+                                                                      color: value == targetIndex
+                                                                          ? CUWidget.red
+                                                                          : null,
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    _history.value.add(targetIndex);
+                                                                    _history.value = _history.value.toList();
+                                                                    index.value = targetIndex;
+                                                                    if (onChanged != null) {
+                                                                      onChanged!(targetIndex);
+                                                                    }
+                                                                    overlayEntry?.remove();
+                                                                  },
+                                                                  outPadding: 0,
+                                                                );
+                                                              }).toList(),
+                                                            ),
+                                                            padding: 0,
+                                                            outPadding: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: MediaQuery.of(context).size.height * 0.25,
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                children: constGroups
+                                                    .map(
+                                                      (group) => Column(
+                                                        children: [
+                                                          if (group.name.isNotEmpty)
+                                                            CUHeadLabel(group.name, left: 27.5),
+                                                          CUCard(
+                                                            Column(
+                                                              children: group.sub.asMap().entries.map((entry) {
+                                                                final targetIndex = nowIndex++;
+                                                                return CUProCard(
+                                                                  Text(entry.value.name),
+                                                                  leading: ValueListenableBuilder<int>(
+                                                                    valueListenable: index,
+                                                                    builder: (_, value, __) => Icon(
+                                                                      entry.value.icon,
+                                                                      color: value == targetIndex
+                                                                          ? CUWidget.red
+                                                                          : null,
+                                                                    ),
+                                                                  ),
+                                                                  onTap: () {
+                                                                    _history.value.add(targetIndex);
+                                                                    _history.value = _history.value.toList();
+                                                                    index.value = targetIndex;
+                                                                    if (onChanged != null) {
+                                                                      onChanged!(targetIndex);
+                                                                    }
+                                                                    overlayEntry?.remove();
+                                                                  },
+                                                                  outPadding: 0,
+                                                                );
+                                                              }).toList(),
+                                                            ),
+                                                            padding: 0,
+                                                            outPadding: 5,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      outPadding: 0,
+                                      color: Theme.of(context).colorScheme.surface,
+                                      radius: BorderRadius.only(
+                                        topRight: Radius.circular(15),
+                                        bottomRight: Radius.circular(15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      Overlay.of(context).insert(overlayEntry);
+                      Future.delayed(Duration(milliseconds: 50), () {
+                        nowIndex = 0;
+                        pos = 0;
+                        overlayEntry?.markNeedsBuild();
+                      });
+                    },
+                    icon: Icon(Icons.menu),
+                    tooltip: menu,
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: icons
+                            .asMap()
+                            .entries
+                            .map(
+                              (entry) => ValueListenableBuilder<int>(
+                                valueListenable: index,
+                                builder: (_, value, __) => IconButton(
+                                  onPressed: () {
+                                    _history.value.add(entry.key);
+                                    _history.value = _history.value.toList();
+                                    index.value = entry.key;
+                                    if (onChanged != null) onChanged!(entry.key);
+                                  },
+                                  icon: Icon(entry.value),
+                                  color: value == entry.key ? CUWidget.red : null,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                  ValueListenableBuilder<List<int>>(
+                    valueListenable: _history,
+                    builder: (_, value, __) => AbsorbPointer(
+                      absorbing: value.isEmpty,
+                      child: IconButton(
+                        onPressed: () {
+                          if (value.isNotEmpty) value.removeLast();
+                          index.value = value.isNotEmpty ? value.last : 0;
+                          _history.value = value.toList();
+                          if (onBacked != null) onBacked!(index.value);
+                        },
+                        icon: Icon(Icons.arrow_back, color: value.isEmpty ? Colors.grey : null),
+                        tooltip: back,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            padding: 5,
+            outPadding: 0,
+            radius: BorderRadius.only(topRight: Radius.circular(15)),
+          ),
+        ),
+        Expanded(
+          child: ValueListenableBuilder<int>(
+            valueListenable: index,
+            builder: (_, value, __) => pages.isEmpty
+                ? SizedBox.shrink()
+                : AnimatedSwitcher(
+                    duration: duration ?? Duration(milliseconds: 300),
+                    child: SizedBox(key: ValueKey<int>(value), child: pages[value]),
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CUNavBarGroup {
+  final String name;
+  final List<CUNavBarGroupSub> sub;
+  CUNavBarGroup({required this.name, required this.sub});
+}
+
+class CUNavBarGroupSub {
+  final IconData icon;
+  final String name;
+  final Widget page;
+  CUNavBarGroupSub({required this.icon, required this.name, required this.page});
+}
+
 class CUProCard extends StatelessWidget {
   final Widget title;
   final Widget? subtitle, leading, trailing;
