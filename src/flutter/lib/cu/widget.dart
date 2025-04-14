@@ -24,8 +24,9 @@ class CUCard extends StatelessWidget {
   final VoidCallback? onTap;
   final Color? color;
   final String tip;
+  final BorderRadius? radius;
   const CUCard(this.child,
-      {Key? key, this.padding = 10, this.outPadding = 20, this.onTap, this.color, this.tip = ''})
+      {Key? key, this.padding = 10, this.outPadding = 20, this.onTap, this.color, this.tip = '', this.radius})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -34,12 +35,12 @@ class CUCard extends StatelessWidget {
         child: Material(
             color: color ??
                 (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: radius ?? CUWidget.radius,
             child: Tooltip(
               message: tip,
               child: InkWell(
                 onTap: onTap,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: radius ?? CUWidget.radius,
                 child: Container(
                   padding: EdgeInsets.all(padding),
                   decoration: BoxDecoration(
@@ -55,15 +56,14 @@ class CUCard extends StatelessWidget {
 class CUHeadLabel extends StatelessWidget {
   final String label;
   final Color color;
-  const CUHeadLabel(
-    this.label, {
-    Key? key,
-    this.color = CUWidget.red,
-  }) : super(key: key);
+  final double left, top, right, bottom;
+  const CUHeadLabel(this.label,
+      {Key? key, this.color = CUWidget.red, this.left = 42.5, this.top = 20, this.right = 0, this.bottom = 7.5})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(42.5, 20, 0, 7.5),
+      padding: EdgeInsets.fromLTRB(left, top, right, bottom),
       child: SizedBox(
           width: double.infinity,
           child: Text(
@@ -101,16 +101,16 @@ class CUListTitle extends StatelessWidget {
         child: Material(
             color: color ??
                 (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: CUWidget.radius,
             child: Tooltip(
               message: tip,
               child: InkWell(
                 onTap: onTap,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: CUWidget.radius,
                 child: Container(
                   padding: EdgeInsets.fromLTRB(padding, 5, padding / 2, 5),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: CUWidget.radius,
                   ),
                   child: ListTile(
                     leading: leading,
@@ -155,16 +155,16 @@ class CUProCard extends StatelessWidget {
       child: Material(
         color: color ??
             (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: CUWidget.radius,
         child: Tooltip(
           message: tip,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: CUWidget.radius,
             child: Container(
               constraints: BoxConstraints(minHeight: 50),
               padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(borderRadius: CUWidget.radius),
               child: Row(
                 children: [
                   if (leading != null) ...[
@@ -263,16 +263,16 @@ class CUTxtButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
         color: Colors.grey.withAlpha(22),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: CUWidget.radius,
         child: Tooltip(
             message: tip,
             child: InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: CUWidget.radius,
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: CUWidget.radius,
                 ),
                 child: Center(child: txt),
               ),
@@ -286,6 +286,7 @@ class CUWidget {
   static const yellow = Color(0x80BA8A5A);
   static const purple = Color(0xFF5746A6);
   static const red = Color(0xFFC7372C);
+  static final radius = BorderRadius.circular(15);
   static const lightColorScheme = ColorScheme.light(
     primary: Color(0xFF000000),
     secondary: Color(0xFF888888),
