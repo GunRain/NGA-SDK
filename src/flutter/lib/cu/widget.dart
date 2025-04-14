@@ -257,8 +257,9 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
 class CUTxtButton extends StatelessWidget {
   final Widget txt;
   final VoidCallback onTap;
+  final bool intrinsic;
   final String tip;
-  const CUTxtButton(this.txt, this.onTap, {Key? key, this.tip = ''}) : super(key: key);
+  const CUTxtButton(this.txt, this.onTap, {Key? key, this.intrinsic = false, this.tip = ''}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -269,13 +270,22 @@ class CUTxtButton extends StatelessWidget {
             child: InkWell(
               onTap: onTap,
               borderRadius: CUWidget.radius,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: CUWidget.radius,
-                ),
-                child: Center(child: txt),
-              ),
+              child: intrinsic
+                  ? IntrinsicWidth(
+                      child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: CUWidget.radius,
+                      ),
+                      child: Center(child: txt),
+                    ))
+                  : Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: CUWidget.radius,
+                      ),
+                      child: Center(child: txt),
+                    ),
             )));
   }
 }

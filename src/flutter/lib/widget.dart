@@ -199,10 +199,10 @@ class NGATxtButton extends StatelessWidget {
   final VoidCallback onTap;
   final double radius;
   final int alpha;
-  final bool useWhite;
+  final bool useWhite, intrinsic;
   final String tip;
   const NGATxtButton(this.txt, this.onTap,
-      {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false, this.tip = ''})
+      {Key? key, this.radius = 24, this.alpha = 22, this.useWhite = false, this.intrinsic = false, this.tip = ''})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -218,16 +218,25 @@ class NGATxtButton extends StatelessWidget {
                 child: InkWell(
                   onTap: onTap,
                   borderRadius: BorderRadius.circular(radius),
-                  child: IntrinsicWidth(
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                        borderRadius: BorderRadius.circular(radius),
-                      ),
-                      child: Center(child: txt),
-                    ),
-                  ),
+                  child: intrinsic
+                      ? IntrinsicWidth(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                              borderRadius: BorderRadius.circular(radius),
+                            ),
+                            child: Center(child: txt),
+                          ),
+                        )
+                      : Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                            borderRadius: BorderRadius.circular(radius),
+                          ),
+                          child: Center(child: txt),
+                        ),
                 ))),
       ),
     );
