@@ -12,10 +12,4 @@
 // For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download. =
 //====================================================================================================
 
-extension NGALet<T> on T? {
-  R let<R>(final R Function(T) f) => f(this as T);
-}
-
-extension NGAStr on String? {
-  String ifEmpty(final String s) => this?.isEmpty ?? true ? s : this!;
-}
+export 'cu/widget.dart';
