@@ -17,9 +17,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NGASplash {
-  static final ok = ValueNotifier<bool>(false);
-  static final indexChar = ValueNotifier<int>(0xE000);
-  static final indexDot = ValueNotifier<String>('');
+  static final ValueNotifier<bool> ok = ValueNotifier<bool>(false);
+  static final ValueNotifier<int> indexChar = ValueNotifier<int>(0xE000);
+  static final ValueNotifier<String> indexDot = ValueNotifier<String>('');
   static late Timer indexCharTimer;
   static late Timer indexDotTimer;
   static void remove() {
@@ -40,54 +40,54 @@ class NGASplash {
       {final Color? bgColor, final Color? txtColor, final Future<void>? func}) {
     indexCharTimer = Timer.periodic(
       const Duration(milliseconds: 25),
-      (final timer) => indexChar.value = indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1,
+      (final Timer timer) => indexChar.value = indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1,
     );
     indexDotTimer = Timer.periodic(
       const Duration(milliseconds: 500),
-      (final timer) => indexDot.value = (indexDot.value.length > 2) ? '' : '${indexDot.value}.',
+      (final Timer timer) => indexDot.value = (indexDot.value.length > 2) ? '' : '${indexDot.value}.',
     );
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
-        children: [
+        children: <Widget>[
           RepaintBoundary(
-            child: FutureBuilder(
+            child: FutureBuilder<void>(
               future: func,
-              builder: (final _, final snapshot) =>
+              builder: (final _, final AsyncSnapshot<Object?> snapshot) =>
                   snapshot.connectionState == ConnectionState.done ? child : const SizedBox.shrink(),
             ),
           ),
           ValueListenableBuilder<bool>(
             valueListenable: ok,
-            builder: (final _, final ok, final __) => AnimatedSwitcher(
+            builder: (final _, final bool ok, final __) => AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: ok
                   ? const SizedBox.shrink()
                   : Builder(
-                      key: const ValueKey('nga_splash_view'),
-                      builder: (final context) {
-                        final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-                        final targetBgColor =
+                      key: const ValueKey<String>('nga_splash_view'),
+                      builder: (final BuildContext context) {
+                        final bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                        final Color targetBgColor =
                             bgColor ?? (isDarkMode ? const Color(0xFF000000) : const Color(0xFFF8F8F8));
-                        final targetTxtColor =
+                        final Color targetTxtColor =
                             txtColor ?? (isDarkMode ? const Color(0xFFF8F8F8) : const Color(0xFF000000));
-                        final targetTxtStyle =
+                        final TextStyle targetTxtStyle =
                             TextStyle(fontFamily: 'BOOT', package: 'nga_sdk', color: targetTxtColor);
                         return Container(
                           color: targetBgColor,
                           alignment: Alignment.center,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            children: <Widget>[
                               ValueListenableBuilder<int>(
                                 valueListenable: indexChar,
-                                builder: (final _, final char, final __) =>
+                                builder: (final _, final int char, final __) =>
                                     Text(String.fromCharCode(char), style: targetTxtStyle.copyWith(fontSize: 40)),
                               ),
                               const SizedBox(height: 10),
                               ValueListenableBuilder<String>(
                                 valueListenable: indexDot,
-                                builder: (final _, final dot, final __) =>
+                                builder: (final _, final String dot, final __) =>
                                     Text('Loading$dot', style: targetTxtStyle.copyWith(fontSize: 20)),
                               ),
                             ],

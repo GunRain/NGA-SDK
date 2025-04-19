@@ -96,9 +96,9 @@ class NGACards extends StatelessWidget {
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [
+                children: <Widget>[
                   SizedBox(height: padding),
-                  for (int i = 0; i < children.length; i++) ...[
+                  for (int i = 0; i < children.length; i++) ...<Widget>[
                     Padding(padding: EdgeInsets.symmetric(horizontal: padding), child: children[i]),
                     if (i < children.length - 1) const Divider(),
                   ],
@@ -121,7 +121,7 @@ class NGAMsg {
     final String tip = '',
   }) {
     if (!context.mounted) return;
-    final overlayState = Overlay.of(context);
+    final OverlayState overlayState = Overlay.of(context);
     IconData icon;
     Color color;
     switch (type) {
@@ -142,14 +142,14 @@ class NGAMsg {
         color = Colors.blueAccent;
     }
     OverlayEntry toastOverlayEntry(final Tween<Offset> tween) => OverlayEntry(
-          builder: (final context) => Positioned(
+          builder: (final BuildContext context) => Positioned(
             top: MediaQuery.of(context).size.height * 0.075,
             left: MediaQuery.of(context).size.width * 0.1,
             right: MediaQuery.of(context).size.width * 0.1,
             child: TweenAnimationBuilder<Offset>(
               tween: tween,
               duration: const Duration(milliseconds: 300),
-              builder: (final context, final offset, final child) =>
+              builder: (final BuildContext context, final Offset offset, final Widget? child) =>
                   Transform.translate(offset: offset * MediaQuery.of(context).size.height, child: child),
               child: Center(
                 child: ClipRRect(
@@ -172,7 +172,7 @@ class NGAMsg {
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: [
+                                children: <Widget>[
                                   Icon(icon, color: color),
                                   const SizedBox(width: 12),
                                   Text(txt, style: TextStyle(color: color)),
@@ -188,13 +188,14 @@ class NGAMsg {
           ),
         );
 
-    final goEntry = toastOverlayEntry(Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero));
+    final OverlayEntry goEntry = toastOverlayEntry(Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero));
     overlayState.insert(goEntry);
-    Future.delayed(Duration(seconds: s), () {
-      final backEntry = toastOverlayEntry(Tween<Offset>(begin: Offset.zero, end: const Offset(0, -1)));
+    Future<void>.delayed(Duration(seconds: s), () {
+      final OverlayEntry backEntry =
+          toastOverlayEntry(Tween<Offset>(begin: Offset.zero, end: const Offset(0, -1)));
       overlayState.insert(backEntry);
       goEntry.remove();
-      Future.delayed(const Duration(milliseconds: 300), backEntry.remove);
+      Future<void>.delayed(const Duration(milliseconds: 300), backEntry.remove);
     });
   }
 }
