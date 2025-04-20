@@ -46,12 +46,13 @@ var logLv2Str = map[LogLevel]string{
 }
 
 type Logger struct {
-	file    *os.File
-	lv      LogLevel
-	queue   chan string
-	wg      sync.WaitGroup
-	TimeLoc *time.Location
-	TimeFmt string
+	file         *os.File
+	lv           LogLevel
+	queue        chan string
+	wg           sync.WaitGroup
+	TimeLoc      *time.Location
+	TimeFmt      string
+	LastLogLevel LogLevel
 }
 
 func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
@@ -63,11 +64,12 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 		return nil, err
 	}
 	logger := &Logger{
-		file:    file,
-		lv:      lv,
-		queue:   make(chan string, 114),
-		TimeLoc: time.Local,
-		TimeFmt: "01-02 15:04:05.000",
+		file:         file,
+		lv:           lv,
+		queue:        make(chan string, 114),
+		TimeLoc:      time.Local,
+		TimeFmt:      "01-02 15:04:05.000",
+		LastLogLevel: LOG_NONE,
 	}
 	if PathExist("/system/bin/getprop") {
 		out, err := exec.Command("/system/bin/getprop", "persist.sys.timezone").Output()
@@ -90,6 +92,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 func (_logger *Logger) log(lv LogLevel, msg string, o ...any) {
 	if lv <= _logger.lv {
 		_logger.wg.Add(1)
+		_logger.LastLogLevel = lv
 		_logger.queue <- time.Now().In(_logger.TimeLoc).Format(_logger.TimeFmt) + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
 	}
 }
