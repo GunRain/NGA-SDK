@@ -47,12 +47,12 @@ var logLv2Str = map[LogLevel]string{
 
 type Logger struct {
 	file         *os.File
-	lv           LogLevel
+	LogLevel     LogLevel
+	LastLogLevel LogLevel
 	queue        chan string
 	wg           sync.WaitGroup
 	TimeLoc      *time.Location
 	TimeFmt      string
-	LastLogLevel LogLevel
 }
 
 func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
@@ -65,7 +65,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 	}
 	logger := &Logger{
 		file:         file,
-		lv:           lv,
+		LogLevel:     lv,
 		queue:        make(chan string, 114),
 		TimeLoc:      time.Local,
 		TimeFmt:      "01-02 15:04:05.000",
@@ -90,7 +90,7 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 }
 
 func (_logger *Logger) log(lv LogLevel, msg string, o ...any) {
-	if lv <= _logger.lv {
+	if lv <= _logger.LogLevel {
 		_logger.wg.Add(1)
 		_logger.LastLogLevel = lv
 		_logger.queue <- time.Now().In(_logger.TimeLoc).Format(_logger.TimeFmt) + " [" + logLv2Str[lv] + "] " + fmt.Sprintf(msg, o...)
