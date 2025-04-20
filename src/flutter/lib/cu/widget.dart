@@ -144,8 +144,8 @@ class CUNavBar extends StatelessWidget {
     required this.constGroups,
     required this.index,
     final Key? key,
-    this.onChanged,
-    this.onBacked,
+    this.onChange,
+    this.onBack,
     this.maxHeight,
     this.duration,
   }) : super(key: key);
@@ -154,17 +154,13 @@ class CUNavBar extends StatelessWidget {
   final List<CUNavBarGroup> groups, constGroups;
   final ValueNotifier<List<int>> _history = ValueNotifier<List<int>>(<int>[]);
   final ValueNotifier<int> index;
-  final void Function(int)? onChanged, onBacked;
+  final void Function(int)? onChange, onBack;
 
   @override
   Widget build(final BuildContext context) {
     final List<CUNavBarGroupSub> subs = <CUNavBarGroupSub>[];
-    for (final CUNavBarGroup group in groups) {
-      subs.addAll(group.sub);
-    }
-    for (final CUNavBarGroup group in constGroups) {
-      subs.addAll(group.sub);
-    }
+    groups.forEach((final CUNavBarGroup group) => subs.addAll(group.sub));
+    constGroups.forEach((final CUNavBarGroup group) => subs.addAll(group.sub));
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -220,28 +216,37 @@ class CUNavBar extends StatelessWidget {
                                                               children: group.sub.asMap().entries.map(
                                                                   (final MapEntry<int, CUNavBarGroupSub> entry) {
                                                                 final int targetIndex = nowIndex++;
-                                                                return CUProCard(
-                                                                  Text(entry.value.name),
-                                                                  leading: ValueListenableBuilder<int>(
-                                                                    valueListenable: index,
-                                                                    builder:
-                                                                        (final _, final int value, final __) =>
+                                                                final bool can = entry.value.can?.call() ?? true;
+                                                                return AbsorbPointer(
+                                                                    absorbing: !can,
+                                                                    child: CUProCard(
+                                                                      Text(entry.value.name),
+                                                                      leading: ValueListenableBuilder<int>(
+                                                                        valueListenable: index,
+                                                                        builder: (final _, final int value,
+                                                                                final __) =>
                                                                             Icon(
-                                                                      entry.value.icon,
-                                                                      color: value == targetIndex
-                                                                          ? CUWidget.red
-                                                                          : null,
-                                                                    ),
-                                                                  ),
-                                                                  onTap: () {
-                                                                    _history.value.add(targetIndex);
-                                                                    _history.value = _history.value.toList();
-                                                                    index.value = targetIndex;
-                                                                    onChanged?.call(targetIndex);
-                                                                    overlayEntry?.remove();
-                                                                  },
-                                                                  outPadding: 0,
-                                                                );
+                                                                          entry.value.icon,
+                                                                          color: value == targetIndex
+                                                                              ? CUWidget.red
+                                                                              : can
+                                                                                  ? null
+                                                                                  : Colors.grey,
+                                                                        ),
+                                                                      ),
+                                                                      subtitle:
+                                                                          !can && entry.value.whyCannot != null
+                                                                              ? Text(entry.value.whyCannot!)
+                                                                              : null,
+                                                                      onTap: () {
+                                                                        _history.value.add(targetIndex);
+                                                                        _history.value = _history.value.toList();
+                                                                        index.value = targetIndex;
+                                                                        onChange?.call(targetIndex);
+                                                                        overlayEntry?.remove();
+                                                                      },
+                                                                      outPadding: 0,
+                                                                    ));
                                                               }).toList(),
                                                             ),
                                                             padding: 0,
@@ -269,28 +274,35 @@ class CUNavBar extends StatelessWidget {
                                                               children: group.sub.asMap().entries.map(
                                                                   (final MapEntry<int, CUNavBarGroupSub> entry) {
                                                                 final int targetIndex = nowIndex++;
-                                                                return CUProCard(
-                                                                  Text(entry.value.name),
-                                                                  leading: ValueListenableBuilder<int>(
-                                                                    valueListenable: index,
-                                                                    builder:
-                                                                        (final _, final int value, final __) =>
-                                                                            Icon(
-                                                                      entry.value.icon,
-                                                                      color: value == targetIndex
-                                                                          ? CUWidget.red
-                                                                          : null,
-                                                                    ),
-                                                                  ),
-                                                                  onTap: () {
-                                                                    _history.value.add(targetIndex);
-                                                                    _history.value = _history.value.toList();
-                                                                    index.value = targetIndex;
-                                                                    onChanged?.call(targetIndex);
-                                                                    overlayEntry?.remove();
-                                                                  },
-                                                                  outPadding: 0,
-                                                                );
+                                                                final bool can = entry.value.can?.call() ?? true;
+                                                                return AbsorbPointer(
+                                                                    absorbing: !can,
+                                                                    child: CUProCard(
+                                                                      Text(entry.value.name),
+                                                                      leading: ValueListenableBuilder<int>(
+                                                                        valueListenable: index,
+                                                                        builder: (final _, final int value,
+                                                                                final __) =>
+                                                                            Icon(entry.value.icon,
+                                                                                color: value == targetIndex
+                                                                                    ? CUWidget.red
+                                                                                    : can
+                                                                                        ? null
+                                                                                        : Colors.grey),
+                                                                      ),
+                                                                      subtitle:
+                                                                          !can && entry.value.whyCannot != null
+                                                                              ? Text(entry.value.whyCannot!)
+                                                                              : null,
+                                                                      onTap: () {
+                                                                        _history.value.add(targetIndex);
+                                                                        _history.value = _history.value.toList();
+                                                                        index.value = targetIndex;
+                                                                        onChange?.call(targetIndex);
+                                                                        overlayEntry?.remove();
+                                                                      },
+                                                                      outPadding: 0,
+                                                                    ));
                                                               }).toList(),
                                                             ),
                                                             padding: 0,
@@ -338,19 +350,23 @@ class CUNavBar extends StatelessWidget {
                             .entries
                             .map(
                               (final MapEntry<int, CUNavBarGroupSub> entry) => ValueListenableBuilder<int>(
-                                valueListenable: index,
-                                builder: (final _, final int value, final __) => IconButton(
-                                  onPressed: () {
-                                    _history.value.add(entry.key);
-                                    _history.value = _history.value.toList();
-                                    index.value = entry.key;
-                                    onChanged?.call(entry.key);
-                                  },
-                                  icon: Icon(entry.value.icon),
-                                  tooltip: entry.value.name,
-                                  color: value == entry.key ? CUWidget.red : null,
-                                ),
-                              ),
+                                  valueListenable: index,
+                                  builder: (final _, final int value, final __) {
+                                    final bool can = entry.value.can?.call() ?? true;
+                                    return AbsorbPointer(
+                                        absorbing: !can,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            _history.value.add(entry.key);
+                                            _history.value = _history.value.toList();
+                                            index.value = entry.key;
+                                            onChange?.call(entry.key);
+                                          },
+                                          icon: Icon(entry.value.icon, color: can ? null : Colors.grey),
+                                          tooltip: entry.value.name,
+                                          color: value == entry.key ? CUWidget.red : null,
+                                        ));
+                                  }),
                             )
                             .toList(),
                       ),
@@ -365,7 +381,7 @@ class CUNavBar extends StatelessWidget {
                           if (value.isNotEmpty) value.removeLast();
                           index.value = value.isNotEmpty ? value.last : 0;
                           _history.value = value.toList();
-                          onBacked?.call(index.value);
+                          onBack?.call(index.value);
                         },
                         icon: Icon(Icons.arrow_back, color: value.isEmpty ? Colors.grey : null),
                         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
@@ -404,11 +420,13 @@ class CUNavBarGroup {
 }
 
 class CUNavBarGroupSub {
-  CUNavBarGroupSub({required this.icon, required this.name, required this.page});
+  CUNavBarGroupSub({required this.icon, required this.name, required this.page, this.can, this.whyCannot});
 
   final IconData icon;
   final String name;
   final Widget page;
+  final bool Function()? can;
+  final String? whyCannot;
 }
 
 class CUProCard extends StatelessWidget {
