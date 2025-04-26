@@ -20,11 +20,6 @@ import 'ext.dart';
 
 class NGAWatermark {
   static OverlayEntry? _watermark;
-  static Widget get(final BuildContext ctx, final String txt, {final bool colorful = false}) => Positioned.fill(
-        child: IgnorePointer(
-          child: CustomPaint(size: Size.infinite, painter: _NGAWatermarkPainter(ctx, txt, colorful)),
-        ),
-      );
   static void add(final BuildContext ctx, final String txt, {final bool colorful = false}) {
     if (_watermark != null) return;
     _watermark =
@@ -34,6 +29,11 @@ class NGAWatermark {
     });
   }
 
+  static Widget get(final BuildContext ctx, final String txt, {final bool colorful = false}) => Positioned.fill(
+        child: IgnorePointer(
+          child: CustomPaint(size: Size.infinite, painter: _NGAWatermarkPainter(ctx, txt, colorful)),
+        ),
+      );
   static void remove() => _watermark?.remove();
 }
 

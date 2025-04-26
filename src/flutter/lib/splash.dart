@@ -119,6 +119,19 @@ class NGASplash {
 }
 
 extension NGASplashExt on Widget {
-  Widget withLoadingView({final Color? bgColor, final Color? txtColor, final Future<void>? func}) =>
-      NGASplash.view(this, bgColor: bgColor, txtColor: txtColor, func: func);
+  Widget withLoadingView({
+    final Color? bgColor,
+    final Color? txtColor,
+    final Future<void>? func,
+    final String watermarkTxt = '',
+    final bool watermarkColorful = false,
+  }) =>
+      NGASplash.view(
+        this,
+        bgColor: bgColor,
+        txtColor: txtColor,
+        func: func,
+        watermarkTxt: watermarkTxt,
+        watermarkColorful: watermarkColorful,
+      );
 }
