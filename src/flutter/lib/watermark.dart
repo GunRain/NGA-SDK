@@ -62,7 +62,7 @@ class _NGAWatermarkPainter extends CustomPainter {
                       Colors.indigo.withAlpha(50),
                       Colors.purple.withAlpha(50),
                     ],
-                  ).createShader(Rect.fromLTWH(0, 0, size.width * 1, size.height)),
+                  ).createShader(Rect.fromLTWH(0, 0, size.width, size.height)),
               )
             : txtStyle.copyWith(color: Colors.grey.withAlpha(50)),
       ),
