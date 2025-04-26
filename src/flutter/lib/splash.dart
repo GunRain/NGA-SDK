@@ -16,6 +16,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'nga.dart';
+
 class NGASplash {
   static final ValueNotifier<bool> ok = ValueNotifier<bool>(false);
   static final ValueNotifier<int> indexChar = ValueNotifier<int>(0xE000);
@@ -36,8 +38,14 @@ class NGASplash {
     ok.value = false;
   }
 
-  static Widget view(final Widget child,
-      {final Color? bgColor, final Color? txtColor, final Future<void>? func}) {
+  static Widget view(
+    final Widget child, {
+    final Color? bgColor,
+    final Color? txtColor,
+    final Future<void>? func,
+    final String watermarkTxt = '',
+    final bool watermarkColorful = false,
+  }) {
     indexCharTimer = Timer.periodic(
       const Duration(milliseconds: 25),
       (final Timer timer) => indexChar.value = indexChar.value > 0xE076 ? 0xE000 : indexChar.value + 1,
@@ -53,7 +61,7 @@ class NGASplash {
           RepaintBoundary(
             child: FutureBuilder<void>(
               future: func,
-              builder: (final _, final AsyncSnapshot<Object?> snapshot) =>
+              builder: (final _, final AsyncSnapshot<void> snapshot) =>
                   snapshot.connectionState == ConnectionState.done ? child : const SizedBox.shrink(),
             ),
           ),
@@ -65,8 +73,8 @@ class NGASplash {
                   ? const SizedBox.shrink()
                   : Builder(
                       key: const ValueKey<String>('nga_splash_view'),
-                      builder: (final BuildContext context) {
-                        final bool isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+                      builder: (final BuildContext ctx) {
+                        final bool isDarkMode = MediaQuery.of(ctx).platformBrightness == Brightness.dark;
                         final Color targetBgColor =
                             bgColor ?? (isDarkMode ? const Color(0xFF000000) : const Color(0xFFF8F8F8));
                         final Color targetTxtColor =
@@ -81,8 +89,10 @@ class NGASplash {
                             children: <Widget>[
                               ValueListenableBuilder<int>(
                                 valueListenable: indexChar,
-                                builder: (final _, final int char, final __) =>
-                                    Text(String.fromCharCode(char), style: targetTxtStyle.copyWith(fontSize: 40)),
+                                builder: (final _, final int char, final __) => Text(
+                                  String.fromCharCode(char),
+                                  style: targetTxtStyle.copyWith(fontSize: 40),
+                                ),
                               ),
                               const SizedBox(height: 10),
                               ValueListenableBuilder<String>(
@@ -97,6 +107,11 @@ class NGASplash {
                     ),
             ),
           ),
+          if (watermarkTxt.isNotEmpty)
+            Builder(
+              builder: (final BuildContext ctx) =>
+                  NGAWatermark.get(ctx, watermarkTxt, colorful: watermarkColorful),
+            ),
         ],
       ),
     );

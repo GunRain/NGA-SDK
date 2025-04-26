@@ -36,11 +36,11 @@ class CUCard extends StatelessWidget {
   final String tip;
   final BorderRadius? radius;
   @override
-  Widget build(final BuildContext context) => Padding(
-      padding: EdgeInsets.symmetric(horizontal: outPadding),
-      child: Material(
+  Widget build(final BuildContext ctx) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: outPadding),
+        child: Material(
           color: color ??
-              (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
+              (MediaQuery.of(ctx).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
           borderRadius: radius ?? CUWidget.radius,
           child: Tooltip(
             message: tip,
@@ -55,7 +55,9 @@ class CUCard extends StatelessWidget {
                 child: child,
               ),
             ),
-          )));
+          ),
+        ),
+      );
 }
 
 class CUHeadLabel extends StatelessWidget {
@@ -72,33 +74,35 @@ class CUHeadLabel extends StatelessWidget {
   final Color color;
   final double left, top, right, bottom;
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(final BuildContext ctx) => Padding(
         padding: EdgeInsets.fromLTRB(left, top, right, bottom),
         child: SizedBox(
-            width: double.infinity,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: color,
-              ),
-            )),
+          width: double.infinity,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
+        ),
       );
 }
 
 @Deprecated("Don't comply with CU specifications")
 class CUListTitle extends StatelessWidget {
   @Deprecated("Don't comply with CU specifications")
-  const CUListTitle(this.title,
-      {final Key? key,
-      this.subtitle,
-      this.leading,
-      this.trailing,
-      this.padding = 10,
-      this.outPadding = 20,
-      this.onTap,
-      this.color,
-      this.tip = ''})
-      : super(key: key);
+  const CUListTitle(
+    this.title, {
+    final Key? key,
+    this.subtitle,
+    this.leading,
+    this.trailing,
+    this.padding = 10,
+    this.outPadding = 20,
+    this.onTap,
+    this.color,
+    this.tip = '',
+  }) : super(key: key);
   final Widget title;
   final Widget? subtitle, leading, trailing;
   final double padding, outPadding;
@@ -106,11 +110,11 @@ class CUListTitle extends StatelessWidget {
   final Color? color;
   final String tip;
   @override
-  Widget build(final BuildContext context) => Padding(
-      padding: EdgeInsets.symmetric(horizontal: outPadding),
-      child: Material(
+  Widget build(final BuildContext ctx) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: outPadding),
+        child: Material(
           color: color ??
-              (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
+              (MediaQuery.of(ctx).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
           borderRadius: CUWidget.radius,
           child: Tooltip(
             message: tip,
@@ -130,12 +134,15 @@ class CUListTitle extends StatelessWidget {
                       (onTap != null
                           ? const Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[CUWidget.arrowForward, SizedBox(width: 15)])
+                              children: <Widget>[CUWidget.arrowForward, SizedBox(width: 15)],
+                            )
                           : null),
                 ),
               ),
             ),
-          )));
+          ),
+        ),
+      );
 }
 
 class CUNavBar extends StatelessWidget {
@@ -166,7 +173,7 @@ class CUNavBar extends StatelessWidget {
   late final List<GlobalKey> _fullKeys;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext ctx) {
     final List<CUNavBarGroupSub> subs = <CUNavBarGroupSub>[];
     groups.forEach((final CUNavBarGroup group) {
       subs.addAll(group.sub);
@@ -185,7 +192,7 @@ class CUNavBar extends StatelessWidget {
           alignment: Alignment.bottomLeft,
           child: CUCard(
             Container(
-              constraints: BoxConstraints(maxHeight: maxHeight ?? MediaQuery.of(context).size.height / 2.5),
+              constraints: BoxConstraints(maxHeight: maxHeight ?? MediaQuery.of(ctx).size.height / 2.5),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -193,9 +200,9 @@ class CUNavBar extends StatelessWidget {
                   IconButton(
                     onPressed: () {
                       int nowIndex = 0;
-                      double pos = -(MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
-                          ? MediaQuery.of(context).size.width / 3
-                          : MediaQuery.of(context).size.width * 0.75);
+                      double pos = -(MediaQuery.of(ctx).size.width > MediaQuery.of(ctx).size.height
+                          ? MediaQuery.of(ctx).size.width / 3
+                          : MediaQuery.of(ctx).size.width * 0.75);
                       OverlayEntry? overlayEntry;
                       overlayEntry = OverlayEntry(
                         builder: (final BuildContext context) => Stack(
@@ -235,40 +242,40 @@ class CUNavBar extends StatelessWidget {
                                                                 final int targetIndex = nowIndex++;
                                                                 final ValueNotifier<bool> can = entry.value.can!;
                                                                 return SizedBox(
-                                                                    key: _fullKeys[targetIndex],
-                                                                    child: AnimatedBuilder(
-                                                                        animation: Listenable.merge(
-                                                                            <Listenable>[index, can]),
-                                                                        builder: (final _, final __) =>
-                                                                            AbsorbPointer(
-                                                                              absorbing: !can.value,
-                                                                              child: CUProCard(
-                                                                                Text(entry.value.name),
-                                                                                leading: Icon(
-                                                                                  entry.value.icon,
-                                                                                  color:
-                                                                                      index.value == targetIndex
-                                                                                          ? CUWidget.red
-                                                                                          : can.value
-                                                                                              ? null
-                                                                                              : Colors.grey,
-                                                                                ),
-                                                                                subtitle: !can.value &&
-                                                                                        entry.value.whyCannot !=
-                                                                                            null
-                                                                                    ? Text(entry.value.whyCannot!)
-                                                                                    : null,
-                                                                                onTap: () {
-                                                                                  _history.value.add(targetIndex);
-                                                                                  _history.value =
-                                                                                      _history.value.toList();
-                                                                                  index.value = targetIndex;
-                                                                                  onChange?.call(targetIndex);
-                                                                                  overlayEntry?.remove();
-                                                                                },
-                                                                                outPadding: 0,
-                                                                              ),
-                                                                            )));
+                                                                  key: _fullKeys[targetIndex],
+                                                                  child: AnimatedBuilder(
+                                                                    animation: Listenable.merge(
+                                                                      <Listenable>[index, can],
+                                                                    ),
+                                                                    builder: (final _, final __) => AbsorbPointer(
+                                                                      absorbing: !can.value,
+                                                                      child: CUProCard(
+                                                                        Text(entry.value.name),
+                                                                        leading: Icon(
+                                                                          entry.value.icon,
+                                                                          color: index.value == targetIndex
+                                                                              ? CUWidget.red
+                                                                              : can.value
+                                                                                  ? null
+                                                                                  : Colors.grey,
+                                                                        ),
+                                                                        subtitle: !can.value &&
+                                                                                entry.value.whyCannot != null
+                                                                            ? Text(entry.value.whyCannot!)
+                                                                            : null,
+                                                                        onTap: () {
+                                                                          _history.value.add(targetIndex);
+                                                                          _history.value =
+                                                                              _history.value.toList();
+                                                                          index.value = targetIndex;
+                                                                          onChange?.call(targetIndex);
+                                                                          overlayEntry?.remove();
+                                                                        },
+                                                                        outPadding: 0,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
                                                               }).toList(),
                                                             ),
                                                             padding: 0,
@@ -298,40 +305,40 @@ class CUNavBar extends StatelessWidget {
                                                                 final int targetIndex = nowIndex++;
                                                                 final ValueNotifier<bool> can = entry.value.can!;
                                                                 return SizedBox(
-                                                                    key: _fullKeys[targetIndex],
-                                                                    child: AnimatedBuilder(
-                                                                        animation: Listenable.merge(
-                                                                            <Listenable>[index, can]),
-                                                                        builder: (final _, final __) =>
-                                                                            AbsorbPointer(
-                                                                              absorbing: !can.value,
-                                                                              child: CUProCard(
-                                                                                Text(entry.value.name),
-                                                                                leading: Icon(
-                                                                                  entry.value.icon,
-                                                                                  color:
-                                                                                      index.value == targetIndex
-                                                                                          ? CUWidget.red
-                                                                                          : can.value
-                                                                                              ? null
-                                                                                              : Colors.grey,
-                                                                                ),
-                                                                                subtitle: !can.value &&
-                                                                                        entry.value.whyCannot !=
-                                                                                            null
-                                                                                    ? Text(entry.value.whyCannot!)
-                                                                                    : null,
-                                                                                onTap: () {
-                                                                                  _history.value.add(targetIndex);
-                                                                                  _history.value =
-                                                                                      _history.value.toList();
-                                                                                  index.value = targetIndex;
-                                                                                  onChange?.call(targetIndex);
-                                                                                  overlayEntry?.remove();
-                                                                                },
-                                                                                outPadding: 0,
-                                                                              ),
-                                                                            )));
+                                                                  key: _fullKeys[targetIndex],
+                                                                  child: AnimatedBuilder(
+                                                                    animation: Listenable.merge(
+                                                                      <Listenable>[index, can],
+                                                                    ),
+                                                                    builder: (final _, final __) => AbsorbPointer(
+                                                                      absorbing: !can.value,
+                                                                      child: CUProCard(
+                                                                        Text(entry.value.name),
+                                                                        leading: Icon(
+                                                                          entry.value.icon,
+                                                                          color: index.value == targetIndex
+                                                                              ? CUWidget.red
+                                                                              : can.value
+                                                                                  ? null
+                                                                                  : Colors.grey,
+                                                                        ),
+                                                                        subtitle: !can.value &&
+                                                                                entry.value.whyCannot != null
+                                                                            ? Text(entry.value.whyCannot!)
+                                                                            : null,
+                                                                        onTap: () {
+                                                                          _history.value.add(targetIndex);
+                                                                          _history.value =
+                                                                              _history.value.toList();
+                                                                          index.value = targetIndex;
+                                                                          onChange?.call(targetIndex);
+                                                                          overlayEntry?.remove();
+                                                                        },
+                                                                        outPadding: 0,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
                                                               }).toList(),
                                                             ),
                                                             padding: 0,
@@ -360,20 +367,22 @@ class CUNavBar extends StatelessWidget {
                           ],
                         ),
                       );
-                      Overlay.of(context).insert(overlayEntry);
+                      Overlay.of(ctx).insert(overlayEntry);
                       Future<void>.delayed(const Duration(milliseconds: 50), () {
                         nowIndex = 0;
                         pos = 0;
                         overlayEntry?.markNeedsBuild();
-                        WidgetsBinding.instance.addPostFrameCallback((final _) => Scrollable.ensureVisible(
-                              _fullKeys[index.value].currentContext!,
-                              duration: duration ?? const Duration(milliseconds: 150),
-                              alignment: 0.5,
-                            ));
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (final _) => Scrollable.ensureVisible(
+                            _fullKeys[index.value].currentContext!,
+                            duration: duration ?? const Duration(milliseconds: 150),
+                            alignment: 0.5,
+                          ),
+                        );
                       });
                     },
                     icon: const Icon(Icons.menu),
-                    tooltip: MaterialLocalizations.of(context).showMenuTooltip,
+                    tooltip: MaterialLocalizations.of(ctx).showMenuTooltip,
                   ),
                   Flexible(
                     child: SingleChildScrollView(
@@ -384,34 +393,39 @@ class CUNavBar extends StatelessWidget {
                             .entries
                             .map(
                               (final MapEntry<int, CUNavBarGroupSub> entry) => SizedBox(
-                                  key: _miniKeys[entry.key],
-                                  child: AnimatedBuilder(
-                                      animation: Listenable.merge(<Listenable>[index, entry.value.can!]),
-                                      builder: (final _, final __) {
-                                        if (index.value == entry.key) {
-                                          WidgetsBinding.instance.addPostFrameCallback((final _) {
-                                            Scrollable.ensureVisible(
-                                              _miniKeys[entry.key].currentContext!,
-                                              duration: duration ?? const Duration(milliseconds: 150),
-                                              alignment: 0.5,
-                                            );
-                                          });
-                                        }
-                                        return AbsorbPointer(
-                                            absorbing: !entry.value.can!.value,
-                                            child: IconButton(
-                                              onPressed: () {
-                                                _history.value.add(entry.key);
-                                                _history.value = _history.value.toList();
-                                                index.value = entry.key;
-                                                onChange?.call(entry.key);
-                                              },
-                                              icon: Icon(entry.value.icon,
-                                                  color: entry.value.can!.value ? null : Colors.grey),
-                                              tooltip: entry.value.name,
-                                              color: index.value == entry.key ? CUWidget.red : null,
-                                            ));
-                                      })),
+                                key: _miniKeys[entry.key],
+                                child: AnimatedBuilder(
+                                  animation: Listenable.merge(<Listenable>[index, entry.value.can!]),
+                                  builder: (final _, final __) {
+                                    if (index.value == entry.key) {
+                                      WidgetsBinding.instance.addPostFrameCallback((final _) {
+                                        Scrollable.ensureVisible(
+                                          _miniKeys[entry.key].currentContext!,
+                                          duration: duration ?? const Duration(milliseconds: 150),
+                                          alignment: 0.5,
+                                        );
+                                      });
+                                    }
+                                    return AbsorbPointer(
+                                      absorbing: !entry.value.can!.value,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          _history.value.add(entry.key);
+                                          _history.value = _history.value.toList();
+                                          index.value = entry.key;
+                                          onChange?.call(entry.key);
+                                        },
+                                        icon: Icon(
+                                          entry.value.icon,
+                                          color: entry.value.can!.value ? null : Colors.grey,
+                                        ),
+                                        tooltip: entry.value.name,
+                                        color: index.value == entry.key ? CUWidget.red : null,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             )
                             .toList(),
                       ),
@@ -429,7 +443,7 @@ class CUNavBar extends StatelessWidget {
                           onBack?.call(index.value);
                         },
                         icon: Icon(Icons.arrow_back, color: value.isEmpty ? Colors.grey : null),
-                        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                        tooltip: MaterialLocalizations.of(ctx).backButtonTooltip,
                       ),
                     ),
                   ),
@@ -494,11 +508,11 @@ class CUProCard extends StatelessWidget {
   final Color? color;
   final String tip;
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(final BuildContext ctx) => Padding(
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
           color: color ??
-              (MediaQuery.of(context).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
+              (MediaQuery.of(ctx).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
           borderRadius: CUWidget.radius,
           child: Tooltip(
             message: tip,
@@ -513,8 +527,8 @@ class CUProCard extends StatelessWidget {
                   children: <Widget>[
                     if (leading != null) ...<Widget>[
                       DefaultTextStyle(
-                        style: Theme.of(context).textTheme.bodyMedium ??
-                            Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                        style: Theme.of(ctx).textTheme.bodyMedium ??
+                            Theme.of(ctx).listTileTheme.leadingAndTrailingTextStyle ??
                             const ListTileThemeData().leadingAndTrailingTextStyle ??
                             const TextStyle(),
                         child: leading!,
@@ -527,8 +541,8 @@ class CUProCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           DefaultTextStyle(
-                            style: Theme.of(context).textTheme.bodyMedium ??
-                                Theme.of(context).listTileTheme.titleTextStyle ??
+                            style: Theme.of(ctx).textTheme.bodyMedium ??
+                                Theme.of(ctx).listTileTheme.titleTextStyle ??
                                 const ListTileThemeData().titleTextStyle ??
                                 const TextStyle(),
                             child: title,
@@ -536,8 +550,8 @@ class CUProCard extends StatelessWidget {
                           if (subtitle != null) ...<Widget>[
                             const SizedBox(height: 3),
                             DefaultTextStyle(
-                              style: Theme.of(context).textTheme.bodySmall ??
-                                  Theme.of(context).listTileTheme.subtitleTextStyle ??
+                              style: Theme.of(ctx).textTheme.bodySmall ??
+                                  Theme.of(ctx).listTileTheme.subtitleTextStyle ??
                                   const ListTileThemeData().subtitleTextStyle ??
                                   const TextStyle(),
                               child: subtitle!,
@@ -547,8 +561,8 @@ class CUProCard extends StatelessWidget {
                       ),
                     ),
                     DefaultTextStyle(
-                      style: Theme.of(context).textTheme.bodyMedium ??
-                          Theme.of(context).listTileTheme.leadingAndTrailingTextStyle ??
+                      style: Theme.of(ctx).textTheme.bodyMedium ??
+                          Theme.of(ctx).listTileTheme.leadingAndTrailingTextStyle ??
                           const ListTileThemeData().leadingAndTrailingTextStyle ??
                           const TextStyle(),
                       child: trailing ?? (onTap != null ? CUWidget.arrowForward : const SizedBox.shrink()),
@@ -569,11 +583,11 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(60);
   @override
-  Widget build(final BuildContext context) => ClipRRect(
+  Widget build(final BuildContext ctx) => ClipRRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(22),
+            backgroundColor: Theme.of(ctx).colorScheme.surface.withAlpha(22),
             elevation: 0,
             scrolledUnderElevation: 0,
             titleSpacing: 24,
@@ -604,7 +618,7 @@ class CUTxtButton extends StatelessWidget {
   final bool intrinsic;
   final String tip;
   @override
-  Widget build(final BuildContext context) => Material(
+  Widget build(final BuildContext ctx) => Material(
         color: Colors.grey.withAlpha(22),
         borderRadius: CUWidget.radius,
         child: Tooltip(

@@ -17,17 +17,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class NGACard extends StatelessWidget {
-  const NGACard(this.child,
-      {final Key? key,
-      this.radius = 24,
-      this.padding = 16,
-      this.outPadding = 0,
-      this.alpha = 22,
-      this.useWhite = false,
-      this.isAllPadding = true,
-      this.onTap,
-      this.tip = ''})
-      : super(key: key);
+  const NGACard(
+    this.child, {
+    final Key? key,
+    this.radius = 24,
+    this.padding = 16,
+    this.outPadding = 0,
+    this.alpha = 22,
+    this.useWhite = false,
+    this.isAllPadding = true,
+    this.onTap,
+    this.tip = '',
+  }) : super(key: key);
   final Widget child;
   final double radius, padding, outPadding;
   final int alpha;
@@ -35,7 +36,7 @@ class NGACard extends StatelessWidget {
   final VoidCallback? onTap;
   final String tip;
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(final BuildContext ctx) => Padding(
         padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
@@ -54,7 +55,7 @@ class NGACard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
                       borderRadius: BorderRadius.circular(radius),
-                      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                      border: Border.all(color: Theme.of(ctx).colorScheme.outlineVariant),
                     ),
                     child: child,
                   ),
@@ -82,7 +83,7 @@ class NGACards extends StatelessWidget {
   final int alpha;
   final bool useWhite, isAllPadding;
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(final BuildContext ctx) => Padding(
         padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
@@ -92,7 +93,7 @@ class NGACards extends StatelessWidget {
               decoration: BoxDecoration(
                 color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
                 borderRadius: BorderRadius.circular(radius),
-                border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                border: Border.all(color: Theme.of(ctx).colorScheme.outlineVariant),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -142,15 +143,15 @@ class NGAMsg {
         color = Colors.blueAccent;
     }
     OverlayEntry toastOverlayEntry(final Tween<Offset> tween) => OverlayEntry(
-          builder: (final BuildContext context) => Positioned(
-            top: MediaQuery.of(context).size.height * 0.075,
-            left: MediaQuery.of(context).size.width * 0.1,
-            right: MediaQuery.of(context).size.width * 0.1,
+          builder: (final BuildContext ctx) => Positioned(
+            top: MediaQuery.of(ctx).size.height * 0.075,
+            left: MediaQuery.of(ctx).size.width * 0.1,
+            right: MediaQuery.of(ctx).size.width * 0.1,
             child: TweenAnimationBuilder<Offset>(
               tween: tween,
               duration: const Duration(milliseconds: 300),
-              builder: (final BuildContext context, final Offset offset, final Widget? child) =>
-                  Transform.translate(offset: offset * MediaQuery.of(context).size.height, child: child),
+              builder: (final BuildContext ctx, final Offset offset, final Widget? child) =>
+                  Transform.translate(offset: offset * MediaQuery.of(ctx).size.height, child: child),
               child: Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -165,19 +166,20 @@ class NGAMsg {
                           onTap: onTap,
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withAlpha(128),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Icon(icon, color: color),
-                                  const SizedBox(width: 12),
-                                  Text(txt, style: TextStyle(color: color)),
-                                ],
-                              )),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withAlpha(128),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(icon, color: color),
+                                const SizedBox(width: 12),
+                                Text(txt, style: TextStyle(color: color)),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -220,36 +222,40 @@ class NGATxtButton extends StatelessWidget {
   final bool useWhite, intrinsic;
   final String tip;
   @override
-  Widget build(final BuildContext context) => ClipRRect(
+  Widget build(final BuildContext ctx) => ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(radius),
-              child: Tooltip(
-                  message: tip,
-                  child: InkWell(
-                      onTap: onTap,
-                      borderRadius: BorderRadius.circular(radius),
-                      child: intrinsic
-                          ? IntrinsicWidth(
-                              child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                                borderRadius: BorderRadius.circular(radius),
-                              ),
-                              child: Center(child: txt),
-                            ))
-                          : Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
-                                borderRadius: BorderRadius.circular(radius),
-                              ),
-                              child: Center(child: txt),
-                            )))),
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(radius),
+            child: Tooltip(
+              message: tip,
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(radius),
+                child: intrinsic
+                    ? IntrinsicWidth(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                            borderRadius: BorderRadius.circular(radius),
+                          ),
+                          child: Center(child: txt),
+                        ),
+                      )
+                    : Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: (useWhite ? Colors.white : Colors.grey).withAlpha(alpha),
+                          borderRadius: BorderRadius.circular(radius),
+                        ),
+                        child: Center(child: txt),
+                      ),
+              ),
+            ),
+          ),
         ),
       );
 }
