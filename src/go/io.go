@@ -140,7 +140,7 @@ func CopyDir(src, dst string) error {
 		if err != nil {
 			return err
 		}
-		dstPath := filepath.Join(src, relPath)
+		dstPath := filepath.Join(dst, relPath)
 		info, err := dir.Info()
 		if err != nil {
 			return err
