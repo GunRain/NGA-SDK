@@ -129,6 +129,9 @@ func CopyFile(src, dst string) error {
 }
 
 func CopyDir(src, dst string) error {
+	if err := os.MkdirAll(dst, os.ModePerm); err != nil {
+		return err
+	}
 	return filepath.WalkDir(src, func(path string, dir fs.DirEntry, err error) error {
 		if err != nil {
 			return err
