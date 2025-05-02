@@ -16,6 +16,7 @@ package nga
 
 import (
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -106,4 +107,44 @@ func IsEmptyFile(path string) bool {
 		return false
 	}
 	return !info.IsDir() && info.Size() == 0
+}
+
+func CopyFile(src, dst string) error {
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+	srcInfo, err := srcFile.Stat()
+	if err != nil {
+		return err
+	}
+	dstFile, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, srcInfo.Mode())
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+	_, err = io.Copy(dstFile, srcFile)
+	return err
+}
+
+func CopyDir(src, dst string) error {
+	return filepath.WalkDir(src, func(path string, dir fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		relPath, err := filepath.Rel(src, path)
+		if err != nil {
+			return err
+		}
+		dstPath := filepath.Join(src, relPath)
+		info, err := dir.Info()
+		if err != nil {
+			return err
+		}
+		if dir.IsDir() {
+			return os.MkdirAll(dstPath, info.Mode())
+		}
+		return CopyFile(path, dstPath)
+	})
 }
