@@ -221,7 +221,7 @@ get_target_bin() {
 
     local binName="$1"
     { [ -z "$2" ] && local targetArch="$ARCH"; } || local targetArch="$2"
-    mv -f "$MODPATH/bin/$binName/$targetArch.bin" "$MODPATH/$binName" || nga_abort "Arch \"$targetArch\" is not supported!"
+    mv -f "$MODPATH/bin/$binName/$targetArch.elf" "$MODPATH/$binName" || nga_abort "Arch \"$targetArch\" is not supported!"
     chmod a+x "$MODPATH/$binName"
 }
 
@@ -274,7 +274,7 @@ run_install_list() {
                 4) echo "local cancel=\"$line\"" ;;
                 *) echo "local opt_name_$((type - 4))=\"$line\"" ;;
                 esac
-                type=$((type+1))
+                type=$((type + 1))
             done
         })"
         newline
@@ -310,7 +310,7 @@ run_install_list() {
                 newline
                 break
             }; } || {
-                target_opt=$((target_opt+1))
+                target_opt=$((target_opt + 1))
                 [ $target_opt -gt "$opt_num" ] && {
                     [ "$cancel" = true ] && {
                         target_opt=0
