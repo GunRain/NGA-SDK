@@ -364,7 +364,7 @@ nga_install_init() {
     hashList="$(zcat "$hashListFile" | base64 -d)"
     find "$MODPATH/" -type f -not -path '*META-INF*' -not -name hashList.dat | while IFS= read -r file; do
         str_eq "${file#"$MODPATH/"}" "$@" && continue
-        [ "$(echo -n "$hashList" | grep -E " ${file#"$MODPATH/"}$" | awk '{print $1}')" = "$(sha384sum "$file" | awk '{print $1}' | sha1sum | awk '{print $1}')" ] || nga_abort "Failed to verify file \"${file#"$MODPATH/"}\"!"
+        [ "$(echo -n "$hashList" | grep -E " ${file#"$MODPATH/"}$" | awk '{print $1}')" = "$(echo -n "$(sha384sum "$file" | awk '{print $1}' | sha1sum)" | awk '{print $1}')" ] || nga_abort "Failed to verify file \"${file#"$MODPATH/"}\"!"
     done
     del -f "$hashListFile"
 }
