@@ -16,13 +16,9 @@
 
 alias del=rm # for rm check
 
-run2null() {
-    "$@" >/dev/null 2>&1
-}
+run2null() { "$@" >/dev/null 2>&1; }
 
-run22null() {
-    "$@" 2>/dev/null
-}
+run22null() { "$@" 2>/dev/null; }
 
 until_key() {
     local eventCode
@@ -49,9 +45,7 @@ until_key() {
     done
 }
 
-until_key_any() {
-    run2null until_key
-}
+until_key_any() { run2null until_key; }
 
 until_key_up_down() {
     local key
@@ -79,23 +73,11 @@ until_key_up_down_power() {
     done
 }
 
-until_key_up() {
-    while :; do
-        [ "$(until_key)" = up ] && return
-    done
-}
+until_key_up() { while :; do [ "$(until_key)" = up ] && return; done; }
 
-until_key_down() {
-    while :; do
-        [ "$(until_key)" = down ] && return
-    done
-}
+until_key_down() { while :; do [ "$(until_key)" = down ] && return; done; }
 
-until_key_power() {
-    while :; do
-        [ "$(until_key)" = power ] && return
-    done
-}
+until_key_power() { while :; do [ "$(until_key)" = power ] && return; done; }
 
 goto_url() {
     [ -n "$1" ] || return
@@ -114,32 +96,26 @@ str_eq() {
     return 1
 }
 
+pure_print() {
+    { run2null type ui_print && ui_print "$1"; } || {
+        [ -z "$OUTFD" ] && printf '%s\n' "$1" || printf '%s\n' "ui_print $1\nui_print" >>"/proc/self/fd/$OUTFD"
+    }
+}
+
 nga_abort() {
-    { run2null type abort && abort "⚠️ $1"; } || { { [ -z "$OUTFD" ] && {
-        printf "%s\n" "⚠️ $1"
+    { run2null type abort && abort "⚠️ $1"; } || {
+        pure_print "⚠️ $1"
         [ -n "$TMPDIR" ] && del -rf "$TMPDIR"
         exit 1
-    }; } || {
-        printf "%s\n" "ui_print ⚠️ $1\nui_print" >>"/proc/self/fd/$OUTFD"
-        [ -n "$TMPDIR" ] && del -rf "$TMPDIR"
-        exit 1
-    }; }
+    }
 }
 
-nga_print() {
-    { run2null type ui_print && ui_print "> $1"; } || { [ -z "$OUTFD" ] && printf "%s\n" "> $1" || printf "%s\n" "ui_print > $1\nui_print" >>"/proc/self/fd/$OUTFD"; }
-}
+nga_print() { pure_print "> $1"; }
 
-# shellcheck disable=SC2120,SC2028,SC2016
-newline() {
-    local method
-    method="$({ run2null type ui_print && echo -n 'ui_print ""'; } || { [ -z "$OUTFD" ] && echo -n 'echo ""' || echo -n 'echo -e "ui_print \nui_print" >> "/proc/self/fd/$OUTFD"'; })"
-    for _ in $(seq 1 "${1:-1}"); do eval "$method"; done
-}
+# shellcheck disable=SC2120
+newline() { for _ in $(seq 1 "${1:-1}"); do pure_print ''; done; }
 
-get_work_dir() {
-    dirname "$(readlink -f "$1")"
-}
+get_work_dir() { dirname "$(readlink -f "$1")"; }
 
 pre_bin() {
     local bin="$1"
@@ -147,11 +123,7 @@ pre_bin() {
     chmod a+x "$bin"
 }
 
-pre_bins() {
-    for bin in "$@"; do
-        pre_bin "$bin"
-    done
-}
+pre_bins() { for bin in "$@"; do pre_bin "$bin"; done; }
 
 run_bin() {
     local bin="$1"
@@ -181,20 +153,16 @@ until_unlock() {
     [ -z "$1" ] || sleep "$1"
 }
 
-is_ksu() {
-    [ "$KSU" = true ]
-}
+is_ksu() { [ "$KSU" = true ]; }
 
-is_ap() {
-    [ "$APATCH" = true ]
-}
+is_ap() { [ "$APATCH" = true ]; }
 
-not_magisk() {
-    is_ksu || is_ap
-}
+not_magisk() { is_ksu || is_ap; }
+
+is_magisk() { ! not_magisk; }
 
 magisk_run_completed() {
-    not_magisk || { [ -f "$1/boot-completed.sh" ] && {
+    is_magisk && { [ -f "$1/boot-completed.sh" ] && {
         # shellcheck disable=SC1091
         . "$1/boot-completed.sh"
         exit
@@ -209,11 +177,7 @@ set_system_file() {
     chcon -R u:object_r:system_file:s0 "$@"
 }
 
-print_lines() {
-    for line in "$@"; do
-        echo "$line"
-    done
-}
+print_lines() { for line in "$@"; do echo "$line"; done; }
 
 get_target_bin() {
     [ -z "$MODPATH" ] && nga_abort 'Value "MODPATH" does not exist!'
@@ -225,11 +189,7 @@ get_target_bin() {
     chmod a+x "$MODPATH/$binName"
 }
 
-get_target_bins() {
-    for binName in "$@"; do
-        get_target_bin "$binName"
-    done
-}
+get_target_bins() { for binName in "$@"; do get_target_bin "$binName"; done; }
 
 get_arch() {
     case "$(getprop ro.product.cpu.abi)" in
@@ -259,7 +219,7 @@ run_install_list() {
     local func_num="$2"
 
     newline
-    nga_print "通过按压音量上键切换安装内容，通过按压音量下键确定安装内容"
+    nga_print '通过按压音量上键切换安装内容，通过按压音量下键确定安装内容'
     newline
 
     for num in $(seq 1 "$func_num"); do
@@ -282,7 +242,7 @@ run_install_list() {
         nga_print "抉择$num: $opt_name"
         newline
         # shellcheck disable=SC2154
-        [ "$cancel" = true ] && nga_print "内容0: 取消此抉择"
+        [ "$cancel" = true ] && nga_print '内容0: 取消此抉择'
         # shellcheck disable=SC2154
         for index_num in $(seq 1 "$opt_num"); do
             nga_print "内容$index_num: $(eval "echo -n \"\$opt_name_$index_num\"")"
@@ -291,16 +251,16 @@ run_install_list() {
         local target_opt
         { [ "$cancel" = true ] && {
             target_opt=0
-            nga_print "当前选择内容: 取消此抉择"
+            nga_print '当前选择内容: 取消此抉择'
         }; } || {
             target_opt=1
-            nga_print "当前选择内容: 内容1"
+            nga_print '当前选择内容: 内容1'
         }
         while :; do
             { [ "$(until_key_up_down)" = down ] && {
                 newline
                 [ "$target_opt" -eq 0 ] && {
-                    nga_print "已确定选择内容: 取消此抉择"
+                    nga_print '已确定选择内容: 取消此抉择'
                     true
                 } || {
                     nga_print "已确定选择内容: 内容$target_opt"
@@ -314,7 +274,7 @@ run_install_list() {
                 [ $target_opt -gt "$opt_num" ] && {
                     [ "$cancel" = true ] && {
                         target_opt=0
-                        nga_print "当前选择内容: 取消此抉择"
+                        nga_print '当前选择内容: 取消此抉择'
                         continue
                     } || target_opt=1
                 }
@@ -342,11 +302,7 @@ nga_install_module() {
     done
 }
 
-nga_install_modules() {
-    for zipPath in "$@"; do
-        nga_install_module "$zipPath"
-    done
-}
+nga_install_modules() { for zipPath in "$@"; do nga_install_module "$zipPath"; done; }
 
 nga_install_init() {
     [ -z "$MODPATH" ] && nga_abort 'Value "MODPATH" does not exist!'
@@ -435,5 +391,12 @@ nga_install_done() {
         ;;
     esac
 }
+
+[ -n "$MAGISK_VER_CODE" ] &&
+    is_magisk && [ "$MAGISK_VER_CODE" -lt 27008 ] &&
+    pure_print '⚠️ WARNING!!! OLD VERSION OF MAGISK DETECTED!'
+
+is_ksu && [ -n "$(run22null pm path com.sukisu.ultra)" ] &&
+    pure_print '⚠️ WARNING!!! SUKISU ULTRA DETECTED!'
 
 true # Okay!
