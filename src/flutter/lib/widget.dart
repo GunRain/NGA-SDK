@@ -129,15 +129,12 @@ class NGAMsg {
       case NGAMsgType.err:
         icon = Icons.error_rounded;
         color = Colors.redAccent;
-        break;
       case NGAMsgType.warn:
         icon = Icons.warning_rounded;
         color = Colors.orangeAccent;
-        break;
       case NGAMsgType.ok:
         icon = Icons.check_circle_rounded;
         color = Colors.greenAccent;
-        break;
       case NGAMsgType.info:
         icon = Icons.info_rounded;
         color = Colors.blueAccent;
