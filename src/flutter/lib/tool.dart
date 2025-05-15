@@ -12,8 +12,12 @@
 // For details about the F2DLPR License terms and conditions, visit: http://license.fileto.download. =
 //====================================================================================================
 
-export 'ext.dart';
-export 'splash.dart';
-export 'tool.dart';
-export 'watermark.dart';
-export 'widget.dart';
+import 'package:flutter/foundation.dart';
+
+class NGATool {
+  static bool isDesktop() =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.macOS);
+}

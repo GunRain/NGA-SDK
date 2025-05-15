@@ -17,6 +17,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+import 'package:window_manager/window_manager.dart';
+
+import '../tool.dart';
 
 class CUCard extends StatelessWidget {
   const CUCard(
@@ -581,29 +584,43 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(60);
   @override
-  Widget build(final ctx) => ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: AppBar(
-            backgroundColor: Theme.of(ctx).colorScheme.surface.withAlpha(22),
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            titleSpacing: 24,
-            leading: leading,
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (icon != null) ...[
-                  icon!,
-                  const SizedBox(width: 16),
+  Widget build(final ctx) => _box(
+        ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: AppBar(
+              backgroundColor: Theme.of(ctx).colorScheme.surface.withAlpha(22),
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              titleSpacing: 24,
+              leading: leading,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    icon!,
+                    const SizedBox(width: 16),
+                  ],
+                  if (title != null) title!,
                 ],
-                if (title != null) title!,
+              ),
+              actions: [
+                if (actions != null) ...actions!,
+                if (NGATool.isDesktop())
+                  const SizedBox(
+                      width: 138, height: 60, child: WindowCaption(backgroundColor: Colors.transparent)),
               ],
             ),
-            actions: actions,
           ),
         ),
       );
+  Widget _box(final Widget widget) => NGATool.isDesktop()
+      ? DragToMoveArea(
+          child: widget,
+        )
+      : SizedBox(
+          child: widget,
+        );
 }
 
 class CUTxtButton extends StatelessWidget {
