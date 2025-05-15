@@ -44,16 +44,16 @@ class _NGAWatermarkPainter extends CustomPainter {
   final String text;
   final bool colorful;
   @override
-  void paint(final Canvas canvas, final Size size) {
-    final TextStyle txtStyle = Theme.of(ctx).textTheme.headlineMedium ?? const TextStyle();
-    final TextPainter txtPainter = TextPainter(
+  void paint(final canvas, final size) {
+    final txtStyle = Theme.of(ctx).textTheme.headlineMedium ?? const TextStyle();
+    final txtPainter = TextPainter(
       text: TextSpan(
         text: text,
         style: colorful
             ? txtStyle.copyWith(
                 foreground: Paint()
                   ..shader = LinearGradient(
-                    colors: <Color>[
+                    colors: [
                       Colors.red.withAlpha(50),
                       Colors.orange.withAlpha(50),
                       Colors.yellow.withAlpha(50),
@@ -68,15 +68,15 @@ class _NGAWatermarkPainter extends CustomPainter {
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    final double stepX = txtPainter.width * 1.5;
-    final double stepY = txtPainter.height * 1.5;
-    final double len = size.width + size.height;
+    final stepX = txtPainter.width * 1.5;
+    final stepY = txtPainter.height * 1.5;
+    final len = size.width + size.height;
     canvas
       ..save()
       ..translate(0, size.height)
       ..rotate(-pi / 4);
-    for (double y = -len; y < len; y += stepY)
-      for (double x = -len; x < len; x += stepX) txtPainter.paint(canvas, Offset(x, y));
+    for (var y = -len; y < len; y += stepY)
+      for (var x = -len; x < len; x += stepX) txtPainter.paint(canvas, Offset(x, y));
     canvas.restore();
   }
 

@@ -36,7 +36,7 @@ class NGACard extends StatelessWidget {
   final VoidCallback? onTap;
   final String tip;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
@@ -83,7 +83,7 @@ class NGACards extends StatelessWidget {
   final int alpha;
   final bool useWhite, isAllPadding;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: isAllPadding ? EdgeInsets.all(outPadding) : EdgeInsets.symmetric(horizontal: outPadding),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(radius),
@@ -97,9 +97,9 @@ class NGACards extends StatelessWidget {
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+                children: [
                   SizedBox(height: padding),
-                  for (int i = 0; i < children.length; i++) ...<Widget>[
+                  for (int i = 0; i < children.length; i++) ...[
                     Padding(padding: EdgeInsets.symmetric(horizontal: padding), child: children[i]),
                     if (i < children.length - 1) const Divider(),
                   ],
@@ -122,7 +122,7 @@ class NGAMsg {
     final String tip = '',
   }) {
     if (!context.mounted) return;
-    final OverlayState overlayState = Overlay.of(context);
+    final overlayState = Overlay.of(context);
     IconData icon;
     Color color;
     switch (type) {
@@ -143,14 +143,14 @@ class NGAMsg {
         color = Colors.blueAccent;
     }
     OverlayEntry toastOverlayEntry(final Tween<Offset> tween) => OverlayEntry(
-          builder: (final BuildContext ctx) => Positioned(
+          builder: (final ctx) => Positioned(
             top: MediaQuery.of(ctx).size.height * 0.075,
             left: MediaQuery.of(ctx).size.width * 0.1,
             right: MediaQuery.of(ctx).size.width * 0.1,
-            child: TweenAnimationBuilder<Offset>(
+            child: TweenAnimationBuilder(
               tween: tween,
               duration: const Duration(milliseconds: 300),
-              builder: (final BuildContext ctx, final Offset offset, final Widget? child) =>
+              builder: (final ctx, final Offset offset, final Widget? child) =>
                   Transform.translate(offset: offset * MediaQuery.of(ctx).size.height, child: child),
               child: Center(
                 child: ClipRRect(
@@ -173,7 +173,7 @@ class NGAMsg {
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
+                              children: [
                                 Icon(icon, color: color),
                                 const SizedBox(width: 12),
                                 Text(txt, style: TextStyle(color: color)),
@@ -190,11 +190,10 @@ class NGAMsg {
           ),
         );
 
-    final OverlayEntry goEntry = toastOverlayEntry(Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero));
+    final goEntry = toastOverlayEntry(Tween(begin: const Offset(0, -1), end: Offset.zero));
     overlayState.insert(goEntry);
     Future<void>.delayed(Duration(seconds: s), () {
-      final OverlayEntry backEntry =
-          toastOverlayEntry(Tween<Offset>(begin: Offset.zero, end: const Offset(0, -1)));
+      final backEntry = toastOverlayEntry(Tween(begin: Offset.zero, end: const Offset(0, -1)));
       overlayState.insert(backEntry);
       goEntry.remove();
       Future<void>.delayed(const Duration(milliseconds: 300), backEntry.remove);
@@ -222,7 +221,7 @@ class NGATxtButton extends StatelessWidget {
   final bool useWhite, intrinsic;
   final String tip;
   @override
-  Widget build(final BuildContext ctx) => ClipRRect(
+  Widget build(final ctx) => ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),

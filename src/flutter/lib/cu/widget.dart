@@ -36,7 +36,7 @@ class CUCard extends StatelessWidget {
   final String tip;
   final BorderRadius? radius;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
           color: color ??
@@ -74,7 +74,7 @@ class CUHeadLabel extends StatelessWidget {
   final Color color;
   final double left, top, right, bottom;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: EdgeInsets.fromLTRB(left, top, right, bottom),
         child: SizedBox(
           width: double.infinity,
@@ -110,7 +110,7 @@ class CUListTitle extends StatelessWidget {
   final Color? color;
   final String tip;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
           color: color ??
@@ -134,7 +134,7 @@ class CUListTitle extends StatelessWidget {
                       (onTap != null
                           ? const Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[CUWidget.arrowForward, SizedBox(width: 15)],
+                              children: [CUWidget.arrowForward, SizedBox(width: 15)],
                             )
                           : null),
                 ),
@@ -156,7 +156,7 @@ class CUNavBar extends StatelessWidget {
     this.maxHeight,
     this.duration,
   }) : super(key: key) {
-    final List<CUNavBarGroupSub> allSubs = <CUNavBarGroupSub>[];
+    final allSubs = <CUNavBarGroupSub>[];
     groups.forEach((final CUNavBarGroup group) => allSubs.addAll(group.sub));
     constGroups.forEach((final CUNavBarGroup group) => allSubs.addAll(group.sub));
     _miniKeys = List<GlobalKey>.generate(allSubs.length, (final _) => GlobalKey());
@@ -166,28 +166,26 @@ class CUNavBar extends StatelessWidget {
   final Duration? duration;
   final double? maxHeight;
   final List<CUNavBarGroup> groups, constGroups;
-  final ValueNotifier<List<int>> _history = ValueNotifier<List<int>>(<int>[]);
+  final _history = ValueNotifier<List<int>>([]);
   final ValueNotifier<int> index;
   final void Function(int)? onChange, onBack;
   late final List<GlobalKey> _miniKeys;
   late final List<GlobalKey> _fullKeys;
 
   @override
-  Widget build(final BuildContext ctx) {
-    final List<CUNavBarGroupSub> subs = <CUNavBarGroupSub>[];
-    groups.forEach((final CUNavBarGroup group) {
+  Widget build(final ctx) {
+    final subs = <CUNavBarGroupSub>[];
+    groups.forEach((final group) {
       subs.addAll(group.sub);
-      group.sub
-          .forEach((final CUNavBarGroupSub sub) => sub.can == null ? sub.can = ValueNotifier<bool>(true) : true);
+      group.sub.forEach((final sub) => sub.can == null ? sub.can = ValueNotifier(true) : true);
     });
-    constGroups.forEach((final CUNavBarGroup group) {
+    constGroups.forEach((final group) {
       subs.addAll(group.sub);
-      group.sub
-          .forEach((final CUNavBarGroupSub sub) => sub.can == null ? sub.can = ValueNotifier<bool>(true) : true);
+      group.sub.forEach((final sub) => sub.can == null ? sub.can = ValueNotifier(true) : true);
     });
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      children: [
         Align(
           alignment: Alignment.bottomLeft,
           child: CUCard(
@@ -196,17 +194,17 @@ class CUNavBar extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+                children: [
                   IconButton(
                     onPressed: () {
-                      int nowIndex = 0;
-                      double pos = -(MediaQuery.of(ctx).size.width > MediaQuery.of(ctx).size.height
+                      var nowIndex = 0;
+                      var pos = -(MediaQuery.of(ctx).size.width > MediaQuery.of(ctx).size.height
                           ? MediaQuery.of(ctx).size.width / 3
                           : MediaQuery.of(ctx).size.width * 0.75);
                       OverlayEntry? overlayEntry;
                       overlayEntry = OverlayEntry(
-                        builder: (final BuildContext context) => Stack(
-                          children: <Widget>[
+                        builder: (final context) => Stack(
+                          children: [
                             GestureDetector(
                               onTap: () => overlayEntry?.remove(),
                               child: Container(color: Colors.black.withAlpha(127)),
@@ -225,27 +223,27 @@ class CUNavBar extends StatelessWidget {
                                         : MediaQuery.of(context).size.width * 0.75,
                                     child: CUCard(
                                       Column(
-                                        children: <Widget>[
+                                        children: [
                                           Expanded(
                                             child: SingleChildScrollView(
                                               child: Column(
                                                 children: groups
                                                     .map(
-                                                      (final CUNavBarGroup group) => Column(
-                                                        children: <Widget>[
+                                                      (final group) => Column(
+                                                        children: [
                                                           if (group.name.isNotEmpty)
                                                             CUHeadLabel(group.name, left: 27.5),
                                                           CUCard(
                                                             Column(
-                                                              children: group.sub.asMap().entries.map(
-                                                                  (final MapEntry<int, CUNavBarGroupSub> entry) {
-                                                                final int targetIndex = nowIndex++;
-                                                                final ValueNotifier<bool> can = entry.value.can!;
+                                                              children:
+                                                                  group.sub.asMap().entries.map((final entry) {
+                                                                final targetIndex = nowIndex++;
+                                                                final can = entry.value.can!;
                                                                 return SizedBox(
                                                                   key: _fullKeys[targetIndex],
                                                                   child: AnimatedBuilder(
                                                                     animation: Listenable.merge(
-                                                                      <Listenable>[index, can],
+                                                                      [index, can],
                                                                     ),
                                                                     builder: (final _, final __) => AbsorbPointer(
                                                                       absorbing: !can.value,
@@ -294,21 +292,21 @@ class CUNavBar extends StatelessWidget {
                                               child: Column(
                                                 children: constGroups
                                                     .map(
-                                                      (final CUNavBarGroup group) => Column(
-                                                        children: <Widget>[
+                                                      (final group) => Column(
+                                                        children: [
                                                           if (group.name.isNotEmpty)
                                                             CUHeadLabel(group.name, left: 27.5),
                                                           CUCard(
                                                             Column(
-                                                              children: group.sub.asMap().entries.map(
-                                                                  (final MapEntry<int, CUNavBarGroupSub> entry) {
-                                                                final int targetIndex = nowIndex++;
-                                                                final ValueNotifier<bool> can = entry.value.can!;
+                                                              children:
+                                                                  group.sub.asMap().entries.map((final entry) {
+                                                                final targetIndex = nowIndex++;
+                                                                final can = entry.value.can!;
                                                                 return SizedBox(
                                                                   key: _fullKeys[targetIndex],
                                                                   child: AnimatedBuilder(
                                                                     animation: Listenable.merge(
-                                                                      <Listenable>[index, can],
+                                                                      [index, can],
                                                                     ),
                                                                     builder: (final _, final __) => AbsorbPointer(
                                                                       absorbing: !can.value,
@@ -392,10 +390,10 @@ class CUNavBar extends StatelessWidget {
                             .asMap()
                             .entries
                             .map(
-                              (final MapEntry<int, CUNavBarGroupSub> entry) => SizedBox(
+                              (final entry) => SizedBox(
                                 key: _miniKeys[entry.key],
                                 child: AnimatedBuilder(
-                                  animation: Listenable.merge(<Listenable>[index, entry.value.can!]),
+                                  animation: Listenable.merge([index, entry.value.can]),
                                   builder: (final _, final __) {
                                     if (index.value == entry.key) {
                                       WidgetsBinding.instance.addPostFrameCallback((final _) {
@@ -431,7 +429,7 @@ class CUNavBar extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ValueListenableBuilder<List<int>>(
+                  ValueListenableBuilder(
                     valueListenable: _history,
                     builder: (final _, final List<int> value, final __) => AbsorbPointer(
                       absorbing: value.isEmpty,
@@ -456,13 +454,13 @@ class CUNavBar extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ValueListenableBuilder<int>(
+          child: ValueListenableBuilder(
             valueListenable: index,
             builder: (final _, final int value, final __) => subs.isEmpty
                 ? const SizedBox.shrink()
                 : AnimatedSwitcher(
                     duration: duration ?? const Duration(milliseconds: 300),
-                    child: SizedBox(key: ValueKey<int>(value), child: subs[value].page),
+                    child: SizedBox(key: ValueKey(value), child: subs[value].page),
                   ),
           ),
         ),
@@ -508,7 +506,7 @@ class CUProCard extends StatelessWidget {
   final Color? color;
   final String tip;
   @override
-  Widget build(final BuildContext ctx) => Padding(
+  Widget build(final ctx) => Padding(
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
           color: color ??
@@ -524,8 +522,8 @@ class CUProCard extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(padding, padding / 2, padding, padding / 2),
                 decoration: BoxDecoration(borderRadius: CUWidget.radius),
                 child: Row(
-                  children: <Widget>[
-                    if (leading != null) ...<Widget>[
+                  children: [
+                    if (leading != null) ...[
                       DefaultTextStyle(
                         style: Theme.of(ctx).textTheme.bodyMedium ??
                             Theme.of(ctx).listTileTheme.leadingAndTrailingTextStyle ??
@@ -539,7 +537,7 @@ class CUProCard extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
+                        children: [
                           DefaultTextStyle(
                             style: Theme.of(ctx).textTheme.bodyMedium ??
                                 Theme.of(ctx).listTileTheme.titleTextStyle ??
@@ -547,7 +545,7 @@ class CUProCard extends StatelessWidget {
                                 const TextStyle(),
                             child: title,
                           ),
-                          if (subtitle != null) ...<Widget>[
+                          if (subtitle != null) ...[
                             const SizedBox(height: 3),
                             DefaultTextStyle(
                               style: Theme.of(ctx).textTheme.bodySmall ??
@@ -583,7 +581,7 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(60);
   @override
-  Widget build(final BuildContext ctx) => ClipRRect(
+  Widget build(final ctx) => ClipRRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: AppBar(
@@ -594,14 +592,12 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
             leading: leading,
             title: Row(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (icon != null) ...<Widget>[
+              children: [
+                if (icon != null) ...[
                   icon!,
                   const SizedBox(width: 16),
                 ],
-                if (title != null) ...<Widget>[
-                  title!,
-                ],
+                if (title != null) title!,
               ],
             ),
             actions: actions,
@@ -618,7 +614,7 @@ class CUTxtButton extends StatelessWidget {
   final bool intrinsic;
   final String tip;
   @override
-  Widget build(final BuildContext ctx) => Material(
+  Widget build(final ctx) => Material(
         color: Colors.grey.withAlpha(22),
         borderRadius: CUWidget.radius,
         child: Tooltip(
@@ -654,22 +650,22 @@ class CUWidget {
   static const Color yellow = Color(0x80BA8A5A);
   static const Color purple = Color(0xFF5746A6);
   static const Color red = Color(0xFFC7372C);
-  static final BorderRadius radius = BorderRadius.circular(15);
-  static const ColorScheme lightColorScheme = ColorScheme.light(
+  static final radius = BorderRadius.circular(15);
+  static const lightColorScheme = ColorScheme.light(
     primary: Color(0xFF000000),
     secondary: Color(0xFF888888),
     surface: Color(0xFFF8F8F8),
     tertiary: Color(0xFFE0E0E0),
     outline: Color(0xFF888888),
   );
-  static const ColorScheme darkColorScheme = ColorScheme.dark(
+  static const darkColorScheme = ColorScheme.dark(
     primary: Color(0xFFFFFFFF),
     secondary: Color(0xFF888888),
     surface: Color(0xFF000000),
     tertiary: Color(0xFF404040),
     outline: Color(0xFF888888),
   );
-  static const SvgPicture arrowForward = SvgPicture(
+  static const arrowForward = SvgPicture(
     AssetBytesLoader('nga_dat/arrow_forward.vec', packageName: 'nga_sdk'),
     width: 16,
     height: 16,

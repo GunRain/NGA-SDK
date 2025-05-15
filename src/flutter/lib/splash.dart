@@ -19,9 +19,9 @@ import 'package:flutter/material.dart';
 import 'nga.dart';
 
 class NGASplash {
-  static final ValueNotifier<bool> ok = ValueNotifier<bool>(false);
-  static final ValueNotifier<int> indexChar = ValueNotifier<int>(0xE000);
-  static final ValueNotifier<String> indexDot = ValueNotifier<String>('');
+  static final ok = ValueNotifier(false);
+  static final indexChar = ValueNotifier(0xE000);
+  static final indexDot = ValueNotifier('');
   static late Timer indexCharTimer;
   static late Timer indexDotTimer;
   static void remove() {
@@ -57,37 +57,37 @@ class NGASplash {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
-        children: <Widget>[
+        children: [
           RepaintBoundary(
-            child: FutureBuilder<void>(
+            child: FutureBuilder(
               future: func,
-              builder: (final _, final AsyncSnapshot<void> snapshot) =>
+              builder: (final _, final snapshot) =>
                   snapshot.connectionState == ConnectionState.done ? child : const SizedBox.shrink(),
             ),
           ),
-          ValueListenableBuilder<bool>(
+          ValueListenableBuilder(
             valueListenable: ok,
             builder: (final _, final bool ok, final __) => AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
               child: ok
                   ? const SizedBox.shrink()
                   : Builder(
-                      key: const ValueKey<String>('nga_splash_view'),
-                      builder: (final BuildContext ctx) {
-                        final bool isDarkMode = MediaQuery.of(ctx).platformBrightness == Brightness.dark;
-                        final Color targetBgColor =
+                      key: const ValueKey('nga_splash_view'),
+                      builder: (final ctx) {
+                        final isDarkMode = MediaQuery.of(ctx).platformBrightness == Brightness.dark;
+                        final targetBgColor =
                             bgColor ?? (isDarkMode ? const Color(0xFF000000) : const Color(0xFFF8F8F8));
-                        final Color targetTxtColor =
+                        final targetTxtColor =
                             txtColor ?? (isDarkMode ? const Color(0xFFF8F8F8) : const Color(0xFF000000));
-                        final TextStyle targetTxtStyle =
+                        final targetTxtStyle =
                             TextStyle(fontFamily: 'BOOT', package: 'nga_sdk', color: targetTxtColor);
                         return Container(
                           color: targetBgColor,
                           alignment: Alignment.center,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              ValueListenableBuilder<int>(
+                            children: [
+                              ValueListenableBuilder(
                                 valueListenable: indexChar,
                                 builder: (final _, final int char, final __) => Text(
                                   String.fromCharCode(char),
@@ -95,7 +95,7 @@ class NGASplash {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              ValueListenableBuilder<String>(
+                              ValueListenableBuilder(
                                 valueListenable: indexDot,
                                 builder: (final _, final String dot, final __) =>
                                     Text('Loading$dot', style: targetTxtStyle.copyWith(fontSize: 20)),
@@ -109,8 +109,7 @@ class NGASplash {
           ),
           if (watermarkTxt.isNotEmpty)
             Builder(
-              builder: (final BuildContext ctx) =>
-                  NGAWatermark.get(ctx, watermarkTxt, colorful: watermarkColorful),
+              builder: (final ctx) => NGAWatermark.get(ctx, watermarkTxt, colorful: watermarkColorful),
             ),
         ],
       ),
