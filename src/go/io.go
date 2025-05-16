@@ -19,6 +19,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func PathExist(fileName string) bool {
@@ -26,15 +27,15 @@ func PathExist(fileName string) bool {
 	return !os.IsNotExist(err)
 }
 
-func MvFile(src, dst string) (bool, error) {
+func MoveFile(src, dst string) error {
 	if dstDir := filepath.Dir(dst); !PathExist(dstDir) {
 		if err := os.MkdirAll(dstDir, os.ModePerm); err != nil {
-			return false, err
+			return err
 		}
 	}
 	srcInfo, err := os.Stat(src)
 	if err != nil {
-		return false, err
+		return err
 	}
 	atime, mtime := srcInfo.ModTime(), srcInfo.ModTime()
 	defer func() {
@@ -42,34 +43,14 @@ func MvFile(src, dst string) (bool, error) {
 			_ = os.Chtimes(dst, atime, mtime)
 		}
 	}()
-	err = os.Rename(src, dst)
-	if err == nil {
-		return true, nil
+	if err = os.Rename(src, dst); err == nil {
+		return nil
+	} else if err = CopyFile(src, dst); err != nil {
+		return err
+	} else if err = os.Remove(src); err != nil {
+		return err
 	}
-	if ok, err := func() (bool, error) {
-		srcFile, err := os.Open(src)
-		if err != nil {
-			return false, err
-		}
-		defer srcFile.Close()
-		dstFile, err := os.Create(dst)
-		if err != nil {
-			return false, err
-		}
-		defer dstFile.Close()
-		_, err = io.Copy(dstFile, srcFile)
-		if err != nil {
-			_ = os.Remove(dst)
-			return false, err
-		}
-		return true, nil
-	}(); !ok {
-		return false, err
-	}
-	if err = os.Remove(src); err != nil {
-		return false, err
-	}
-	return true, nil
+	return nil
 }
 
 func IsDir(path string) bool {
@@ -109,6 +90,17 @@ func IsEmptyFile(path string) bool {
 	return !info.IsDir() && info.Size() == 0
 }
 
+func IsHiddenPath(path string) bool {
+	path = filepath.Clean(path)
+	parts := strings.Split(path, string(filepath.Separator))
+	for _, part := range parts {
+		if strings.HasPrefix(part, ".") && part != "." && part != ".." {
+			return true
+		}
+	}
+	return false
+}
+
 func CopyFile(src, dst string) error {
 	srcFile, err := os.Open(src)
 	if err != nil {
@@ -124,8 +116,13 @@ func CopyFile(src, dst string) error {
 		return err
 	}
 	defer dstFile.Close()
-	_, err = io.Copy(dstFile, srcFile)
-	return err
+	if _, err = io.Copy(dstFile, srcFile); err != nil {
+		_ = os.Remove(dst)
+		return err
+	}
+	atime, mtime := srcInfo.ModTime(), srcInfo.ModTime()
+	_ = os.Chtimes(dst, atime, mtime)
+	return nil
 }
 
 func CopyDir(src, dst string) error {
