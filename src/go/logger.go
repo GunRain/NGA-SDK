@@ -45,31 +45,48 @@ var logLv2Str = map[LogLevel]string{
 	LOG_VERBOSE: "V",
 }
 
+type LogMode int
+
+const (
+	LOG_APPEND = LogMode(os.O_APPEND)
+	LOG_TRUNC  = LogMode(os.O_TRUNC)
+)
+
+type LogOutput uint8
+
+const (
+	LOG_PRINT LogOutput = iota
+	LOG_FILE
+	LOG_ALL
+)
+
 type Logger struct {
 	file         *os.File
 	LogLevel     LogLevel
 	LastLogLevel LogLevel
+	OutputMode   LogOutput
 	queue        chan string
 	wg           sync.WaitGroup
 	TimeLoc      *time.Location
 	TimeFmt      string
 }
 
-func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
+func NewLogger(path string, mode LogMode, level LogLevel, output LogOutput) (*Logger, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0777); err != nil {
 		return nil, err
 	}
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|mode, 0666)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|int(mode), 0666)
 	if err != nil {
 		return nil, err
 	}
 	logger := &Logger{
 		file:         file,
-		LogLevel:     lv,
+		LogLevel:     level,
+		LastLogLevel: LOG_NONE,
+		OutputMode:   output,
 		queue:        make(chan string, 114),
 		TimeLoc:      time.Local,
 		TimeFmt:      "01-02 15:04:05.000",
-		LastLogLevel: LOG_NONE,
 	}
 	if PathExist("/system/bin/getprop") {
 		out, err := exec.Command("/system/bin/getprop", "persist.sys.timezone").Output()
@@ -82,7 +99,15 @@ func NewLogger(path string, mode int, lv LogLevel) (*Logger, error) {
 	}
 	go func() {
 		for msg := range logger.queue {
-			_, _ = logger.file.WriteString(msg + "\n")
+			switch logger.OutputMode {
+			case LOG_FILE:
+				_, _ = logger.file.WriteString(msg + "\n")
+			case LOG_PRINT:
+				_, _ = fmt.Println(msg)
+			case LOG_ALL:
+				_, _ = fmt.Println(msg)
+				_, _ = logger.file.WriteString(msg + "\n")
+			}
 			logger.wg.Done()
 		}
 	}()
