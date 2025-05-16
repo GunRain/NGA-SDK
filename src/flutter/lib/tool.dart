@@ -15,9 +15,11 @@
 import 'package:flutter/foundation.dart';
 
 class NGATool {
-  static bool isDesktop() =>
+  static bool get isDesktop =>
       !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.linux ||
-          defaultTargetPlatform == TargetPlatform.macOS);
+      [
+        TargetPlatform.windows,
+        TargetPlatform.linux,
+        TargetPlatform.macOS,
+      ].contains(defaultTargetPlatform);
 }

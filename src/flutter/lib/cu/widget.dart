@@ -606,15 +606,18 @@ class CUTopBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               actions: [
                 if (actions != null) ...actions!,
-                if (NGATool.isDesktop())
+                if (NGATool.isDesktop)
                   const SizedBox(
-                      width: 138, height: 60, child: WindowCaption(backgroundColor: Colors.transparent)),
+                    width: 138,
+                    height: 60,
+                    child: WindowCaption(backgroundColor: Colors.transparent),
+                  ),
               ],
             ),
           ),
         ),
       );
-  Widget _box(final Widget widget) => NGATool.isDesktop()
+  Widget _box(final Widget widget) => NGATool.isDesktop
       ? DragToMoveArea(
           child: widget,
         )
