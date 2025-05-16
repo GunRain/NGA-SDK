@@ -20,6 +20,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../ext.dart';
 import '../tool.dart';
 
 class CUCard extends StatelessWidget {
@@ -675,8 +676,9 @@ class CUWidget {
     if (!_themeColorListener) {
       SystemTheme.fallbackColor = red;
       SystemTheme.accentColor.load().then((final _) {
-        _themeColor.value = SystemTheme.accentColor.accent;
-        SystemTheme.onChange.listen((final _) => _themeColor.value = SystemTheme.accentColor.accent);
+        _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 127 ? red : ac);
+        SystemTheme.onChange.listen((final _) =>
+            _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 127 ? red : ac));
       });
       _themeColorListener = true;
     }
