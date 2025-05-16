@@ -12,7 +12,7 @@ NGA SDK是面向Android开发的辅助SDK，内容涵盖应用安全、前端组
 
 ### [文档](https://pub-web.flutter-io.cn/documentation/nga_sdk/latest/nga_sdk/)
 
-## Shell
+## Shell (`busybox ash`可用)
 
 ### [实用代码(Shell Utils)](src/shell/nga-utils.sh)
 
