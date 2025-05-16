@@ -16,6 +16,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -67,24 +68,27 @@ class CUHeadLabel extends StatelessWidget {
   const CUHeadLabel(
     this.label, {
     final Key? key,
-    this.color = CUWidget.red,
+    this.color,
     this.left = 42.5,
     this.top = 20,
     this.right = 0,
     this.bottom = 7.5,
   }) : super(key: key);
   final String label;
-  final Color color;
+  final Color? color;
   final double left, top, right, bottom;
   @override
   Widget build(final ctx) => Padding(
         padding: EdgeInsets.fromLTRB(left, top, right, bottom),
         child: SizedBox(
           width: double.infinity,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: color,
+          child: ValueListenableBuilder(
+            valueListenable: CUWidget.themeColor,
+            builder: (final _, final Color dfltCl, final __) => Text(
+              label,
+              style: TextStyle(
+                color: color ?? dfltCl,
+              ),
             ),
           ),
         ),
@@ -665,11 +669,25 @@ class CUTxtButton extends StatelessWidget {
 }
 
 class CUWidget {
+  static final _themeColor = ValueNotifier(red);
+  static var _themeColorListener = false;
+  static ValueNotifier<Color> get themeColor {
+    if (!_themeColorListener) {
+      SystemTheme.fallbackColor = red;
+      SystemTheme.accentColor.load().then((final _) {
+        _themeColor.value = SystemTheme.accentColor.accent;
+        SystemTheme.onChange.listen((final _) => _themeColor.value = SystemTheme.accentColor.accent);
+      });
+      _themeColorListener = true;
+    }
+    return _themeColor;
+  }
+
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF202020);
   static const Color yellow = Color(0x80BA8A5A);
   static const Color purple = Color(0xFF5746A6);
-  static const Color red = Color(0xFFC7372C);
+  static const Color red = Color(0xFFC8372C);
   static final radius = BorderRadius.circular(15);
   static const lightColorScheme = ColorScheme.light(
     primary: Color(0xFF000000),
