@@ -141,6 +141,7 @@ class NGAMsg {
       case NGAMsgType.info:
         icon = Icons.info_rounded;
         color = Colors.blueAccent;
+        break;
     }
     OverlayEntry toastOverlayEntry(final Tween<Offset> tween) => OverlayEntry(
           builder: (final ctx) => Positioned(
