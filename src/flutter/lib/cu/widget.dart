@@ -359,7 +359,7 @@ class CUNavBar extends StatelessWidget {
                                                           key: _fullKeys[targetIndex],
                                                           child: AnimatedBuilder(
                                                             animation: Listenable.merge(
-                                                              [index, can],
+                                                              [index, can, CUWidget.themeColor],
                                                             ),
                                                             builder: (final _, final __) => AbsorbPointer(
                                                               absorbing: !can.value,
@@ -368,7 +368,7 @@ class CUNavBar extends StatelessWidget {
                                                                 leading: Icon(
                                                                   sub.icon,
                                                                   color: index.value == targetIndex
-                                                                      ? CUWidget.red
+                                                                      ? CUWidget.themeColor.value
                                                                       : can.value
                                                                           ? null
                                                                           : Colors.grey,
@@ -455,7 +455,7 @@ class CUNavBar extends StatelessWidget {
                                 (final entry) => SizedBox(
                                   key: _miniKeys[entry.key],
                                   child: AnimatedBuilder(
-                                    animation: Listenable.merge([index, entry.value.can]),
+                                    animation: Listenable.merge([index, entry.value.can, CUWidget.themeColor]),
                                     builder: (final _, final __) {
                                       if (index.value == entry.key)
                                         WidgetsBinding.instance.addPostFrameCallback((final _) {
@@ -480,7 +480,7 @@ class CUNavBar extends StatelessWidget {
                                             color: entry.value.can!.value ? null : Colors.grey,
                                           ),
                                           tooltip: entry.value.name,
-                                          color: index.value == entry.key ? CUWidget.red : null,
+                                          color: index.value == entry.key ? CUWidget.themeColor.value : null,
                                         ),
                                       );
                                     },
@@ -577,10 +577,10 @@ class CUWidget extends StatelessWidget {
     if (!_themeColorListener) {
       SystemTheme.fallbackColor = red;
       SystemTheme.accentColor.load().then((final _) {
-        _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 127 ? red : ac);
+        _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 0.5 ? red : ac);
         SystemTheme.onChange.listen(
           (final _) =>
-              _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 127 ? red : ac),
+              _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 0.5 ? red : ac),
         );
       });
       _themeColorListener = true;
