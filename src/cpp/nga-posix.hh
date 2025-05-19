@@ -48,7 +48,7 @@ namespace NGA {
     /// @brief  执行指令
     /// @param  指令
     /// @return stdout
-    str cmd(const strv& c) {
+    str cmd(strv c) {
         if (FILE* fp = popen(c.data(), "r")) {
             ostringstream stm;
             int           c;
@@ -63,13 +63,13 @@ namespace NGA {
         /// @brief  判断路径是否存在
         /// @param  路径
         /// @return 路径存在时返回true，否则为false
-        NGA_INLINE static bool ok(const strv& p) {
+        NGA_INLINE static bool ok(strv p) {
             return !access(p.data(), F_OK);
         }
         /// @brief  判断路径是否为目录
         /// @param  路径
         /// @return 路径为目录时返回true，否则为false
-        NGA_INLINE static bool dok(const strv& p) {
+        NGA_INLINE static bool dok(strv p) {
             struct stat stat_buf;
             if (!stat(p.data(), &stat_buf)) return S_ISDIR(stat_buf.st_mode);
             return false;
@@ -77,13 +77,13 @@ namespace NGA {
         /// @brief  判断路径是否为文件
         /// @param  路径
         /// @return 路径为文件时返回true，否则为false
-        NGA_INLINE static bool fok(const strv& p) {
+        NGA_INLINE static bool fok(strv p) {
             return !dok(p);
         }
         /// @brief  判断路径是否为空目录
         /// @param  路径
         /// @return 路径为空目录时返回true，否则为false
-        NGA_INLINE static bool dmt(const strv& p) {
+        NGA_INLINE static bool dmt(strv p) {
             if (DIR* dir = opendir(p.data())) {
                 struct dirent* entry;
                 while ((entry = readdir(dir)))
@@ -99,7 +99,7 @@ namespace NGA {
         /// @brief  判断路径是否为空文件
         /// @param  路径
         /// @return 路径为空文件时返回true，否则为false
-        NGA_INLINE static bool fmt(const strv& p) {
+        NGA_INLINE static bool fmt(strv p) {
             struct stat st;
             if (stat(p.data(), &st)) return false;
             return st.st_size == 0;
@@ -107,7 +107,7 @@ namespace NGA {
         /// @brief  获取文件内容为字符串
         /// @param  路径
         /// @return 文件内容
-        NGA_INLINE static str read(const strv& p) {
+        NGA_INLINE static str read(strv p) {
             if (FILE* f = fopen(p.data(), "r")) {
                 str ret;
                 int c;
@@ -121,7 +121,7 @@ namespace NGA {
         /// @param s 源路径
         /// @param d 指定路径
         /// @return  移动成功时返回true，否则为false
-        NGA_INLINE static bool mv(const strv& s, const strv& d) {
+        NGA_INLINE static bool mv(strv s, strv d) {
             error_code ec;
             if (const str dp = fs::path(d).parent_path().string(); !ok(dp))
                 if (fs::create_directories(dp, ec); ec) return false;
@@ -143,7 +143,7 @@ namespace NGA {
         /// @brief  获取文件的修改时间
         /// @param  路径
         /// @return %Y-%m-%d格式的修改时间
-        NGA_INLINE static str time(const strv& p) {
+        NGA_INLINE static str time(strv p) {
             struct stat fileInfo;
             if (stat(p.data(), &fileInfo)) return "";
             time_t        time     = fileInfo.st_mtime;
@@ -155,7 +155,7 @@ namespace NGA {
         /// @brief  支持通配符*地匹配路径(不会匹配.开头路径)
         /// @param  路径
         /// @return 匹配到的存在的路径
-        NGA_INLINE static vector<string> paths(const strv& p) {
+        NGA_INLINE static vector<string> paths(strv p) {
             if (p.find('*') == str::npos)
                 if (ok(p))
                     return {p.data()};

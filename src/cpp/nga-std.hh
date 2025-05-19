@@ -40,7 +40,7 @@ namespace NGA {
         /// @param s1 第一个字符串
         /// @param s2 第二个字符串
         /// @return   两个字符串相同时返回true，否则为false
-        NGA_INLINE static bool eq(const strv& s1, const strv& s2) {
+        NGA_INLINE static bool eq(strv s1, strv s2) {
             if (s1.size() != s2.size())
                 return false;
             else
@@ -90,7 +90,7 @@ namespace NGA {
         /// @param f 要替换的内容
         /// @param t 要替换到的内容
         /// @return  替换后的源字符串
-        NGA_INLINE static str replace_head(str s, const strv& f, const strv& t) {
+        NGA_INLINE static str replace_head(str s, strv f, strv t) {
             if (s.starts_with(f)) s.replace(0, f.length(), t);
             return s;
         }
@@ -99,7 +99,7 @@ namespace NGA {
         /// @param f 要替换的内容
         /// @param t 要替换到的内容
         /// @return  替换后的源字符串
-        NGA_INLINE static str replace_all(str s, const strv& f, const strv& t) {
+        NGA_INLINE static str replace_all(str s, strv f, strv t) {
             size_t p = 0;
             while ((p = s.find(f, p)) != str::npos) {
                 s.replace(p, f.length(), t);
@@ -111,7 +111,7 @@ namespace NGA {
         /// @param s 文件名称
         /// @param t 后缀
         /// @return  后缀相同时返回true，否则为false
-        NGA_INLINE static bool check_suffix(const strv& s, str t) {
+        NGA_INLINE static bool check_suffix(strv s, str t) {
             if (t = '.' + t; s.size() < t.size())
                 return false;
             else
