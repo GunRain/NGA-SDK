@@ -85,8 +85,7 @@ namespace NGA {
         /// @return 路径为空目录时返回true，否则为false
         NGA_INLINE static bool dmt(strv p) {
             if (DIR* dir = opendir(p.data())) {
-                struct dirent* entry;
-                while ((entry = readdir(dir)))
+                while (const struct dirent* entry = readdir(dir))
                     if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
                         closedir(dir);
                         return false;
@@ -184,8 +183,7 @@ namespace NGA {
                         vector<string> tmp_paths;
                         for (const str& dir_path : rets.empty() ? (vector<string>){tmp_path.string()} : rets)
                             if (DIR* dir = opendir(dir_path.data())) {
-                                struct dirent* entry;
-                                while ((entry = readdir(dir)))
+                                while (const struct dirent* entry = readdir(dir))
                                     if (const str name = entry->d_name; !name.starts_with('.'))
                                         if (item == "*")
                                             tmp_paths.push_back((fs::path(dir_path) / name).string());
