@@ -70,8 +70,8 @@ namespace NGA {
         /// @param  路径
         /// @return 路径为目录时返回true，否则为false
         NGA_INLINE static bool dok(strv p) {
-            if (struct stat stat_buf; !stat(p.data(), &stat_buf)) return S_ISDIR(stat_buf.st_mode);
-            return false;
+            struct stat stat_buf;
+            return !stat(p.data(), &stat_buf) && S_ISDIR(stat_buf.st_mode);
         }
         /// @brief  判断路径是否为文件
         /// @param  路径
@@ -98,8 +98,8 @@ namespace NGA {
         /// @param  路径
         /// @return 路径为空文件时返回true，否则为false
         NGA_INLINE static bool fmt(strv p) {
-            if (struct stat st; !stat(p.data(), &st)) return st.st_size == 0;
-            return false;
+            struct stat st;
+            return !stat(p.data(), &st) && st.st_size == 0;
         }
         /// @brief  获取文件内容为字符串
         /// @param  路径
