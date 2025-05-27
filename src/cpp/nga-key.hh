@@ -14,40 +14,42 @@
 
 #pragma once
 
-#include <fcntl.h>
 #include <filesystem>
-#include <linux/input.h>
-#include <poll.h>
 #include <string>
 #include <string_view>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include <vector>
 
+#include <fcntl.h>
+#include <poll.h>
+#include <unistd.h>
+
+#include <linux/input.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
 #ifndef NGA_INLINE
-#ifdef __GNUC__
-#define NGA_INLINE __attribute__((always_inline)) inline
-#elif defined(_MSC_VER)
-#define NGA_INLINE __forceinline
-#else
-#define NGA_INLINE inline
-#endif
+    #ifdef __GNUC__
+        #define NGA_INLINE __attribute__((always_inline)) inline
+    #elif defined(_MSC_VER)
+        #define NGA_INLINE __forceinline
+    #else
+        #define NGA_INLINE inline
+    #endif
 #endif
 
 namespace NGA {
     using namespace std;
     using str  = string;
     using strv = string_view;
-    template <typename T>
+    template<typename T>
     using vec    = vector<T>;
     namespace fs = filesystem;
 
     namespace key {
         NGA_INLINE vec<str> getInputs(int TYPE) {
             vec<str> targets;
-            for (const fs::directory_entry& entry : fs::directory_iterator("/dev/input"))
-                if (const str input = entry.path().string(); entry.is_character_file())
+            for (fs::directory_entry const& entry : fs::directory_iterator("/dev/input"))
+                if (str const input = entry.path().string(); entry.is_character_file())
                     if (int fd = open(input.data(), O_RDONLY); fd >= 0) {
                         unsigned char evBits[(KEY_MAX + 7) / 8] = {0};
                         ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(evBits)), evBits);
@@ -58,8 +60,8 @@ namespace NGA {
         }
         class listener {
         public:
-            NGA_INLINE           listener(const listener&)  = delete;
-            NGA_INLINE listener& operator=(const listener&) = delete;
+            NGA_INLINE           listener(listener const&)  = delete;
+            NGA_INLINE listener& operator=(listener const&) = delete;
             NGA_INLINE ~listener(void) { free(); }
             NGA_INLINE static unique_ptr<listener> create(int TYPE) {
                 return unique_ptr<listener>(new listener(TYPE));
@@ -72,7 +74,8 @@ namespace NGA {
                         if (pfd.revents & POLLIN) {
                             struct input_event event;
                             ssize_t            bytesRead = read(pfd.fd, &event, sizeof(event));
-                            if (bytesRead > 0 && event.type == EV_KEY && event.code == _type && event.value == 1)
+                            if (bytesRead > 0 && event.type == EV_KEY && event.code == _type
+                                && event.value == 1)
                                 return true;
                         }
                 }
@@ -84,12 +87,13 @@ namespace NGA {
             }
 
         private:
-            NGA_INLINE listener(int TYPE) : _type(TYPE) {
-                for (const str& eventPath : getInputs(TYPE))
-                    if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0) _fds.push_back({fd, POLLIN, 0});
+            NGA_INLINE listener(int TYPE): _type(TYPE) {
+                for (str const& eventPath : getInputs(TYPE))
+                    if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
+                        _fds.push_back({fd, POLLIN, 0});
             }
             vec<struct pollfd> _fds;
             int                _type;
         };
-    }  // namespace key
-}  // namespace NGA
+    } // namespace key
+} // namespace NGA

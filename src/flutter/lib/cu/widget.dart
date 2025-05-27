@@ -577,10 +577,9 @@ class CUWidget extends StatelessWidget {
     if (!_themeColorListener) {
       SystemTheme.fallbackColor = red;
       SystemTheme.accentColor.load().then((final _) {
-        _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 0.5 ? red : ac);
+        _themeColor.value = SystemTheme.accentColor.accent.withAlpha(255);
         SystemTheme.onChange.listen(
-          (final _) =>
-              _themeColor.value = SystemTheme.accentColor.accent.let((final ac) => ac.a < 0.5 ? red : ac),
+          (final _) => _themeColor.value = SystemTheme.accentColor.accent.withAlpha(255),
         );
       });
       _themeColorListener = true;

@@ -16,32 +16,34 @@
 
 #include <cstring>
 #include <ctime>
-#include <dirent.h>
-#include <fcntl.h>
 #include <filesystem>
 #include <sstream>
 #include <string>
 #include <string_view>
-#include <sys/stat.h>
 #include <system_error>
-#include <unistd.h>
 #include <vector>
 
+#include <dirent.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <sys/stat.h>
+
 #ifndef NGA_INLINE
-#ifdef __GNUC__
-#define NGA_INLINE __attribute__((always_inline)) inline
-#elif defined(_MSC_VER)
-#define NGA_INLINE __forceinline
-#else
-#define NGA_INLINE inline
-#endif
+    #ifdef __GNUC__
+        #define NGA_INLINE __attribute__((always_inline)) inline
+    #elif defined(_MSC_VER)
+        #define NGA_INLINE __forceinline
+    #else
+        #define NGA_INLINE inline
+    #endif
 #endif
 
 namespace NGA {
     using namespace std;
     using str  = string;
     using strv = string_view;
-    template <typename T>
+    template<typename T>
     using vec    = vector<T>;
     namespace fs = filesystem;
 
@@ -53,8 +55,7 @@ namespace NGA {
             ostringstream stm;
             int           c;
             while ((c = fgetc(fp)) != EOF) stm.put(c);
-            pclose(fp);
-            return stm.str();
+            return (pclose(fp), stm.str());
         }
         return "";
     }
@@ -63,9 +64,7 @@ namespace NGA {
         /// @brief  判断路径是否存在
         /// @param  路径
         /// @return 路径存在时返回true，否则为false
-        NGA_INLINE static bool ok(strv p) {
-            return !access(p.data(), F_OK);
-        }
+        NGA_INLINE static bool ok(strv p) { return !access(p.data(), F_OK); }
         /// @brief  判断路径是否为目录
         /// @param  路径
         /// @return 路径为目录时返回true，否则为false
@@ -76,21 +75,16 @@ namespace NGA {
         /// @brief  判断路径是否为文件
         /// @param  路径
         /// @return 路径为文件时返回true，否则为false
-        NGA_INLINE static bool fok(strv p) {
-            return !dok(p);
-        }
+        NGA_INLINE static bool fok(strv p) { return !dok(p); }
         /// @brief  判断路径是否为空目录
         /// @param  路径
         /// @return 路径为空目录时返回true，否则为false
         NGA_INLINE static bool dmt(strv p) {
             if (DIR* dir = opendir(p.data())) {
                 while (const struct dirent* entry = readdir(dir))
-                    if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, "..")) {
-                        closedir(dir);
-                        return false;
-                    }
-                closedir(dir);
-                return true;
+                    if (strcmp(entry->d_name, ".") && strcmp(entry->d_name, ".."))
+                        return (closedir(dir), false);
+                return (closedir(dir), true);
             }
             return false;
         }
@@ -109,8 +103,7 @@ namespace NGA {
                 str ret;
                 int c;
                 while ((c = fgetc(f)) != EOF) ret.push_back(c);
-                fclose(f);
-                return ret;
+                return (fclose(f), ret);
             }
             return "";
         }
@@ -120,21 +113,20 @@ namespace NGA {
         /// @return  移动成功时返回true，否则为false
         NGA_INLINE static bool mv(strv s, strv d) {
             error_code ec;
-            if (const str dp = fs::path(d).parent_path().string(); !ok(dp))
+            if (str const dp = fs::path(d).parent_path().string(); !ok(dp))
                 if (fs::create_directories(dp, ec); ec) return false;
             struct stat si;
             if (stat(s.data(), &si)) return false;
-            struct timespec dt[2] = {{si.st_atime, 0}, {si.st_mtime, 0}};
+            struct timespec dt[2] = {
+                {si.st_atime, 0},
+                {si.st_mtime, 0}
+            };
             if (rename(s.data(), d.data()))
                 if (fs::copy(s, d, ec); !ec)
-                    if (utimensat(AT_FDCWD, d.data(), dt, 0); remove(s.data()))
-                        return false;
-                    else
-                        return true;
-                else
-                    return false;
-            else
-                utimensat(AT_FDCWD, d.data(), dt, 0);
+                    if (utimensat(AT_FDCWD, d.data(), dt, 0); remove(s.data())) return false;
+                    else return true;
+                else return false;
+            else utimensat(AT_FDCWD, d.data(), dt, 0);
             return true;
         }
         /// @brief  获取文件的修改时间
@@ -146,43 +138,39 @@ namespace NGA {
             time_t        time     = fileInfo.st_mtime;
             tm*           timeInfo = localtime(&time);
             ostringstream oss;
-            oss << put_time(timeInfo, "%Y-%m-%d");
-            return oss.str();
+            return (oss << put_time(timeInfo, "%Y-%m-%d"), oss.str());
         }
         /// @brief  支持通配符*地匹配路径(不会匹配.开头路径)
         /// @param  路径
         /// @return 匹配到的存在的路径
         NGA_INLINE static vector<string> paths(strv p) {
             if (p.find('*') == str::npos)
-                if (ok(p))
-                    return {p.data()};
-                else
-                    return {};
+                if (ok(p)) return {p.data()};
+                else return {};
             else {
                 vector<string> rets;
                 fs::path       tmp_path = "/";
                 stringstream   ss(p.data());
                 str            item;
                 while (getline(ss, item, '/'))
-                    if (item.empty())
-                        continue;
+                    if (item.empty()) continue;
                     else if (item.find('*') == str::npos)
-                        if (rets.empty())
-                            tmp_path /= item;
+                        if (rets.empty()) tmp_path /= item;
                         else {
                             vector<string> tmp_paths;
-                            for (const str& path : rets)
-                                if (const str target = (fs::path(path) / item).string(); ok(target))
+                            for (str const& path : rets)
+                                if (str const target = (fs::path(path) / item).string(); ok(target))
                                     tmp_paths.push_back(target);
                             if (tmp_paths.empty()) return {};
                             rets = tmp_paths;
                         }
                     else {
                         vector<string> tmp_paths;
-                        for (const str& dir_path : rets.empty() ? (vector<string>){tmp_path.string()} : rets)
+                        for (str const& dir_path :
+                             rets.empty() ? (vector<string>){tmp_path.string()} : rets)
                             if (DIR* dir = opendir(dir_path.data())) {
                                 while (const struct dirent* entry = readdir(dir))
-                                    if (const str name = entry->d_name; !name.starts_with('.'))
+                                    if (str const name = entry->d_name; !name.starts_with('.'))
                                         if (item == "*")
                                             tmp_paths.push_back((fs::path(dir_path) / name).string());
                                         else {
@@ -191,11 +179,11 @@ namespace NGA {
                                             str          sub, real_sub;
                                             bool         ok = false, check = false;
                                             while (getline(ss, sub, '*'))
-                                                if (sub.empty())
-                                                    continue;
+                                                if (sub.empty()) continue;
                                                 else if (pos = name.find(sub, pos);
-                                                         pos == str::npos ||
-                                                         (!check && item[0] != '*' && !name.starts_with(sub))) {
+                                                         pos == str::npos
+                                                         || (!check && item[0] != '*'
+                                                             && !name.starts_with(sub))) {
                                                     ok = false;
                                                     break;
                                                 } else {
@@ -206,8 +194,7 @@ namespace NGA {
                                             if (ok && (item.back() == '*' || name.ends_with(real_sub)))
                                                 tmp_paths.push_back((fs::path(dir_path) / name).string());
                                         }
-                                    else
-                                        continue;
+                                    else continue;
                                 closedir(dir);
                             }
                         if (tmp_paths.empty()) return {};
@@ -216,5 +203,5 @@ namespace NGA {
                 return rets;
             }
         }
-    }  // namespace f
-}  // namespace NGA
+    } // namespace f
+} // namespace NGA

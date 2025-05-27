@@ -21,13 +21,13 @@
 #include <string_view>
 
 #ifndef NGA_INLINE
-#ifdef __GNUC__
-#define NGA_INLINE __attribute__((always_inline)) inline
-#elif defined(_MSC_VER)
-#define NGA_INLINE __forceinline
-#else
-#define NGA_INLINE inline
-#endif
+    #ifdef __GNUC__
+        #define NGA_INLINE __attribute__((always_inline)) inline
+    #elif defined(_MSC_VER)
+        #define NGA_INLINE __forceinline
+    #else
+        #define NGA_INLINE inline
+    #endif
 #endif
 
 namespace NGA {
@@ -41,8 +41,7 @@ namespace NGA {
         /// @param s2 第二个字符串
         /// @return   两个字符串相同时返回true，否则为false
         NGA_INLINE static bool eq(strv s1, strv s2) {
-            if (s1.size() != s2.size())
-                return false;
+            if (s1.size() != s2.size()) return false;
             else
                 for (size_t i = 0; i < s1.size(); ++i)
                     if (tolower(s1[i]) != tolower(s2[i])) return false;
@@ -55,21 +54,17 @@ namespace NGA {
         NGA_INLINE static bool match(str s1, str s2) {
             transform(s1.begin(), s1.end(), s1.begin(), [](unsigned char c) { return tolower(c); });
             transform(s2.begin(), s2.end(), s2.begin(), [](unsigned char c) { return tolower(c); });
-            if (s2 == "*")
-                return true;
+            if (s2 == "*") return true;
             else if (s2.find('*') == str::npos)
-                if (s1.find(s2) == str::npos)
-                    return false;
-                else
-                    return true;
+                if (s1.find(s2) == str::npos) return false;
+                else return true;
             else {
                 size_t       pos = 0;
                 stringstream ss(s2.data());
                 str          item, last_item;
                 bool         ok = false, check = false;
                 while (getline(ss, item, '*'))
-                    if (item.empty())
-                        continue;
+                    if (item.empty()) continue;
                     else if (pos = s1.find(item, pos);
                              pos == str::npos || (!check && s2[0] != '*' && !s1.starts_with(item))) {
                         ok = false;
@@ -79,10 +74,8 @@ namespace NGA {
                         last_item  = item;
                         pos++;
                     }
-                if (ok && (s2.back() == '*' || s1.ends_with(last_item)))
-                    return true;
-                else
-                    return false;
+                if (ok && (s2.back() == '*' || s1.ends_with(last_item))) return true;
+                else return false;
             }
         }
         /// @brief   替换字符串头部
@@ -112,10 +105,8 @@ namespace NGA {
         /// @param t 后缀
         /// @return  后缀相同时返回true，否则为false
         NGA_INLINE static bool check_suffix(strv s, str t) {
-            if (t = '.' + t; s.size() < t.size())
-                return false;
-            else
-                return eq(s.substr(s.size() - t.size()), t);
+            if (t = '.' + t; s.size() < t.size()) return false;
+            else return eq(s.substr(s.size() - t.size()), t);
         }
-    }  // namespace s
-}  // namespace NGA
+    } // namespace s
+} // namespace NGA
