@@ -22,14 +22,15 @@ class NGAWatermark {
   static OverlayEntry? _watermark;
   static void add(final BuildContext ctx, final String txt, {final bool colorful = false}) {
     if (_watermark != null) return;
-    _watermark =
-        OverlayEntry(builder: (final _) => get(ctx, txt, colorful: colorful)).let((final OverlayEntry entry) {
+    _watermark = OverlayEntry(builder: (final _) => get(ctx, txt, colorful: colorful))
+        .let((final OverlayEntry entry) {
       Overlay.of(ctx).insert(entry);
       return entry;
     });
   }
 
-  static Widget get(final BuildContext ctx, final String txt, {final bool colorful = false}) => Positioned.fill(
+  static Widget get(final BuildContext ctx, final String txt, {final bool colorful = false}) =>
+      Positioned.fill(
         child: IgnorePointer(
           child: CustomPaint(size: Size.infinite, painter: _NGAWatermarkPainter(ctx, txt, colorful)),
         ),

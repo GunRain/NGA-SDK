@@ -79,7 +79,9 @@ class _CUBaseCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: outPadding),
         child: Material(
           color: color ??
-              (MediaQuery.of(ctx).platformBrightness == Brightness.light ? CUWidget.white : CUWidget.black),
+              (MediaQuery.of(ctx).platformBrightness == Brightness.light
+                  ? CUWidget.white
+                  : CUWidget.black),
           borderRadius: radius ?? CUWidget.radius,
           child: Container(
             constraints: limitHeight ? const BoxConstraints(minHeight: CUWidget.height) : null,
@@ -265,7 +267,8 @@ class CUNavBarGroup {
 }
 
 class CUNavBarGroupSub {
-  CUNavBarGroupSub({required this.icon, required this.name, required this.page, this.can, this.whyCannot});
+  CUNavBarGroupSub(
+      {required this.icon, required this.name, required this.page, this.can, this.whyCannot});
 
   final IconData icon;
   final String name;
@@ -339,17 +342,18 @@ class CUNavBar extends StatelessWidget {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width > MediaQuery.of(context).size.height
-                                              ? MediaQuery.of(context).size.width / 3
-                                              : MediaQuery.of(context).size.width * 0.75,
+                                      width: MediaQuery.of(context).size.width >
+                                              MediaQuery.of(context).size.height
+                                          ? MediaQuery.of(context).size.width / 3
+                                          : MediaQuery.of(context).size.width * 0.75,
                                       child: CUCard(
                                         ((final List<CUNavBarGroup> target) => target
                                             .map(
                                               (final group) => Column(
                                                 children: [
                                                   if (group.name.isNotEmpty)
-                                                    CUHeadLabel(group.name, left: CUWidget.lessLeftPadding),
+                                                    CUHeadLabel(group.name,
+                                                        left: CUWidget.lessLeftPadding),
                                                   CUCard(
                                                     Column(
                                                       children: group.sub.map((final sub) {
@@ -373,12 +377,14 @@ class CUNavBar extends StatelessWidget {
                                                                           ? null
                                                                           : Colors.grey,
                                                                 ),
-                                                                subtitle: !can.value && sub.whyCannot != null
-                                                                    ? Text(sub.whyCannot!)
-                                                                    : null,
+                                                                subtitle:
+                                                                    !can.value && sub.whyCannot != null
+                                                                        ? Text(sub.whyCannot!)
+                                                                        : null,
                                                                 onTap: () {
                                                                   _history.value.add(targetIndex);
-                                                                  _history.value = _history.value.toList();
+                                                                  _history.value =
+                                                                      _history.value.toList();
                                                                   index.value = targetIndex;
                                                                   onChange?.call(targetIndex);
                                                                   overlayEntry?.remove();
@@ -455,7 +461,8 @@ class CUNavBar extends StatelessWidget {
                                 (final entry) => SizedBox(
                                   key: _miniKeys[entry.key],
                                   child: AnimatedBuilder(
-                                    animation: Listenable.merge([index, entry.value.can, CUWidget.themeColor]),
+                                    animation:
+                                        Listenable.merge([index, entry.value.can, CUWidget.themeColor]),
                                     builder: (final _, final __) {
                                       if (index.value == entry.key)
                                         WidgetsBinding.instance.addPostFrameCallback((final _) {
@@ -480,7 +487,8 @@ class CUNavBar extends StatelessWidget {
                                             color: entry.value.can!.value ? null : Colors.grey,
                                           ),
                                           tooltip: entry.value.name,
-                                          color: index.value == entry.key ? CUWidget.themeColor.value : null,
+                                          color:
+                                              index.value == entry.key ? CUWidget.themeColor.value : null,
                                         ),
                                       );
                                     },
@@ -587,11 +595,11 @@ class CUWidget extends StatelessWidget {
     return _themeColor;
   }
 
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color black = Color(0xFF202020);
-  static const Color yellow = Color(0xFFD9C1A9);
-  static const Color purple = Color(0xFF5746A6);
-  static const Color red = Color(0xFFC8372C);
+  static const white = Color(0xFFFFFFFF);
+  static const black = Color(0xFF202020);
+  static const yellow = Color(0xFFD9C1A9);
+  static const purple = Color(0xFF5746A6);
+  static const red = Color(0xFFC8372C);
   static const padding = 22.5;
   static const outPadding = 20.0;
   static const leftPadding = 42.5;
