@@ -26,11 +26,11 @@ until_key() {
         eventCode=$(getevent -qlc 1 | awk '{if ($2=="EV_KEY" && $4=="DOWN") {print $3; exit}}')
         case "$eventCode" in
         KEY_VOLUMEUP)
-            printf up
+            echo -n up
             return
             ;;
         KEY_VOLUMEDOWN)
-            printf down
+            echo -n down
             return
             ;;
         KEY_POWER)
@@ -98,7 +98,8 @@ str_eq() {
 
 pure_print() {
     { run2null type ui_print && ui_print "$1"; } || {
-        [ -z "$OUTFD" ] && printf '%s\n' "$1" || printf '%s\n' "ui_print $1\nui_print" >>"/proc/self/fd/$OUTFD"
+        # shellcheck disable=SC3036
+        [ -z "$OUTFD" ] && echo -e "$1" || echo -e "ui_print $1\nui_print" >>"/proc/self/fd/$OUTFD"
     }
 }
 
