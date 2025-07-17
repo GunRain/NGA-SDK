@@ -22,9 +22,9 @@ import (
 )
 
 type HttpReader struct {
-	url    string
+	Url    string
 	client *http.Client
-	size   int64
+	Size   int64
 }
 
 func NewHttpReader(url string) (*HttpReader, error) {
@@ -37,18 +37,18 @@ func NewHttpReader(url string) (*HttpReader, error) {
 	if resp.ContentLength < 0 {
 		return nil, errors.New("ContentLength < 0")
 	}
-	return &HttpReader{url: url, client: client, size: resp.ContentLength}, nil
+	return &HttpReader{Url: url, client: client, Size: resp.ContentLength}, nil
 }
 
 func (_reader *HttpReader) ReadAt(p []byte, off int64) (n int, err error) {
-	if off >= _reader.size {
+	if off >= _reader.Size {
 		return 0, io.EOF
 	}
 	end := off + int64(len(p)) - 1
-	if end >= _reader.size {
-		end = _reader.size - 1
+	if end >= _reader.Size {
+		end = _reader.Size - 1
 	}
-	req, err := http.NewRequest("GET", _reader.url, nil)
+	req, err := http.NewRequest("GET", _reader.Url, nil)
 	if err != nil {
 		return 0, err
 	}
