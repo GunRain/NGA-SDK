@@ -22,9 +22,9 @@ import (
 )
 
 type HttpReader struct {
-	Url    string
+	url    string
 	client *http.Client
-	Size   int64
+	size   int64
 }
 
 func NewHttpReader(url string) (*HttpReader, error) {
