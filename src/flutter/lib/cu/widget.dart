@@ -14,6 +14,7 @@
 
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:system_theme/system_theme.dart';
@@ -582,7 +583,7 @@ class CUWidget extends StatelessWidget {
   static final _themeColor = ValueNotifier(red);
   static var _themeColorListener = false;
   static ValueNotifier<Color> get themeColor {
-    if (!_themeColorListener) {
+    if (!kIsWasm && !kIsWeb && !_themeColorListener) {
       SystemTheme.fallbackColor = red;
       SystemTheme.accentColor.load().then((final _) {
         _themeColor.value = SystemTheme.accentColor.accent.withAlpha(255);
