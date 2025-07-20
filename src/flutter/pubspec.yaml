@@ -1,6 +1,6 @@
 name: nga_sdk
 description: "NGA SDK is an auxiliary SDK for Android(and Flutter for Android) development, aiming to provide a better development experience for NGAs."
-version: 4.4.4+0
+version: 4.4.4+1
 repository: https://github.com/TianwanTW/NGA-SDK
 environment:
   sdk: '>=2.12.0 <4.0.0'
@@ -8,10 +8,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.1.0
+  flutter_svg: ^2.2.0
   system_theme: ^3.1.2
   vector_graphics: ^1.1.19
-  window_manager: ^0.5.0
+  window_manager: ^0.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
