@@ -397,7 +397,6 @@ nga_install_done() {
     is_magisk && [ "$MAGISK_VER_CODE" -lt 27008 ] &&
     pure_print '⚠️ WARNING!!! OLD VERSION OF MAGISK DETECTED!'
 
-is_ksu && [ -n "$(run22null pm path com.sukisu.ultra)" ] &&
-    pure_print '⚠️ WARNING!!! SUKISU ULTRA DETECTED!'
+[ "$KSU_SUKISU" = true ] && pure_print '⚠️ WARNING!!! SUKISU DETECTED!'
 
 true # Okay!
