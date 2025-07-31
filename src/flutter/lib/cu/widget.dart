@@ -610,9 +610,7 @@ class CUWidget extends StatelessWidget {
   static const bottomPadding = 7.5;
   static const height = 50.5;
   static const radiusNum = 15.0;
-  static const czyRadiusNum = 10.0;
   static final radius = BorderRadius.circular(radiusNum);
-  static final czyRadius = BorderRadius.circular(czyRadiusNum);
   static const lightColorScheme = ColorScheme.light(
     primary: Color(0xFF000000),
     secondary: Color(0xFF888888),

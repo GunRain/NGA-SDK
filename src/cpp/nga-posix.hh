@@ -30,13 +30,13 @@
 #include <sys/stat.h>
 
 #ifndef NGA_INLINE
-    #ifdef __GNUC__
-        #define NGA_INLINE __attribute__((always_inline)) inline
-    #elif defined(_MSC_VER)
-        #define NGA_INLINE __forceinline
-    #else
-        #define NGA_INLINE inline
-    #endif
+#ifdef __GNUC__
+#define NGA_INLINE __attribute__((always_inline)) inline
+#elif defined(_MSC_VER)
+#define NGA_INLINE __forceinline
+#else
+#define NGA_INLINE inline
+#endif
 #endif
 
 namespace NGA {
@@ -52,10 +52,10 @@ namespace NGA {
     /// @return stdout
     str cmd(strv c) {
         if (FILE* fp = popen(c.data(), "r")) {
-            ostringstream stm;
-            int           c;
-            while ((c = fgetc(fp)) != EOF) stm.put(c);
-            return (pclose(fp), stm.str());
+            str ret;
+            int ch;
+            while ((ch = fgetc(fp)) != EOF) ret.push_back(ch);
+            return (pclose(fp), ret);
         }
         return "";
     }
