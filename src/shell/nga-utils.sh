@@ -353,7 +353,8 @@ nga_install_done() {
     }
 
     # Clean useless files (just simply)
-    for file in README CHANGELOG LICENSE NOTICE CONTRIBUTING SECURITY; do
+    # Keep license for SakitinSU
+    for file in README CHANGELOG NOTICE CONTRIBUTING SECURITY; do
         for suffix in '' '.txt' '.md' '.mkd'; do
             [ -f "$MODPATH/$file$suffix" ] && del -rf "$MODPATH/$file$suffix"
         done
