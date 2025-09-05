@@ -9,7 +9,7 @@ ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
 LineEnding: LF
 UseCRLF: false
-UseTab: Never
+UseTab: Always
 InsertNewlineAtEOF: false
 AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
