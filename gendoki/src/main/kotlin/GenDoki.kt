@@ -1,3 +1,5 @@
+@file:Suppress("PackageDirectoryMismatch")
+
 package dev.oom_wg.purejoy.ccc.gendoki
 
 import android.app.Application

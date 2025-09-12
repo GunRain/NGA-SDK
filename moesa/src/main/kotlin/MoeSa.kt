@@ -1,3 +1,5 @@
+@file:Suppress("PackageDirectoryMismatch")
+
 package dev.oom_wg.purejoy.ccc.moesa
 
 import android.app.Application
