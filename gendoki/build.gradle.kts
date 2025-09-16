@@ -13,7 +13,7 @@ android {
 	compileSdk = 36
 
 	defaultConfig {
-		minSdk = 16
+		minSdk = 1
 		consumerProguardFiles("consumer-rules.pro")
 	}
 	buildTypes {
