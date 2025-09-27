@@ -278,10 +278,6 @@ val fvv = FVVV().apply { parse(txt) }
 一切去除描述的行为均仅为在输出的字符串中去除，不会影响到代码中的描述
 :::
 
-:::note
-目前仅通过传入字符串来设置模式，后续会为此优化
-:::
-
 <Tabs>
 <TabItem value="cpp" label="C++">
 
@@ -296,7 +292,7 @@ val fvv = FVVV().apply { parse(txt) }
 </TabItem>
 <TabItem value="go" label="Go">
 
-<CodeBlock language='go'>{`fvv_str := fvv.Print()`.trim()}</CodeBlock>
+<CodeBlock language='go'>{`fvv_str := fvv.Print(PrintOpt{})`.trim()}</CodeBlock>
 
 </TabItem>
 <TabItem value="kotlin" label="Kotlin">
