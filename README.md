@@ -1,33 +1,10 @@
-# [NGA SDK](https://app.niggergo.work) ([LICENSE](LICENSE.txt))
+# [NGA SDK](https://app.niggergo.work/docs/nga)
 
-NGA SDK是面向Android开发的辅助SDK，内容涵盖应用安全、前端组件、实用代码等。
+## [LICENSE](LICENSE.txt)
 
-使用此SDK需要知道一件事情，如果不知道这件事情，则可以忽略这件事情，以后也最好不要知道这件事情。
+NGA SDK 是面向 Android 开发的辅助 SDK，内容涵盖应用安全、前端组件、实用代码等。
 
-`任何使用NGA SDK的代码的行为都应该注明来源，我本人除外`
+使用此 SDK 需要知道一件事情，如果不知道这件事情，则可以忽略这件事情，以后也最好不要知道这件事情。
 
-**部分代码经过恶意降低可读性编写，请酌情查看**
-
-## [Flutter](src/flutter/) ([Pub](https://pub-web.flutter-io.cn/packages/nga_sdk))
-
-### [文档](https://pub-web.flutter-io.cn/documentation/nga_sdk/latest/nga_sdk/)
-
-## Shell (`busybox ash`可用)
-
-### [实用代码(Shell Utils)](src/shell/nga-utils.sh)
-
-### [秋水加密(AW Enc)](src/shell/nga-enc.sh)
-
-## C++ (`C++20`)
-
-### [标准库通用](src/cpp/nga-std.hpp)
-
-### [POSIX通用](src/cpp/nga-posix.hpp)
-
-### [按键事件监听](src/cpp/nga-key.hpp)
-
-## Go (`Go1.18`)
-
-### [日志记录](src/go/logger.go)
-
-### [文件操作](src/go/io.go)
+> [!TIP]
+> 请注意许可证内容，使用 NGA SDK 的代码应当注明来源
