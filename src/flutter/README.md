@@ -1,1 +1,1 @@
-# [README](https://gitcode.com/OutOfMemories-WorkGroup/NGA-SDK)
+# [README](https://app.niggergo.work/docs/nga)

@@ -1,0 +1,423 @@
+import Admonition from '@theme/Admonition'
+import CodeBlock from '@theme/CodeBlock'
+import TabItem from '@theme/TabItem'
+import Tabs from '@theme/Tabs'
+
+# 基本用法
+
+**FVV** 全称 **Fresh View for Viewer**，是一个较为简单易上手的语言，名字显而易见，是个 _~~废物~~_ **清新** 的文本格式，那么有多清新呢，请看示例
+
+```fvv
+Val1 = "FVV\"" <字符串转义与注释转义\>>;
+Val2 = true    <布尔值>;
+Val3 = 2006    <整数>;
+Val4 = 2006.06 <浮点数>;
+
+Val5 = ["FVV", "FW"] <字符串组>;
+Val6 = [2, 0, 0, 6,] <整数组(这个“,”是故意多打的)>;
+Val7 = [Val5, Val6]  <字符串组(值组赋值默认跟随第一个值的类型)>;
+Val8 = <FVV值组嵌套> [
+  {
+    Val9 = "FVV"
+    Val10 = <FVV值组> [
+      <FVV值组子值> {
+        Val11 = "FW"
+      }
+      {
+        Val12 = "FW"
+      }
+    ]
+  }
+]
+
+Group = {
+  Sub = {
+      a = Val3 <跨组赋值>;
+  } <子组>;
+  c = Sub.a <跨组赋值>;
+} <组>;
+
+Group.Sub.b = a           <同组赋值，支持用“.”连接组名>;
+Group.Sub.b = Group.Sub.a <同组赋值，用“.”表示了完整名称>;
+```
+
+显而易见，支持`字符串`、`布尔值`、`整数`、`浮点数`以及它们的`组`的定义，还有 FVV 本身的`组`，还支持`值组`以及`赋值`
+
+:::tip
+FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符号是特定符号时（例如 `"` 和 `>`），
+判断其上一个字符是否为 `\`，并没有很完善的转义判断，故仅支持转义 `"` 和 `>`（即 `"\""` 和 `<\>>`），
+不支持 `\n` 等转义，直接使用 `\` 时不需要 `\\`，直接 `\` 即可（因此字符串或注释的末尾不可以是 `\`）
+:::
+
+值的命名也是没有什么忌口的，但需要注意的是，
+如果一个值被命名为**纯数字**（仅 `整数`，因为 `浮点数` 会被分割为双层组），
+那么这个值将**无法用于赋值**，因为没法判断到底给的是值还是值的名称
+
+同样的，还需要注意正常命名不要带 `.` 啊喂，会被认为是多层组的定义的
+
+值的定义使用 `;` 或 `换行` 进行，
+所有的值都可以置于根路径的 `{}` 里面（放不放都没区别，只不过加一个 `{}` 看起来类 JSON 一点），
+块注释使用 `<>`，没有行注释
+
+:::tip
+`换行` 可以省略掉以下字符:
+
+- `;`: 当定义值时有 `换行` 则无需在行尾添加 `;`
+- `,`: 当定义组时有 `换行` 则无需在两个值之间添加 `,`
+
+:::
+
+注释是 FVV 一个比较特色的功能，它可以放到任何地方，请看示例:
+
+```fvv
+<注释>{<注释>a<注释>=<注释>1<注释>;<注释>}<注释>
+```
+
+可以非常直接地看出来，注释完全是想怎么写就怎么写，但是它的作用不止于此
+
+介于 `=` 与 `;`（或 `换行`）之间的**最后一个**注释，将会被认定为是该值的 `描述`，在解析时将会被留存为该值的附属值
+
+:::warning
+因为 `换行` 可以替代 `;`，`描述` 又是和定义一样通过 `换行`/`;` 来解析的，
+所以 `描述` 不可以写到定义的**下一行**！
+:::
+
+:::note
+为了让 **FWW** 有更好的开发体验，`FVV 值组` 及其子值的 `描述` 是放在前面的
+:::
+
+## 代码层使用方法
+
+:::tip
+仅支持 `UTF-8` 文本（或 `UTF-8 with BOM`），由于各种语言实现的差异，不确保所有语言均可正常解析所有文本
+
+解析时会把所有 `\r\n` 替换为 `\n`，把所有 `\r` 替换为 `\n`
+（即强制将文本转换为 `LF` 文本）
+:::
+
+### 引入依赖
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+在项目中添加文件后，直接 `#include` 即可:
+
+<CodeBlock language='cpp'>{`#include "fvv.hh"`.trim()}</CodeBlock>
+
+</TabItem>
+
+<TabItem value="dart" label="Dart">
+
+> [Flutter Pub 发布页面](https://pub-web.flutter-io.cn/packages/fvv)
+>
+> [Dart API 文档](https://pub-web.flutter-io.cn/documentation/fvv/latest/fvv/)
+
+先添加依赖:
+
+<Tabs>
+	<TabItem value='dart' label='Dart'>
+		<CodeBlock language='shell'>{`dart pub add fvv`.trim()}</CodeBlock>
+	</TabItem>
+	<TabItem value='flutter' label='Flutter'>
+		<CodeBlock language='shell'>{`flutter pub add fvv`.trim()}</CodeBlock>
+	</TabItem>
+</Tabs>
+
+然后直接 `import` 即可:
+
+<CodeBlock language='dart'>{`import 'package:fvv/fvv.dart';`.trim()}</CodeBlock>
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+<Admonition type="tip" title="本地依赖">
+
+在 `go.mod` 中通过 `replace` 指向本地路径，并通过 `require` 添加依赖:
+
+<CodeBlock language='mod'>
+{`
+replace shiror.ren/fvv => path/fvv/go
+
+require shiror.ren/fvv v0.0.0
+`.trim()}
+
+</CodeBlock>
+
+</Admonition>
+
+直接 `import` 即可:
+
+<CodeBlock language='go'>{`import "shiror.ren/fvv"`.trim()}</CodeBlock>
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin">
+
+> [JitPack 发布页面](https://jitpack.io/#dev.oom-wg/FVV)
+
+先确保 `repositories` 内有 `https://jitpack.io`:
+
+<Tabs>
+	<TabItem value='groovy' label='Groovy'>
+		<CodeBlock language='groovy'>
+			{`
+dependencyResolutionManagement {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+`.trim()}
+		</CodeBlock>
+	</TabItem>
+	<TabItem value='kotlin' label='Kotlin'>
+		<CodeBlock language='kotlin'>
+			{`
+dependencyResolutionManagement {
+    repositories {
+        maven("https://jitpack.io")
+    }
+}
+`.trim()}
+		</CodeBlock>
+	</TabItem>
+</Tabs>
+
+然后添加依赖:
+
+<CodeBlock language='groovy'>
+	{`
+dependencies {
+    implementation("dev.oom-wg.FVV:FVV:-SNAPSHOT")
+}
+`.trim()}
+</CodeBlock>
+
+再直接 `import` 即可:
+
+<CodeBlock language='kotlin'>{`import ren.shiror.fvv.FVVV`.trim()}</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+### 基本功能
+
+首先当然是解析
+
+:::tip
+由于 `Go` 的语言特性，其函数名称不得不大写
+
+由于 `Dart` 与 `Go` 不支持函数重载，为了保证长期维护的可能性，额外添加了 `String` 后缀
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+<CodeBlock language='cpp'>
+	{`
+FVV::FVVV fvv;
+fvv.parse(txt);
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+
+<TabItem value="dart" label="Dart">
+
+<CodeBlock language='dart'>
+	{`
+final fvv = FVVV()..parseString(txt);
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+<CodeBlock language='go'>
+	{`
+fvv := NewFVVV()
+fvv.ParseString(txt)
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin">
+
+<CodeBlock language='kotlin'>
+	{`
+val fvv = FVVV().apply { parse(txt) }
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+然后是格式化成字符串，当传入以下内容时，会有不同的格式化效果:
+
+- `Common`: 默认
+- `Min`: 格式化后的文本将去掉任何符号间的**空格**、**缩进**、**换行**(替换成 `;`)、**描述**
+- `BigList`: 格式化后的文本中的任何组都会被展开为**一行一值**
+- `NoDesc`: 格式化后的文本不再有任何**描述**
+
+:::note
+各个语言的格式化选项位置如下:
+
+- `C++`: `FVV::FormatOpt`
+- `Dart`: `FVVFormatOpt`
+- `Go`: 以 `FmtOpt` 开头的值，调用时需要通过 `PrintOpt` 传入
+- `Kotlin`: `FVVV.Companion.FormatOpt`
+
+不同的语言在命名上略有不同，但实际行为一致
+:::
+
+:::important
+`FVV 值组` 的 `描述` 在 FWW 中是页面标题，在 `Min` 与 `NoDesc` 中不会被去除
+
+其内部的 `FVV 值` 的 `描述` 则是其组件类型，同样也不会被去除
+:::
+
+:::tip
+一切去除描述的行为均仅为在输出的字符串中去除，不会影响到代码中的描述
+:::
+
+:::note
+目前仅通过传入字符串来设置模式，后续会为此优化
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+<CodeBlock language='cpp'>{`string fvv_str = fvv.print();`.trim()}</CodeBlock>
+
+</TabItem>
+
+<TabItem value="dart" label="Dart">
+
+<CodeBlock language='dart'>{`final fvvStr = fvv.print();`.trim()}</CodeBlock>
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+<CodeBlock language='go'>{`fvv_str := fvv.Print()`.trim()}</CodeBlock>
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin">
+
+<CodeBlock language='kotlin'>{`val fvvStr = fvv.print()`.trim()}</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+然后是对值的基本判断
+
+:::note
+由于 `Go` 的语法可用性太低了，便又封装了 `SubIsEmpty` 和 `SubIsNotEmpty` 来判断子项是否为空，
+但使用前最好还是先判断一下值本身是否为 `nil`
+
+由于写 `Kotlin` 时语法基本上照抄 `Dart`，所以 `isEmpty` 和 `isNotEmpty` 是通过 getter 获取的，然后又写了常规的函数获取
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+<CodeBlock language='cpp'>
+	{`
+bool is_empty = fvv.isEmpty() && !fvv.isNotEmpty(); // 判断是否为空
+bool is_type = fvv.isType<T>(); // 判断类型
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+
+<TabItem value="dart" label="Dart">
+
+<CodeBlock language='dart'>
+	{`
+final isEmpty = fvv.isEmpty && !fvv.isNotEmpty; // 判断是否为空
+final isType = fvv.isType<T>(); // 判断类型
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+<CodeBlock language='go'>
+	{`
+is_empty := fvv.IsEmpty() && !fvv.SubIsNotEmpty() // 判断是否为空
+_, is_type := fvv.Value.(T) // 判断类型
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin">
+
+<CodeBlock language='kotlin'>
+	{`
+val isEmpty = fvv.isEmpty && fvv.isEmpty() && !fvv.isNotEmpty && !fvv.isNotEmpty() // 判断是否为空
+val isType = fvv.isType<T>() // 判断类型
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+然后是读取值
+
+:::tip
+由于 `Go` 的语法实现这些有点麻烦，所以请自行使用 `.(T)` 来获取值吧
+
+由于 `Dart` 机制，常规获取 `List` 类型得到的是拷贝，有 `Ref` 后缀的函数获取到的才是引用
+:::
+
+:::note
+由于 `JVM` 机制，在 `Kotlin` 获取 `List` 类型的方法有点抽象...，在 `Kotlin` 获取到的是拷贝
+:::
+
+<Tabs>
+<TabItem value="cpp" label="C++">
+
+<CodeBlock language='cpp'>
+	{`
+auto value = fvv.as<T>(); // 指定类型获取
+string str = fvv.asString(); // 获取字符串
+vector<string> strs = fvv.asStrings(); // 获取字符串组
+// 其他依此类推，不再示范
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+
+<TabItem value="dart" label="Dart">
+
+<CodeBlock language='dart'>
+	{`
+final value = fvv.as<T>(); // 指定类型获取
+final str = fvv.asString(); // 获取字符串
+final strs = fvv.asStrings(); // 获取字符串组
+// 其他依此类推，不再示范
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="go" label="Go">
+
+<CodeBlock language='go'>
+	{`
+value, ok := fvv.Value.(T) // 指定类型获取，通过返回的布尔值来判断是否获取成功
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value="kotlin" label="Kotlin">
+
+<CodeBlock language='kotlin'>
+	{`
+val value = fvv.as<T>() // 指定类型获取
+val str = fvv.asString() // 获取字符串
+val strs = fvv.asStrings() // 获取字符串组
+// 其他依此类推，不再示范
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+赋值只需要在有重写运算符功能的语言上直接赋值即可，没有则需要手动调用内部的值进行赋值

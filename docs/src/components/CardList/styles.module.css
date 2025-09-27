@@ -1,0 +1,7 @@
+.cardListItem {
+	margin-block-end: 2rem;
+}
+
+.cardListItem > * {
+	block-size: 100%;
+}

@@ -1,0 +1,16 @@
+extends:
+  - stylelint-config-standard
+plugins:
+  - stylelint-plugin-logical-css
+  - stylelint-plugin-defensive-css
+  - stylelint-prettier
+rules:
+  plugin/use-logical-properties-and-values: true
+  plugin/use-defensive-css: true
+  prettier/prettier: true
+  comment-empty-line-before: null
+  custom-property-empty-line-before: null
+  font-family-no-missing-generic-family-keyword: null
+  keyframes-name-pattern: null
+  rule-empty-line-before: null
+  selector-class-pattern: null
