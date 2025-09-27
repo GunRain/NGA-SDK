@@ -50,6 +50,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: docs-dist
-          folder: docs/dist
+          folder: docs/build
           clean: true
           single-commit: true
