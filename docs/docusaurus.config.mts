@@ -36,8 +36,7 @@ export default {
 			require.resolve('@easyops-cn/docusaurus-search-local'),
 			{
 				hashed: true,
-				language: ['en', 'zh'],
-				removeDefaultStemmer: true
+				language: ['en', 'zh']
 			}
 		]
 	],
