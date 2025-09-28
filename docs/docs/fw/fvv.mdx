@@ -8,14 +8,14 @@ import Tabs from '@theme/Tabs'
 **FVV** 全称 **Fresh View for Viewer**，是一个较为简单易上手的语言，名字显而易见，是个 _~~废物~~_ **清新** 的文本格式，那么有多清新呢，请看示例
 
 ```fvv
-Val1 = "FVV\"" <字符串转义与注释转义\>>;
-Val2 = true    <布尔值>;
-Val3 = 2006    <整数>;
-Val4 = 2006.06 <浮点数>;
+Val1 = "FVV\"" <字符串转义与注释转义\>>
+Val2 = true    <布尔值>
+Val3 = 2006    <整数>
+Val4 = 2006.06 <浮点数>
 
-Val5 = ["FVV", "FW"] <字符串组>;
-Val6 = [2, 0, 0, 6,] <整数组(这个“,”是故意多打的)>;
-Val7 = [Val5, Val6]  <字符串组(值组赋值默认跟随第一个值的类型)>;
+Val5 = ["FVV", "FW"] <字符串组>
+Val6 = [2, 0, 0, 6,] <整数组(这个“,”是故意多打的)>
+Val7 = [Val5, Val6]  <字符串组(值组赋值默认跟随第一个值的类型)>
 Val8 = <FVV值组嵌套> [
   {
     Val9 = "FVV"
@@ -32,13 +32,17 @@ Val8 = <FVV值组嵌套> [
 
 Group = {
   Sub = {
-      a = Val3 <跨组赋值>;
-  } <子组>;
-  c = Sub.a <跨组赋值>;
-} <组>;
+      a = Val3 <跨组赋值>
+  } <子组>
+  c = Sub.a <跨组赋值>
+} <组>
 
-Group.Sub.b = a           <同组赋值，支持用“.”连接组名>;
-Group.Sub.b = Group.Sub.a <同组赋值，用“.”表示了完整名称>;
+Group.Sub.b = a           <同组赋值，支持用“.”连接组名>
+Group.Sub.b = Group.Sub.a <同组赋值，用“.”表示了完整名称>
+
+Desc = "这是描述"
+Value = "这是值" <Desc>
+<Value的描述是通过赋值Desc实现的，这样Value的描述将会是“这是描述”>
 ```
 
 显而易见，支持`字符串`、`布尔值`、`整数`、`浮点数`以及它们的`组`的定义，还有 FVV 本身的`组`，还支持`值组`以及`赋值`
@@ -86,6 +90,13 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 为了让 **FWW** 有更好的开发体验，`FVV 值组` 及其子值的 `描述` 是放在前面的
 :::
 
+:::tip
+`描述` 是支持**赋值**的，也就是说任意字符串都有可能赋值到 `描述` 上，只要 `描述` 与该字符串的值名称相同
+
+所以在实践中，建议在编写 `描述` 时，在开头加一个 `- `，从而实现类似于 `<- 这是注释>` 的效果，
+如果字体支持，`<-` 会变成一个好看的箭头，这样既不会与赋值机制有冲突，还可以提升观感
+:::
+
 ## 代码层使用方法
 
 :::tip
@@ -114,7 +125,7 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 
 先添加依赖:
 
-<Tabs groupId="dart-type" queryString>
+<Tabs groupId='dart-type' queryString>
 	<TabItem value='dart' label='Dart'>
 		<CodeBlock language='shell'>{`dart pub add fvv`.trim()}</CodeBlock>
 	</TabItem>
@@ -156,7 +167,7 @@ require shiror.ren/fvv v0.0.0
 
 先确保 `repositories` 内有 `https://jitpack.io`:
 
-<Tabs groupId="gradle-script" queryString>
+<Tabs groupId='gradle-script' queryString>
 	<TabItem value='groovy' label='Groovy'>
 		<CodeBlock language='groovy'>
 			{`
