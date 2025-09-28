@@ -320,6 +320,9 @@ val fvv = FVVV().apply { parse(txt) }
 但使用前最好还是先判断一下值本身是否为 `nil`
 
 由于写 `Kotlin` 时语法基本上照抄 `Dart`，所以 `isEmpty` 和 `isNotEmpty` 是通过 getter 获取的，然后又写了常规的函数获取
+
+> （本来想给 Dart 也写两种方式调用，结果 Dart 会重名...）
+
 :::
 
 <Tabs groupId="code-lang" queryString>
@@ -418,13 +421,19 @@ value, ok := fvv.Value.(T) // 指定类型获取，通过返回的布尔值来�
 <CodeBlock language='kotlin'>
 	{`
 val value = fvv.as<T>() // 指定类型获取
-val str = fvv.asString() // 获取字符串
-val strs = fvv.asStrings() // 获取字符串组
+val str = fvv.asString() // 常规获取字符串
+val str = fvv.string // getter获取字符串
+val strs = fvv.asStrings() // 常规获取字符串组
+val strs = fvv.strings // getter获取字符串组
 // 其他依此类推，不再示范
 `.trim()}
 </CodeBlock>
 
 </TabItem>
 </Tabs>
+
+:::note
+由于 `Dart` 的基本类型名称会冲突，所以没在它上面实现 getter 获取...
+:::
 
 赋值只需要在有重写运算符功能的语言上直接赋值即可，没有则需要手动调用内部的值进行赋值
