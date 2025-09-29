@@ -319,10 +319,7 @@ val fvv = FVVV().apply { parse(txt) }
 由于 `Go` 的语法可用性太低了，便又封装了 `SubIsEmpty` 和 `SubIsNotEmpty` 来判断子项是否为空，
 但使用前最好还是先判断一下值本身是否为 `nil`
 
-由于写 `Kotlin` 时语法基本上照抄 `Dart`，所以 `isEmpty` 和 `isNotEmpty` 是通过 getter 获取的，然后又写了常规的函数获取
-
-> （本来想给 Dart 也写两种方式调用，结果 Dart 会重名...）
-
+由于写 `Kotlin` 时语法基本上照抄 `Dart`，所以 `isEmpty` 和 `isNotEmpty` 是通过 getter 获取的
 :::
 
 <Tabs groupId="code-lang" queryString>
@@ -361,7 +358,7 @@ _, is_type := fvv.Value.(T) // 判断类型
 
 <CodeBlock language='kotlin'>
 	{`
-val isEmpty = fvv.isEmpty && fvv.isEmpty() && !fvv.isNotEmpty && !fvv.isNotEmpty() // 判断是否为空
+val isEmpty = fvv.isEmpty && !fvv.isNotEmpty // 判断是否为空
 val isType = fvv.isType<T>() // 判断类型
 `.trim()}
 </CodeBlock>
