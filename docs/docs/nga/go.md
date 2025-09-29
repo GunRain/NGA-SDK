@@ -14,10 +14,18 @@ Go 部分主要提供一些功能与辅助函数
 
 在 `go.mod` 中通过 `replace` 指向本地路径，并通过 `require` 添加依赖
 
-```mod
+```mod title="示例"
 replace app.niggergo.work/sdk/nga => path/nga/src/go
 
 require app.niggergo.work/sdk/nga v0.0.0
+```
+
+### 远程依赖
+
+通过命令行添加依赖:
+
+```shell
+go get -u app.niggergo.work/sdk/nga
 ```
 
 ### 使用依赖
