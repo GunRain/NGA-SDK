@@ -147,9 +147,9 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 
 <CodeBlock language='mod' title='示例'>
 {`
-replace shiror.ren/fvv => path/fvv/go
+replace app.niggergo.work/fvv => path/fvv/go
 
-require shiror.ren/fvv v0.0.0
+require app.niggergo.work/fvv v0.0.0
 `.trim()}
 
 </CodeBlock>
@@ -166,9 +166,15 @@ require shiror.ren/fvv v0.0.0
 
 </Admonition>
 
+<Admonition type='warning'>
+
+远程依赖仅可在 Go `1.25`+ 可用！
+
+</Admonition>
+
 直接 `import` 即可:
 
-<CodeBlock language='go'>{`import "shiror.ren/fvv"`.trim()}</CodeBlock>
+<CodeBlock language='go'>{`import "app.niggergo.work/fvv"`.trim()}</CodeBlock>
 
 </TabItem>
 <TabItem value='kotlin' label='Kotlin'>
