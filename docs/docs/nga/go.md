@@ -22,6 +22,10 @@ require app.niggergo.work/sdk/nga v0.0.0
 
 ### 远程依赖
 
+:::warning
+远程依赖仅可在 Go `1.25`+ 可用！
+:::
+
 通过命令行添加依赖:
 
 ```shell
