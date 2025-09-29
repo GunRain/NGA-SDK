@@ -25,7 +25,7 @@ require app.niggergo.work/sdk/nga v0.0.0
 通过命令行添加依赖:
 
 ```shell
-go get -u app.niggergo.work/sdk/nga
+go get -u app.niggergo.work/sdk/nga@latest
 ```
 
 ### 使用依赖
