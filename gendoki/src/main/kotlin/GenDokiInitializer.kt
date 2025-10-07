@@ -1,4 +1,4 @@
-@file:Suppress("PackageDirectoryMismatch")
+@file:Suppress("PackageDirectoryMismatch", "unused")
 
 package dev.oom_wg.purejoy.ccc.gendoki
 

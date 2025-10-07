@@ -27,4 +27,4 @@ dependencyResolutionManagement {
 
 rootProject.name = 'PureJoy CCC'
 
-include ':gendoki', ':moesa'
+include ':gendoki', ':moesa', ':futago'
