@@ -44,6 +44,7 @@ dependencyResolutionManagement {
 dependencies {
     implementation("dev.oom-wg.PureJoy-CCC:gendoki:-SNAPSHOT") // GenDoki
     implementation("dev.oom-wg.PureJoy-CCC:moesa:-SNAPSHOT") // MoeSa
+    implementation("dev.oom-wg.PureJoy-CCC:futago:-SNAPSHOT") // Futago
 }
 ```
 
@@ -51,6 +52,7 @@ dependencies {
 
 - `GenDoki`: 用于非常简单地配置用于初始化内容的内容提供器
 - `MoeSa`: 用于在不传入任何参数的情况下通过 `GenDoki` 在软件启动时校验软件真实性
+- `Futago`: 用于在不继承任何 **`Application` 子类** 的情况下通过 [`KavaRef`](https://highcapable.github.io/KavaRef/zh-cn/) 在 `Application` 中创建多个 **`Application` 子类** 的实例
 
 :::
 
@@ -104,4 +106,37 @@ class AppInitializer : GenDokiInitializer() {
 
 :::note
 如果校验失败，会调用 `killProcess(myPid())` 和 `exitProcess(-1)` 强制停止软件运行
+:::
+
+### Futago
+
+在自己的 `Application` 中实现 `FutagoAppsLoader` 然后再在 `attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory` 函数中调用即可
+
+```kotlin title="示例"
+import android.app.Application
+import android.content.Context
+import android.content.res.Configuration
+import dev.oom_wg.purejoy.ccc.futago.FutagoAppsDelegate
+import dev.oom_wg.purejoy.ccc.futago.FutagoAppsLoader
+
+class AppApplication : Application(), FutagoAppsLoader<AppApplication> {
+    override val futagoDelegate by lazy {
+        FutagoAppsDelegate(
+            listOf(TargetApplication::class)
+        )
+    }
+
+    override fun attachBaseContext(base: Context) =
+        super.attachBaseContext(base).also { appsAttachBaseContext() }
+    override fun onCreate() = super.onCreate().also { appsCreate() }
+    override fun onTerminate() = super.onTerminate().also { appsTerminate() }
+    override fun onConfigurationChanged(newConfig: Configuration) =
+        super.onConfigurationChanged(newConfig).also { appsConfigurationChanged(newConfig) }
+    override fun onLowMemory() = super.onLowMemory().also { appsLowMemory() }
+    override fun onTrimMemory(level: Int) = super.onTrimMemory(level).also { appsTrimMemory(level) }
+}
+```
+
+:::note
+为确保在 R8 的发力下运行正常，已在 **使用者 ProGuard 规则** 中添加了对所有 **`Application` 子类** 的 `keepclassmembers` 规则，将会保留 构造函数、`attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory` 以确保反射运行正常
 :::
