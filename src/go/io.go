@@ -148,7 +148,9 @@ func CopyDir(src, dst string) error {
 			}
 			atime, mtime := info.ModTime(), info.ModTime()
 			_ = os.Chtimes(dstPath, atime, mtime)
+			return nil
+		} else {
+			return CopyFile(path, dstPath)
 		}
-		return CopyFile(path, dstPath)
 	})
 }
