@@ -328,7 +328,7 @@ nga_install_init() {
 
 	# For Latest File
 	[ "$1" = official ] && {
-		nga_print 'Official website: https://latestfile.zip'
+		nga_print 'Official Website: https://latestfile.zip'
 		shift
 	}
 
