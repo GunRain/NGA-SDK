@@ -373,8 +373,8 @@ nga_install_done() {
 	}
 
 	# Clean useless files (just simply)
-	# Keep license for ShiroSU
-	for file in README CHANGELOG NOTICE CONTRIBUTING SECURITY; do
+	# Keep license, changelog for ShiroSU
+	for file in README NOTICE CONTRIBUTING SECURITY; do
 		for suffix in '' '.txt' '.md' '.mkd'; do
 			[ -f "$MODPATH/$file$suffix" ] && del -rf "$MODPATH/$file$suffix"
 		done
