@@ -88,16 +88,40 @@ EmptyLineBeforeAccessModifier: LogicalBlock
 FixNamespaceComments: false
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex:           '^<.*/.*\.h>$'
-    Priority:        4
+  - Regex:           '^<c(assert|complex|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|string|tgmath|time|uchar|wchar|wctype|std(align|arg|bool|def|int|io|lib))>$'
+    Priority:        2
     SortPriority:    0
     CaseSensitive:   false
-  - Regex:           '^<.*\.h>'
+  - Regex:           '^<(assert|complex|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|string|tgmath|time|uchar|wchar|wctype|std(align|arg|bool|def|int|io|lib))\.h>$'
     Priority:        3
     SortPriority:    0
     CaseSensitive:   false
+  - Regex:           '^<asm/.*\.h>$'
+    Priority:        6
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<sys/.*\.h>$'
+    Priority:        7
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<linux/.*\.h>$'
+    Priority:        8
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<android/.*\.h>$'
+    Priority:        9
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<.*/.*\.h>$'
+    Priority:        10
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^<.*\.h>'
+    Priority:        5
+    SortPriority:    0
+    CaseSensitive:   false
   - Regex:           '^<.*/.*'
-    Priority:        2
+    Priority:        4
     SortPriority:    0
     CaseSensitive:   false
   - Regex:           '^<.*'
@@ -105,7 +129,7 @@ IncludeCategories:
     SortPriority:    0
     CaseSensitive:   false
   - Regex:           '.*'
-    Priority:        5
+    Priority:        11
     SortPriority:    0
     CaseSensitive:   false
 IndentAccessModifiers: false
@@ -136,7 +160,7 @@ PackConstructorInitializers: NextLine
 PointerAlignment: Left
 PPIndentWidth: -1
 QualifierAlignment: Custom
-QualifierOrder: 
+QualifierOrder:
   - type
   - static
   - friend
