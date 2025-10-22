@@ -15,10 +15,11 @@
 #pragma once
 
 #include <algorithm>
-#include <cctype>
 #include <sstream>
 #include <string>
 #include <string_view>
+
+#include <cctype>
 
 #ifndef NGA_INLINE
 #ifdef __GNUC__

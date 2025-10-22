@@ -23,9 +23,10 @@
 #include <poll.h>
 #include <unistd.h>
 
-#include <linux/input.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+
+#include <linux/input.h>
 
 #ifndef NGA_INLINE
 #ifdef __GNUC__
@@ -51,7 +52,7 @@ namespace NGA {
 			for (fs::directory_entry const& entry : fs::directory_iterator("/dev/input"))
 				if (str const input = entry.path().string(); entry.is_character_file())
 					if (int fd = open(input.data(), O_RDONLY); fd >= 0) {
-						unsigned char evBits[(KEY_MAX + 7) / 8] = {0};
+						unsigned char evBits[(KEY_MAX + 7) / 8] = { 0 };
 						ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(evBits)), evBits);
 						if (evBits[TYPE / 8] & (1 << (TYPE % 8))) targets.push_back(input);
 						close(fd);
@@ -59,7 +60,7 @@ namespace NGA {
 			return targets;
 		}
 		class listener {
-		public:
+		   public:
 			NGA_INLINE			 listener(listener const&)	= delete;
 			NGA_INLINE listener& operator=(listener const&) = delete;
 			NGA_INLINE ~listener(void) { free(); }
@@ -86,11 +87,11 @@ namespace NGA {
 				_fds.clear();
 			}
 
-		private:
+		   private:
 			NGA_INLINE listener(int TYPE): _type(TYPE) {
 				for (str const& eventPath : getInputs(TYPE))
 					if (int fd = open(eventPath.data(), O_RDONLY); fd >= 0)
-						_fds.push_back({fd, POLLIN, 0});
+						_fds.push_back({ fd, POLLIN, 0 });
 			}
 			vec<struct pollfd> _fds;
 			int				   _type;

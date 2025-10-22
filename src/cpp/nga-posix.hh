@@ -14,14 +14,15 @@
 
 #pragma once
 
-#include <cstring>
-#include <ctime>
 #include <filesystem>
 #include <sstream>
 #include <string>
 #include <string_view>
 #include <system_error>
 #include <vector>
+
+#include <cstring>
+#include <ctime>
 
 #include <dirent.h>
 #include <fcntl.h>
@@ -118,9 +119,9 @@ namespace NGA {
 			struct stat si;
 			if (stat(s.data(), &si)) return false;
 			struct timespec dt[2] = {
-				{si.st_atime, 0},
-				  {si.st_mtime, 0}
-			  };
+				{ si.st_atime, 0 },
+				{ si.st_mtime, 0 }
+			};
 			if (rename(s.data(), d.data()))
 				if (fs::copy(s, d, ec); !ec)
 					if (utimensat(AT_FDCWD, d.data(), dt, 0); remove(s.data())) return false;
@@ -145,7 +146,7 @@ namespace NGA {
 		/// @return 匹配到的存在的路径
 		NGA_INLINE static vector<string> paths(strv p) {
 			if (p.find('*') == str::npos)
-				if (ok(p)) return {p.data()};
+				if (ok(p)) return { p.data() };
 				else return {};
 			else {
 				vector<string> rets;
@@ -167,7 +168,7 @@ namespace NGA {
 					else {
 						vector<string> tmp_paths;
 						for (str const& dir_path :
-							 rets.empty() ? (vector<string>){tmp_path.string()} : rets)
+							 rets.empty() ? (vector<string>) { tmp_path.string() } : rets)
 							if (DIR* dir = opendir(dir_path.data())) {
 								while (const struct dirent* entry = readdir(dir))
 									if (str const name = entry->d_name; !name.starts_with('.'))
