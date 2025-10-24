@@ -1,7 +1,7 @@
 name: nga_sdk
 description: 'SDK for C++, Dart (Flutter), Go, Shell, etc.'
-version: 4.4.5+1
-repository: https://github.com/TianwanTW/NGA-SDK
+version: 4.4.6
+repository: https://github.com/ShIroRRen/NGA-SDK
 environment:
   sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.17.0"
