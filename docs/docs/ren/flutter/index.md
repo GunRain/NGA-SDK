@@ -1,0 +1,313 @@
+# Re:Next - Flutter
+
+Flutter 是一个基于 Dart 实现的前端框架，
+但是由于 Dart 本身在除了开发一些包之外，很少需要单独使用，所以主要讲 Flutter
+
+:::note[Flutter 与 CMP]
+Flutter 与 CMP 在某些方面比较相似，但是 CMP 相较于 Flutter 有较多的劣势
+
+首先就是跨平台方面，CMP 需要 **JVM**，所以在绝大部分情况下，只会在 Android 上见到 Compose
+（KMP 倒不至于，但是开发也并不简单）
+
+尤其是在网页方面，两者都支持 `js`/`wasm`，但是 CMP 有个非常严重的硬伤，编译即送 **Skiko** 依赖大礼包，无论 js 还是 wasm，无论代码多少，都会依赖上这么个庞然大物
+
+虽然 Flutter 也会有 **Canvaskit** 的依赖，但是 Flutter 默认会走**谷歌 CDN**，并不需要过多操心，谷歌 CDN 无论是在中国大陆还是其他地方，速度都是相当可观的（_IP 太脏当我没说_）
+
+然而 **Skiko 并没有任何 CDN**，只能靠自己，这是一个非常大的硬伤，因为 Flutter 和 CMP 的编译产物都是比较大的，再加上比较大的核心依赖，速度会一拖再拖
+
+还有个硬伤，也是非常需要重视的，那就是 CMP **不支持中文**（就是没有其他语言的字体，常规字符外的文字均无法显示），也不会调用系统字体，虽然 Flutter 也是如此，但是 Flutter 做的相当智能了，会自动从**谷歌字体 CDN** 下载字体
+
+所以 CMP 只能自己依赖字体，要依赖一个中文字体也会占相当大的大小，并且 CMP 使用字体不知道为什么做的有一丝怪异，和 Jetpack Compose 有些不同，用起来会更麻烦
+
+还有个非常关键的点，CMP 无法使用谷歌字体，Jetpack Compose 的谷歌字体是通过 **GMS** 实现的，在没 GMS 的 Android 设备上都是残废的，更不用说在 CMP 上了（Flutter 的谷歌字体则不需要，因为是纯 Dart 实现的跨平台谷歌字体，根本都不需要为了 Android 单独再走 GMS）
+
+自己手动通过网络获取字体或许有些许可能，但是远远不如 Flutter 来的方便
+
+还有就是 Compose 本身的问题，先讲一个让我入门即放弃的问题
+
+Compose 的焦点管理相当麻烦，需要自己手动清理，不清理轻则内存泄漏，重则无法操作界面
+
+还有就是在设计上的几个问题，Flutter 是万物皆 `Widget` 这么个基本类，无论是 `main` 的入口，还是具体到每个组件都是这样
+
+然而 Compose 是由一堆意义不明的 `Unit`（就是什么都不返回的函数，等同于 `void`）组成的，
+在这么个整体架构上就很难让人理解，在组件上看起来是与 Flutter 比较相像的嵌套，但是实际上并不是这样
+
+Compose 中比较常见的一个东西是 `content: @Composable () -> Unit`，实际上就是传入了一个 Lambda 函数，
+并非 Flutter 那样的 `Widget`/`List<Widget>`，所以在组件分工上就会非常不明确，并且会导致在体系上非常混乱，
+因为可以 “**随地大小变**（_量_）”
+
+随地设变量虽然很多时候确实比较有需求，但是这样就不太约束人了（_代码质量_`--`），并且这也导致了 Compose 有了一种另样的界面架构：弹窗
+
+Flutter 的弹窗是可以直接在函数中创建的，例如在按钮的回调中显示弹窗，这样非常直观，也非常人性化
+
+但是 Compose 的弹窗是直接嵌在界面内部的，可以存在于几乎任何地方，然后通过一个**布尔值**管理状态，
+其他的类似组件原理皆是如此
+
+这样的各类问题就会导致整个界面的架构能多不明确就能多不明确，因为约束性差，状态管理上也莫名其妙
+
+Flutter 与 Compose 的状态更新也很不一样，Compose 由于就像先前说过的架构混乱，所以在状态管理上会更加吃力些，
+并且 Compose 的值很多时候与 `remember` 息息相关，没有细致管理可能就会有很多额外的性能消耗，
+**裸**值、**remember** 的值、**全局**值、**ViewModel** 中的值在使用时也要考虑许多
+
+然而 Flutter 只要是在不太滥用的情况下，可以把重绘约束到具体值或具体组件上，并不需要波及到整个组件，
+可以让组件只监听它需要的值，然后单独变化
+
+还有一个比较大的差异，Compose 的基本组件很少，大部分组件都是通过基本组件加上 `Modifier` 实现的，
+通过它来设置每个组件的具体效果，而非 Flutter 那样每个组件各自分工，通过嵌套实现组合效果
+
+并且 `Modifier` 有个比较反直觉的点，设置给它的属性并不会顺序执行，而是倒序的
+
+例如给一个组件通过 `clickable` 设置可点击，此时该组件就会有水波纹的按压效果，但是并没有圆角
+
+但是按照常规直觉，应当是 `Modifier.clickable {...}.clip(...)`，但这样并无成效，
+正确的反而是 `Modifier.clip(...).clickable {...}`，这样才能裁剪出圆角
+
+因为 `Modifier` 的原理是先内后外的链式调用，得反着来才可以正常用
+
+但是如果把 Flutter 只与 Jetpack Compose 对比，Flutter 的问题也不少
+
+体积问题是一个比较重要的问题，Flutter 本身的依赖就已经很大了，再加上代码的构建产物也挺大的，
+完全比不过编译成 `dex` 可以直接在 JVM 中运行的 Kotlin 代码
+
+并且 Kotlin 可以直接与 **JVM** 或是 **JNI** 这些交互，
+然而 Dart 虽然也有 **ffi** 或是**与 JVM 的通信通道**，但自然是远不及别人 Android 原生代码本身的
+
+还有一个最大的硬伤，那就是 Dart 本身很难实现较为容易的多线程运行
+
+Dart 的每个 **Isolate** 都是内存隔离的，无法直接交互，调用麻烦，通信也麻烦，能干的活也很少，
+涉及一点界面就会报错 Flutter 引擎未初始化（因为 Flutter 引擎仅存在于**主 Isolate**）
+
+所以大部分情况下，都是通过**异步**实现一些操作，代价就是性能差，占用多了就卡了，很多大厂软件也长期以来都有这个问题，
+很难解决，因为是底层设计的问题，要是 Dart 有 Kotlin 那样的协程，软件性能都不知道能翻多少倍
+:::
+
+由于并不是零基础教程，所以不讲基础
+
+:::note
+
+- [SDK 镜像](https://docs.flutter.cn/install/archive)
+- [Pub 镜像](https://docs.flutter.cn/community/china/)
+
+:::
+
+:::tip
+非常建议学习 Flutter 时通关一遍 [Codelab](https://codelabs.developers.google.cn/codelabs/flutter-codelab-first)
+:::
+
+## 版本选择
+
+除非有什么特殊需求，那么 **Stable 版本**是不太必要的，用 **Beta 版本**即可
+
+## 项目起名
+
+再新建项目时，尽可能地不要起太简单的名字，起 `dart`、`flutter`、`web` 这种名字会和官方包名称冲突！
+
+## 从 main 到具体界面
+
+`main` 自然就是 main，默认它不会有任何操作，要干什么当然是一步一步写啦
+
+`runApp` 是一个非常关键的函数，向它传入的 `Widget` 即软件的根组件
+
+但是，在此之前了，如果用了一些包，有些包可能需要初始化组件，大概会是这样的
+
+```dart title="示例"
+final WidgetsBinding binding = WidgetsFlutterBinding.ensureInitialized();
+
+// 初始化第三方包...
+
+runApp(/* 根组件 */);
+```
+
+字面上就能看出来，是为了确保绑定初始化成功，有些第三方包也会使用这个绑定
+
+:::note
+实际上 `runApp` 内部就会执行一次，只不过没有给个接口调用好让不重复执行而已
+:::
+
+:::tip
+可以随便封装一下，比如说像这样
+
+```dart title="封装示例"
+void runAppWithBinding(final Widget app, final void Function(WidgetsBinding) initializer) {
+  initializer(WidgetsFlutterBinding.ensureInitialized());
+  runApp(app);
+}
+```
+
+然后就可以这样调用
+
+```dart title="调用示例"
+runAppWithBinding(/* 根组件 */, (final WidgetsBinding binding) {
+  // 初始化第三方包...
+});
+```
+
+（和直接调用是一样的，怎么顺心怎么来？）
+:::
+
+根组件往往不是一个直接的组件，而是一个用于配置内容的组件再嵌套具体内容的组件
+
+```dart title="示例"
+runApp(
+  MaterialApp(
+    title: /* 软件标题 */,
+    theme: ThemeData.light(useMaterial3: true), // MD3 的日间主题
+    darkTheme: ThemeData.dark(useMaterial3: false), // MD2 的夜间主题（只是随便写的）
+    home: /* 主页组件 */,
+  ),
+);
+```
+
+:::tip
+在面临多页面需求时，可以使用 `MaterialApp.router` 等页面路由方案，而非直接的主页面组件
+:::
+
+落实到具体页面具体组件时，往往会使用 `StatefulWidget` 或 `StatelessWidget`，
+但是为了尽可能优化性能，**绝大部分情况下都不建议使用 `StatefulWidget`**
+
+:::note
+实际上还有一种组件的创建方式，那就是通过函数返回一个 `Widget`，
+这种方式实际上和直接定义继承 `StatelessWidget` 的类是一样的，按需使用即可
+:::
+
+很多时候，可能会通过 `StatefulWidget` 然后通过 `setState` 更新状态，
+这种做法相当不合适，会很大地浪费性能
+
+最好是除非实在没办法，那不然绝不用任何 `StatefulWidget`，不使用它也有很多管理状态的办法
+
+### 原生状态管理
+
+Flutter 提供了 `ValueNotifier` 等类型，以及对应的 `ValueListenableBuilder` 等组件，
+用于较为轻量地监听值的变化，可以满足很多需要，去掉了大部分使用 `StatefulWidget` 的情况
+
+```dart title="示例"
+class Page extends StatelessWidget {
+  Page({super.key});
+
+  final meow = ValueNotifier('meow');
+
+  @override
+  Widget build(final context) => Center(
+    child: ValueListenableBuilder(
+      valueListenable: meow,
+      builder: (final _, final String value, final _) => Text(value),
+    ),
+  );
+}
+```
+
+### 第三方包状态管理
+
+#### [GetX](https://pub-web.flutter-io.cn/packages/get)
+
+当值较多时，使用 Flutter 自带方案可能就会力不从心了，这时候可以选择 GetX 这个状态管理包
+
+使用 GetX 非常简单，只需要把需要监听的值加上一个 `.obs`，然后通过 `Obx` 组件包裹需要使用值的组件即可
+
+```dart title="GetX 示例"
+class Page extends StatelessWidget {
+  Page({super.key});
+
+  final meow = 'meow'.obs;
+
+  @override
+  Widget build(final context) => Center(child: Obx(() => Text(meow.value)));
+}
+```
+
+当值较多或需要跨页面使用时，也可以定义一个继承 `GetxController` 的类来统一存放，
+然后通过 `Get.put` 来创建，通过 `Get.find` 来获取
+
+#### [Flutter Hooks](https://pub-web.flutter-io.cn/packages/flutter_hooks)
+
+通过 Flutter 自带的东西或者 GetX 的确可以解决绝大部分状态管理了，但是还有一个硬伤没有解决
+
+有些控制器，比如说动画控制器，文本编辑控制器，它们需要手动管理生命周期，创建、释放等都需要手动管理
+
+如果直接在 `StatelessWidget` 使用，那么生命周期管理不当，直接内存泄漏
+
+通常情况下，通过 `StatefulWidget` 的 `initState`、`dispose` 等实现创建、释放等操作
+
+但只是为了控制器而这样大动干戈实在不应该，Flutter Hooks 提供了一个非常好用的方法，
+只需要让组件继承自 `HookWidget`（`StatelessWidget` 的子类），
+然后再使用对应的方法即可获取会自动管理生命周期的控制器
+
+这样多管齐下，`StatefulWidget` 基本上是可以完全杜绝了
+
+:::note
+通过其他方法也可以实现对于控制器的生命周期管理，但是 Flutter Hooks 是一个相当方便的解决方案
+:::
+
+## 懒加载
+
+Dart 有一个懒加载机制，`import` 时加上一个 `deferred as` 就可以按需加载，
+调用它的 `loadLibrary` 即可加载
+
+:::note
+虽然它仅生效于网页与 Android（并且 Android 的作用有限，基本用不到），
+但是 Flutter 作为跨平台框架，好好利用特性的相当必要的
+
+尤其是在写跨平台软件或包时，更应当使用
+:::
+
+虽然并不是很必要，但是还是建议从 `main` 开始就使用懒加载
+
+```dart title="main 懒加载示例"
+import 'xxx.dart' deferred as xxx;
+
+void main() async => await xxx.loadLibrary().then((_) => xxx.xxx());
+```
+
+这样做能在网页平台减少 `main.dart.js` 的大小，虽然其他平台用不到，但是这样写也不会对其他平台有什么影响
+
+:::note
+虽然只是把代码从 `main.dart.js` 转移到其他 `main.dart.js_X.part.js`，并不会减少整体大小，
+但是基于多方面因素嘛，这样做总归是好的
+:::
+
+以此类推，在 `runApp` 之前，以及它运行的页面，都可以懒加载一下
+
+并且在使用 router 时，也可以懒加载一下，这样会对加载速度有巨大提升（当然是得看代码量了）
+
+```dart title="GoRouter 懒加载示例"
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'page1.dart' deferred as page1;
+import 'page2.dart' deferred as page2;
+
+final router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      pageBuilder: (final _, final state) => MaterialPage(
+        key: state.pageKey,
+        child: FutureBuilder(
+          future: page1.loadLibrary(),
+          builder: (final _, final snapshot) => snapshot.connectionState == ConnectionState.done
+              ? page1.Page1()
+              : const Center(child: CircularProgressIndicator()),
+        ),
+      ),
+      routes: [
+        GoRoute(
+          path: 'page2',
+          pageBuilder: (final _, final state) => MaterialPage(
+            key: state.pageKey,
+            child: FutureBuilder(
+              future: page2.loadLibrary(),
+              builder: (final _, final snapshot) => snapshot.connectionState == ConnectionState.done
+                  ? page2.Page2()
+                  : const Center(child: CircularProgressIndicator()),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ],
+);
+```
+
+这样加载单个页面的速度将会大大加快（因为不使用懒加载的话，所有页面的代码都会放在一起，加载时会一口气全部加载完）
+
+加载其他页面的速度倒是会慢了些，但是对软件的整体体验会提升非常大（毕竟一开始的速度快了不少嘛）
