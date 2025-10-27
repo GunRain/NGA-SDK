@@ -123,7 +123,7 @@ export default {
 					]
 				}
 			],
-			copyright: `Licensed under the <a href="https://license.fileto.download/" target="_blank">F2DLPR License</a>. Copyright © 2016-${new Date().getFullYear()} <a href="https://shiror.ren/" target="_blank">ShIroRRen</a>. Built with <a href="https://docusaurus.io/zh-CN/" target="_blank" rel="noopener noreferrer">Docusaurus</a>.`
+			copyright: `根据 <a href="https://license.fileto.download/" target="_blank">F2DLPR 许可证</a>授权许可。©️ 2016-${new Date().getFullYear()} <a href="https://shiror.ren/" target="_blank">白彩恋</a>，版权所有，保留一切权利。使用 <a href="https://docusaurus.io/zh-CN/" target="_blank" rel="noopener noreferrer">Docusaurus</a> 构建。`
 		},
 		prism: {
 			theme: prismThemes.github,
