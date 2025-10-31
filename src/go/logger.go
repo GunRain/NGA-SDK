@@ -84,7 +84,7 @@ func NewLogger(path string, mode LogMode, level LogLevel, output LogOutput) (*Lo
 		LogLevel:     level,
 		LastLogLevel: LOG_NONE,
 		OutputMode:   output,
-		queue:        make(chan string, 114),
+		queue:        make(chan string, 106),
 		TimeLoc:      time.Local,
 		TimeFmt:      "01-02 15:04:05.000",
 	}
