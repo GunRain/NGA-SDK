@@ -1,8 +1,3 @@
-import Admonition from '@theme/Admonition'
-import CodeBlock from '@theme/CodeBlock'
-import TabItem from '@theme/TabItem'
-import Tabs from '@theme/Tabs'
-
 # 开发 PkgPub
 
 PkgPub 旨在快速、便利地建立自己的 Maven 仓库来发布依赖
