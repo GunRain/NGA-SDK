@@ -9,34 +9,7 @@ import Tabs from '@theme/Tabs'
 
 ## 引入依赖
 
-> [JitPack 发布页面](https://jitpack.io/#dev.oom-wg/PureJoy-CCC)
-
-先确保 `repositories` 内有 `https://jitpack.io`:
-
-<Tabs groupId='gradle-script' queryString>
-	<TabItem value='groovy' label='Groovy'>
-		<CodeBlock language='groovy'>
-			{`
-dependencyResolutionManagement {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-	<TabItem value='kotlin' label='Kotlin'>
-		<CodeBlock language='kotlin'>
-			{`
-dependencyResolutionManagement {
-    repositories {
-        maven("https://jitpack.io")
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-</Tabs>
+先依赖源中有 [PkgPub](/docs/purejoy/pkgpub/use) 的依赖源
 
 然后添加对应的依赖:
 

@@ -32,12 +32,12 @@
 	"dependencies": {
 		"@docusaurus/core": "3.9.2",
 		"@docusaurus/preset-classic": "3.9.2",
-		"@easyops-cn/docusaurus-search-local": "^0.52.1",
+		"@easyops-cn/docusaurus-search-local": "^0.52.2",
 		"@mdx-js/react": "^3.1.1",
 		"clsx": "^2.1.1",
 		"prism-react-renderer": "^2.4.1",
-		"react": "^19.2.0",
-		"react-dom": "^19.2.0",
+		"react": "^19.2.3",
+		"react-dom": "^19.2.3",
 		"remark-code-import": "^1.2.0"
 	},
 	"devDependencies": {
@@ -45,9 +45,9 @@
 		"@docusaurus/tsconfig": "3.9.2",
 		"@docusaurus/types": "3.9.2",
 		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
-		"prettier": "^3.6.2",
+		"prettier": "^3.7.4",
 		"prettier-plugin-lint-md": "^1.0.1",
-		"stylelint": "^16.26.0",
+		"stylelint": "^16.26.1",
 		"stylelint-config-standard": "^39.0.1",
 		"stylelint-plugin-defensive-css": "^1.0.4",
 		"stylelint-plugin-logical-css": "^1.2.3",

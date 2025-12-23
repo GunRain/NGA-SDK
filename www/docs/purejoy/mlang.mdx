@@ -13,58 +13,15 @@ import Tabs from '@theme/Tabs'
 
 ## 引入依赖
 
-> [JitPack 发布页面](https://jitpack.io/#dev.oom-wg/PureJoy-MultiLang)
-
-先确保 `repositories` 内有 `https://jitpack.io`:
-
-<Tabs groupId='gradle-script' queryString>
-	<TabItem value='groovy' label='Groovy'>
-		<CodeBlock language='groovy'>
-			{`
-buildscript {
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
-}
-dependencyResolutionManagement {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-	<TabItem value='kotlin' label='Kotlin'>
-		<CodeBlock language='kotlin'>
-			{`
-buildscript {
-    repositories {
-        maven("https://jitpack.io")
-    }
-}
-dependencyResolutionManagement {
-    repositories {
-        maven("https://jitpack.io")
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-</Tabs>
+先依赖源中有 [PkgPub](/docs/purejoy/pkgpub/use) 的依赖源
 
 然后添加欢愉多语言的 Gradle 插件:
 
 ```groovy
-buildscript {
-    dependencies {
-        classpath("dev.oom-wg.PureJoy-MultiLang:plugin:-SNAPSHOT")
-    }
+plugins {
+    id("dev.oom-wg.purejoy.mlang") version "+" apply false
 }
 ```
-
-:::note
-由于 **JitPack** 的发布限制，无法通过 `id` 直接引入 Gradle 插件
-:::
 
 在项目中引入并配置内容:
 
