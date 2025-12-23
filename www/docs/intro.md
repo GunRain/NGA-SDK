@@ -18,6 +18,11 @@ NGA 文档 主要提供由 [尚彩白彩恋](https://shiror.ren) 开发的项目
 
 ## 欢律遗愉
 
+### PkgPub
+
+- [GitHub](https://github.com/OOM-WG/PureJoy-PkgPub)
+- [文档](purejoy/pkgpub)
+
 ### 多语言框架
 
 - [GitHub](https://github.com/OOM-WG/PureJoy-MultiLang)

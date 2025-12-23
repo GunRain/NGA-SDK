@@ -8,6 +8,7 @@ import Tabs from '@theme/Tabs'
 **FVV** 全称 **Fresh View for Viewer**，是一个较为简单易上手的语言，名字显而易见，是个 _~~废物~~_ **清新** 的文本格式，那么有多清新呢，请看示例
 
 ```fvv file=./eg.fvv
+
 ```
 
 显而易见，支持`字符串`、`布尔值`、`整数`、`浮点数`以及它们的`组`的定义，还有 FVV 本身的`组`，还支持`值组`以及`赋值`
@@ -144,34 +145,7 @@ require app.niggergo.work/fvv v0.0.0
 </TabItem>
 <TabItem value='kotlin' label='Kotlin'>
 
-> [JitPack 发布页面](https://jitpack.io/#dev.oom-wg/FVV)
-
-先确保 `repositories` 内有 `https://jitpack.io`:
-
-<Tabs groupId='gradle-script' queryString>
-	<TabItem value='groovy' label='Groovy'>
-		<CodeBlock language='groovy'>
-			{`
-dependencyResolutionManagement {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-	<TabItem value='kotlin' label='Kotlin'>
-		<CodeBlock language='kotlin'>
-			{`
-dependencyResolutionManagement {
-    repositories {
-        maven("https://jitpack.io")
-    }
-}
-`.trim()}
-		</CodeBlock>
-	</TabItem>
-</Tabs>
+先依赖源中有 [PkgPub](/docs/purejoy/pkgpub/use) 的依赖源
 
 然后添加依赖:
 

@@ -1,0 +1,62 @@
+import CodeBlock from '@theme/CodeBlock'
+import TabItem from '@theme/TabItem'
+import Tabs from '@theme/Tabs'
+
+# 使用 PkgPub
+
+在 maven 仓库列表中添加 [_回忆溢出工作组_](https://oom-wg.dev/) 的仓库以使用其依赖
+
+## 引入依赖源
+
+<Tabs groupId='gradle-script' queryString>
+	<TabItem value='groovy' label='Groovy'>
+		<CodeBlock language='groovy'>
+			{`
+buildscript {
+    repositories {
+        maven {
+            url 'https://oom-maven.sawahara.host'
+            content {
+                includeGroupByRegex 'ren\\.shiror.*'
+                includeGroupByRegex 'dev\\.oom-wg.*'
+            }
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositories {
+        maven {
+            url 'https://oom-maven.sawahara.host'
+            content {
+                includeGroupByRegex 'ren\\.shiror.*'
+                includeGroupByRegex 'dev\\.oom-wg.*'
+            }
+        }
+    }
+}
+`.trim()}
+		</CodeBlock>
+	</TabItem>
+	<TabItem value='kotlin' label='Kotlin'>
+		<CodeBlock language='kotlin'>
+			{`
+dependencyResolutionManagement {
+    maven("https://oom-maven.sawahara.host") {
+      content {
+          includeGroupByRegex("ren\\.shiror.*")
+          includeGroupByRegex("dev\\.oom-wg.*")
+      }
+    }
+}
+`.trim()}
+		</CodeBlock>
+	</TabItem>
+</Tabs>
+
+### 镜像源
+
+目前有如下源:
+
+- `https://oom-maven.sawahara.host`: EdgeOne Pages (全球，包括中国大陆)
+- `https://maven.oom-wg.dev`: GitHub Pages
+- `https://raw.githubusercontent.com/OOM-WG/PureJoy/maven`: GitHub
