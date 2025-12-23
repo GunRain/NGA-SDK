@@ -1,9 +1,12 @@
+import com.palantir.gradle.gitversion.VersionDetails
+import groovy.lang.Closure
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
 	id("com.android.library")
 	kotlin("android")
 	`maven-publish`
+	id("com.palantir.git-version")
 }
 
 kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_1_8
@@ -42,7 +45,10 @@ android {
 afterEvaluate {
 	publishing {
 		publications {
-			create<MavenPublication>("release", configurePublishConfig("gendoki", "GenDoki"))
+			val versionDetails: Closure<VersionDetails> by extra
+			create<MavenPublication>(
+				"release", configurePublishConfig(versionDetails().lastTag, "gendoki", "GenDoki")
+			)
 		}
 		repositories {
 			mavenLocal()
