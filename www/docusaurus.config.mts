@@ -13,9 +13,6 @@ export default {
 	url: 'https://app.niggergo.work',
 	baseUrl: '/',
 
-	onBrokenLinks: 'throw',
-	onBrokenMarkdownLinks: 'warn',
-
 	i18n: {
 		defaultLocale: 'zh-Hans',
 		locales: ['zh-Hans']
@@ -25,7 +22,7 @@ export default {
 		[
 			'classic',
 			{
-				docs: {sidebarPath: 'sidebars.mts'},
+				docs: {sidebarPath: 'sidebars.mts', remarkPlugins: [require('remark-code-import')]},
 				blog: false
 			} satisfies Preset.Options
 		]
