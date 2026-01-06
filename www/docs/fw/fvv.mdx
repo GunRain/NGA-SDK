@@ -11,12 +11,28 @@ import Tabs from '@theme/Tabs'
 
 ```
 
-显而易见，支持`字符串`、`布尔值`、`整数`、`浮点数`以及它们的`组`的定义，还有 FVV 本身的`组`，还支持`值组`以及`赋值`
+显而易见，支持 `字符串`、`浮点数`、`整数`、`布尔值` 以及它们的 `列表` 的定义，还有 `组` 本身的 `列表`
+
+:::note 命名定义
+
+```
+组 = {
+  文本 = ""
+  文本列表 = [""]
+  组列表 = [{}]
+}
+```
+
+- `组` 为 _组名称_，`文本`/`文本列表`/`组列表` 为 _值名称_
+- `""`/`[""]`/`[{}]` 为值，`{}` 称为组
+
+故基本类型名称为 `字符串`/`文本`、`浮点数`、`整数`、`布尔值`，`组` 为特殊类型
+
+列表类型即为 `字符串列表`/`文本列表`、`浮点数列表`、`整数列表`、`布尔值列表` 以及 `组列表`
+:::
 
 :::tip
-FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符号是特定符号时（例如 `"` 和 `>`），
-判断其上一个字符是否为 `\`，并没有很完善的转义判断，故仅支持转义 `"` 和 `>`（即 `"\""` 和 `<\>>`），
-不支持 `\n` 等转义，直接使用 `\` 时不需要 `\\`，直接 `\` 即可（因此字符串或注释的末尾不可以是 `\`）
+FVV `2` 在 FVV `1` 的基础上有了大幅度改进，详见[此处](fvv-1-to-2)
 :::
 
 值的命名也是没有什么忌口的，但需要注意的是，
@@ -26,7 +42,7 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 同样的，还需要注意正常命名不要带 `.` 啊喂，会被认为是多层组的定义的
 
 值的定义使用 `;` 或 `换行` 进行，
-所有的值都可以置于根路径的 `{}` 里面（放不放都没区别，只不过加一个 `{}` 看起来类 JSON 一点），
+所有的值都可以置于根路径的 `{}` 里面（放不放都没区别，只不过加一个 `{}` 看起来类 _JSON_ 一点？），
 块注释使用 `<>`，没有行注释
 
 :::tip
@@ -35,6 +51,7 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 - `;`: 当定义值时有 `换行` 则无需在行尾添加 `;`
 - `,`: 当定义组时有 `换行` 则无需在两个值之间添加 `,`
 
+`}` 也可省略分隔符
 :::
 
 注释是 FVV 一个比较特色的功能，它可以放到任何地方，请看示例:
@@ -53,7 +70,7 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 :::
 
 :::note
-为了让 **FWW** 有更好的开发体验，`FVV 值组` 及其子值的 `描述` 是放在前面的
+为了让 **FWW** 有更好的开发体验，`组列表` 及其子值的 `描述` 是放在前面的
 :::
 
 :::tip
@@ -66,10 +83,7 @@ FVV 本身在实现方面有部分缺陷，对转义的判断仅为当当前符�
 ## 代码层使用方法
 
 :::tip
-仅支持 `UTF-8` 文本（或 `UTF-8 with BOM`），由于各种语言实现的差异，不确保所有语言均可正常解析所有文本
-
-解析时会把所有 `\r\n` 替换为 `\n`，把所有 `\r` 替换为 `\n`
-（即强制将文本转换为 `LF` 文本）
+仅支持 `UTF-8` 文本（或 `UTF-8 with BOM`），`\r`/`\n`/`\r\n` 文本均可正常解析
 :::
 
 ### 引入依赖
@@ -152,7 +166,7 @@ require app.niggergo.work/fvv v0.0.0
 <CodeBlock language='groovy'>
 	{`
 dependencies {
-    implementation("ren.shiror.fvv:core:1.+")
+    implementation("ren.shiror.fvv:core:2.+")
 }
 `.trim()}
 </CodeBlock>
@@ -166,7 +180,15 @@ dependencies {
 
 ### 基本功能
 
-首先当然是解析
+:::warning
+示例代码都是瞎写的，不要依此为参照
+:::
+
+:::note
+对于开发体验着重在 `C++` 与 `Go` 上以及 `Dart` 与 `Kotlin` 上，在一起的语言开发体验较为相似
+:::
+
+#### 解析
 
 :::tip
 由于 `Go` 的语言特性，其函数名称不得不大写
@@ -216,65 +238,51 @@ val fvv = FVVV().apply { parse(txt) }
 </TabItem>
 </Tabs>
 
-然后是格式化成字符串，当传入以下内容时，会有不同的格式化效果:
+#### 格式化
+
+当传入以下内容时，会有不同的格式化效果:
 
 - `Common`: 默认
-- `Min`: 格式化后的文本将去掉任何符号间的**空格**、**缩进**、**换行**(替换成 `;`)、**描述**
-- `BigList`: 格式化后的文本中的任何组都会被展开为**一行一值**
-- `NoDesc`: 格式化后的文本不再有任何**描述**
+- `UseWrapper`: 最外面包裹一层 _花括号_
+- `Minify`: 最小化，移除所有 _缩进_、_空格_、_换行_
+- `UseCRLF`: 使用 `\r\n` 换行，默认 `\n`
+- `UseCR`: 使用 `\r` 换行，默认同上
+- `UseSpace2`: 使用 `2` 个 **空格** 作为 **缩进** ，默认是 `\t`
+- `UseSpace4`: 使用 `4` 个 **空格** 作为 **缩进**
+- `IntBinary`: 输出整数为 _二进制_ 格式，默认是 _十进制_
+- `IntOctal`: 输出整数为 _八进制_ 格式，默认同上
+- `IntHex`: 输出整数为 _十六进制_ 格式，默认同上
+- `DigitSep3`: 输出 _十进制整数_ 或 _浮点数的整数部分_ 时每 `3` 个数字插入一个分隔符
+- `DigitSep4`: 同上，每 `4` 个数字插入一个分隔符
+- `UseColon`: 使用 _冒号_ 而非默认的 _等号_ 作为定义符
+- `FullWidth`: 将部分符号改为 **全角**
+- `KeepListSingle`: 强制 _列表_ 保持为一行（默认长度达到 `16` 的内容达到 `6` 则一行一个）
+- `ForceUseSeparator`: 强制添加 _分隔符_（最小化时无效）
+- `RawMultilineString`: 当 _字符串_ 有多行时改为 _原始多行缩进字符串_（最小化时无效）
+- `NoDescs`: 移除所有 `描述`（在 _FWW 风格_ 下对 `组列表` 与 `组` 无效）
+- `NoLinks`: 移除所有 `链接`
+- `FlattenPaths`: 递归展平只有 `1` 个值的 `组`
+- `FWWStyle`: FWW 风格，前置 `组` 的 `描述`
 
 :::note
 各个语言的格式化选项位置如下:
 
 - `C++`: `FVV::FormatOpt`
-- `Dart`: `FVVFormatOpt`
-- `Go`: 以 `FmtOpt` 开头的值，调用时需要通过 `PrintOpt` 传入
-- `Kotlin`: `FVVV.Companion.FormatOpt`
+- `Dart`: `FormatOpt`
+- `Go`: 以 `FmtOpt` 开头的值
+- `Kotlin`: `FVVV.FormatOpt`
 
 不同的语言在命名上略有不同，但实际行为一致
 :::
 
-:::important
-`FVV 值组` 的 `描述` 在 FWW 中是页面标题，在 `Min` 与 `NoDesc` 中不会被去除
+传入均支持通过 `|`/`or` 传入为一个参数或通过 `,` 传入为多个参数
 
-其内部的 `FVV 值` 的 `描述` 则是其组件类型，同样也不会被去除
+:::note
+当使用 `Dart`/`Kotlin` 默认的 `toString` 时（`"$fvv"`），将使用默认的格式化效果
 :::
 
 :::tip
-一切去除描述的行为均仅为在输出的字符串中去除，不会影响到代码中的描述
-:::
-
-<Tabs groupId='code-lang' queryString>
-<TabItem value='cpp' label='C++'>
-
-<CodeBlock language='cpp'>{`string fvv_str = fvv.print();`.trim()}</CodeBlock>
-
-</TabItem>
-
-<TabItem value='dart' label='Dart'>
-
-<CodeBlock language='dart'>{`final fvvStr = fvv.print();`.trim()}</CodeBlock>
-
-</TabItem>
-<TabItem value='go' label='Go'>
-
-<CodeBlock language='go'>{`fvv_str := fvv.Print(PrintOpt{})`.trim()}</CodeBlock>
-
-</TabItem>
-<TabItem value='kotlin' label='Kotlin'>
-
-<CodeBlock language='kotlin'>{`val fvvStr = fvv.print()`.trim()}</CodeBlock>
-
-</TabItem>
-</Tabs>
-
-然后是对值的基本判断
-
-:::note
-由于 `Go` 的语法可用性太低了，便又封装了 `SubIsEmpty` 和 `SubIsNotEmpty` 来判断子项是否为空，
-但使用前最好还是先判断一下值本身是否为 `nil`
-
-由于写 `Kotlin` 时语法基本上照抄 `Dart`，所以 `isEmpty` 和 `isNotEmpty` 是通过 getter 获取的
+一切去除 `描述`/`链接` 的行为均仅为在输出的字符串中去除，不会影响到代码中的实际内容
 :::
 
 <Tabs groupId='code-lang' queryString>
@@ -282,8 +290,7 @@ val fvv = FVVV().apply { parse(txt) }
 
 <CodeBlock language='cpp'>
 	{`
-bool is_empty = fvv.isEmpty() && !fvv.isNotEmpty(); // 判断是否为空
-bool is_type = fvv.isType<T>(); // 判断类型
+fvv.to_string(opts...);
 `.trim()}
 </CodeBlock>
 
@@ -293,8 +300,7 @@ bool is_type = fvv.isType<T>(); // 判断类型
 
 <CodeBlock language='dart'>
 	{`
-final isEmpty = fvv.isEmpty && !fvv.isNotEmpty; // 判断是否为空
-final isType = fvv.isType<T>(); // 判断类型
+fvv.toString(opts...);
 `.trim()}
 </CodeBlock>
 
@@ -303,8 +309,7 @@ final isType = fvv.isType<T>(); // 判断类型
 
 <CodeBlock language='go'>
 	{`
-is_empty := fvv.IsEmpty() && !fvv.SubIsNotEmpty() // 判断是否为空
-_, is_type := fvv.Value.(T) // 判断类型
+fvv.ToString(opts...)
 `.trim()}
 </CodeBlock>
 
@@ -313,24 +318,97 @@ _, is_type := fvv.Value.(T) // 判断类型
 
 <CodeBlock language='kotlin'>
 	{`
-val isEmpty = fvv.isEmpty && !fvv.isNotEmpty // 判断是否为空
-val isType = fvv.isType<T>() // 判断类型
+fvv.toString(opts...)
 `.trim()}
 </CodeBlock>
 
 </TabItem>
 </Tabs>
+
+#### 使用值
+
+:::danger
+由于 `JVM` 机制，在 `Kotlin` 上
+_判断_/_获取_ 列表时请使用对应的 `isList<T>()`/`list<T>()` 方法，否则会类型出错
+:::
+
+首先是对值的基本判断
+
+:::note
+由于 `Go` 的语法可用性太低了，便又封装了 `IsNodesEmpty` 和 `IsNodesNotEmpty` 来判断子项是否为空，
+但使用前最好还是先判断一下值本身是否为 `nil`
+:::
+
+<Tabs groupId='code-lang' queryString>
+<TabItem value='cpp' label='C++'>
+
+<CodeBlock language='cpp'>
+	{`
+bool is_empty = fvv.empty(); // 判断值是否为空
+bool is_type = fvv.is<T>(); // 判断类型
+is_type = fvv.is_list<T>(); // 判断列表类型（相当于 fvv.is<vector<T>>()）
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+
+<TabItem value='dart' label='Dart'>
+
+<CodeBlock language='dart'>
+	{`
+final isEmpty = fvv.isEmpty && !fvv.isNotEmpty; // 判断值是否为空
+var isType = fvv.isType<T>(); // 判断类型
+isType = fvv.isList<T>(); // 判断列表类型（相当于 fvv.isType<List<T>>()）
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value='go' label='Go'>
+
+<CodeBlock language='go'>
+	{`
+is_empty := fvv.IsEmpty() && !fvv.IsNotEmpty() // 判断值是否为空
+is_empty = fvv.IsNodesEmpty() && !fvv.IsNodesNotEmpty() // 判断子值是否为空
+is_type := fvv.IsBool() // 判断类型（也可使用 fvv.Is[T](fwv)，此处的 fvv 是 fvv 包）
+is_type = fvv.IsBoolList() // 判断列表类型（也可使用 fvv.IsList[T](fwv)，此处的 fvv 是 fvv 包）
+// 其他依此类推，不再示范...
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+<TabItem value='kotlin' label='Kotlin'>
+
+<CodeBlock language='kotlin'>
+	{`
+val isEmpty = fvv.isEmpty() && !fvv.isNotEmpty() // 判断值是否为空
+var isType = fvv.\`is\`<T>() || fvv.isType<T>() // 判断类型（不适用于列表）
+isType = fvv.isList<T>() // 判断列表类型
+`.trim()}
+</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+:::important
+由于 FVV 2 统一采用 `int64` 为整数类型，对于各语言的兼容性如下:
+
+- `C++`: 使用 `long long`/`vector<long long>` 类型，
+  存储时有兼容其他整数类型，但判断时需要使用 `long long`/`vector<long long>`
+- `Dart`: 由于没有细分类型，无变化
+- `Go`: 由于 `Go` 没有重载，在判断中对 `int`/`[]int` 做了兼容，使用时尽量用 `int64`/`[]int64`
+- `Kotlin`: 在存储与判断时均有 `Int`/`List<Int>` 转 `Long`/`List<Long>` 与
+  `Float`/`List<Float>` 转 `Double`/`List<Double>`
+
+:::
+
+---
 
 然后是读取值
 
 :::tip
-由于 `Go` 的语法实现这些有点麻烦，所以请自行使用 `.(T)` 来获取值吧
+由于 `Dart` 机制，常规获取 `List` 类型得到的是引用，拷贝请再调用 `toList()`
 
-由于 `Dart` 机制，常规获取 `List` 类型得到的是拷贝，有 `Ref` 后缀的函数获取到的才是引用
-:::
-
-:::note
-由于 `JVM` 机制，在 `Kotlin` 获取 `List` 类型的方法有点抽象...，在 `Kotlin` 获取到的是拷贝
+在 `Kotlin` 获取 `List` 类型时由于 `JVM` 机制无法确认类型，总会创建一个新的固定类型的 `List`，不会获取到引用
 :::
 
 <Tabs groupId='code-lang' queryString>
@@ -338,10 +416,8 @@ val isType = fvv.isType<T>() // 判断类型
 
 <CodeBlock language='cpp'>
 	{`
-auto value = fvv.as<T>(); // 指定类型获取
-string str = fvv.asString(); // 获取字符串
-vector<string> strs = fvv.asStrings(); // 获取字符串组
-// 其他依此类推，不再示范
+T value = fvv.value<T>(默认值); // 指定类型获取值
+vector<T> list = fvv.list<T>(默认值); // 指定类型获取列表
 `.trim()}
 </CodeBlock>
 
@@ -351,10 +427,12 @@ vector<string> strs = fvv.asStrings(); // 获取字符串组
 
 <CodeBlock language='dart'>
 	{`
-final value = fvv.as<T>(); // 指定类型获取
-final str = fvv.asString(); // 获取字符串
-final strs = fvv.asStrings(); // 获取字符串组
-// 其他依此类推，不再示范
+final value = fvv.as<T>(默认值) ?: fvv.asType<T>(默认值) ?: fvv.get<T>(); // 指定类型获取值
+//（当不确定类型时，使用 as/asType，返回 T?，确定时则可使用 get，返回 T）
+final list = fvv.list<T>(默认值); // 指定类型获取列表
+final boolValue = fvv.boolean; // 获取布尔值
+final boolList = fvv.bools; // 获取布尔值列表
+// 其他依此类推，不再示范...
 `.trim()}
 </CodeBlock>
 
@@ -363,7 +441,11 @@ final strs = fvv.asStrings(); // 获取字符串组
 
 <CodeBlock language='go'>
 	{`
-value, ok := fvv.Value.(T) // 指定类型获取，通过返回的布尔值来判断是否获取成功
+value := fvv.Value[T](fwv); // 指定类型获取值（此处的 fvv 是 fvv 包）
+list := fvv.List[T](); // 指定类型获取列表（此处的 fvv 是 fvv 包）
+bool_value := fvv.Bool(默认值); // 获取布尔值
+bool_list := fvv.BoolList(默认值); // 获取布尔值列表
+// 其他依此类推，不再示范...
 `.trim()}
 </CodeBlock>
 
@@ -372,12 +454,12 @@ value, ok := fvv.Value.(T) // 指定类型获取，通过返回的布尔值来�
 
 <CodeBlock language='kotlin'>
 	{`
-val value = fvv.as<T>() // 指定类型获取
-val str = fvv.asString() // 常规获取字符串
-val str = fvv.string // getter获取字符串
-val strs = fvv.asStrings() // 常规获取字符串组
-val strs = fvv.strings // getter获取字符串组
-// 其他依此类推，不再示范
+val value = fvv.\`as\`<T>(默认值) ?: fvv.asType<T>(默认值) ?: fvv.get<T>(); // 指定类型获取值
+//（当不确定类型时，使用 as/asType，返回 T?，确定时则可使用 get，返回 T）
+val list = fvv.list<T>(默认值); // 指定类型获取列表
+val boolValue = fvv.bool; // 获取布尔值
+val boolList = fvv.bools; // 获取布尔值列表
+// 其他依此类推，不再示范...
 `.trim()}
 </CodeBlock>
 
@@ -385,7 +467,49 @@ val strs = fvv.strings // getter获取字符串组
 </Tabs>
 
 :::note
-由于 `Dart` 的基本类型名称会冲突，所以没在它上面实现 getter 获取...
+由于 `Dart` 的基本类型名称会冲突，但为了尽可能与 `Kotlin` 一致，目前的 getter 如下:
+
+- `bool`(`Kotlin`)、`boolean`(`Dart`&`Kotlin`)
+- `int`(`Kotlin`)、`integer`(`Dart`&`Kotlin`)
+- `double`(`Kotlin`)、`float`(`Dart`&`Kotlin`)
+- `string`、`bools`、`ints`、`doubles`、`strings`、`fvvvs`(`Dart`&`Kotlin`)
+
 :::
 
 赋值只需要在有重写运算符功能的语言上直接赋值即可，没有则需要手动调用内部的值进行赋值
+
+### 序列化/反序列化
+
+:::note
+_序列化_ 时会去除所有链接
+:::
+
+_序列化_/_反序列化_ 在各语言上均可使用，但差异较大
+
+<Tabs groupId='code-lang' queryString>
+<TabItem value='cpp' label='C++'>
+`C++` 可以直接通过 `to`/`from` 传入值引用，或在类中定义 `fvv_values` 函数以绑定名称与引用
+
+`parse` 支持传入第二个参数以相当于执行 `parse`+`to`
+</TabItem>
+<TabItem value='dart' label='Dart'>
+`Dart` 需要定义继承 `FVVStruct` 的类，在 `fvvValues` 函数中绑定名称并设置 `getter`/`setter`，
+当需要处理嵌套的 `FVVStruct` 列表时，需要传入 `factory` 以创建该 `FVVStruct`
+
+调用只需要通过 `to`/`from` 传入即可
+
+`parseString` 支持传入第二个参数以相当于执行 `parseString`+`to`
+</TabItem>
+<TabItem value='go' label='Go'>
+`Go` 可在 `struct` 使用 ``` `fvv:"值名称"` ```，支持 `omitempty`
+
+调用只需要通过 `Unmarshal`/`Marshal` 传入即可
+
+`ParseString` 支持传入多个参数以相当于执行 `parseString`+`Unmarshal`
+</TabItem>
+<TabItem value='kotlin' label='Kotlin'>
+`Kotlin` 基于 `serialization` 实现
+
+`parse` 支持传入类型以相当于执行 `parse`+`Unmarshal`
+</TabItem>
+</Tabs>
