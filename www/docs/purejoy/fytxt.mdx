@@ -116,12 +116,10 @@ FYTxt 将所有平台的语言标签均转为了**下划线连接**的**全大�
 
 ```kotlin
 langAliases = mapOf(
-    "ZH_CN" to "^ZH_.*(HANS|CN|SG)",
-    "ZH" to "^ZH_(?!.*(HANS|CN|SG)).*"
+    "ZH_HANS" to "^ZH_.*(HANS|CN|SG)",
+    "ZH_HANT" to "^ZH_(?!.*(HANS|CN|SG)).*"
 )
 ```
-
-> 此处代码中 `ZH_CN` 对应 _简体中文_，`ZH` 对应 _繁体中文_
 
 :::
 
