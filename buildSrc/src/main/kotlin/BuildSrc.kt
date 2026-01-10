@@ -26,14 +26,14 @@ fun Project.configurePublishConfig(
 		developers {
 			developer {
 				id.set("oom-wg")
-				name.set("O.O.M. W.G.")
+				name.set("OOM WG")
 				email.set("oom@200ok.work")
 				url.set("https://oom-wg.dev")
 			}
 		}
 
 		organization {
-			name.set("O.O.M. W.G.")
+			name.set("OOM WG")
 			url.set("https://oom-wg.dev")
 		}
 
