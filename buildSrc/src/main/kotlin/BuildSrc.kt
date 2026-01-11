@@ -4,7 +4,9 @@ import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.*
 
-fun Project.configurePublishConfig( moduleId: String, nameExt: String = ""): MavenPublication.() -> Unit = {
+fun Project.configurePublishConfig(
+	moduleId: String, nameExt: String = ""
+): MavenPublication.() -> Unit = {
 	from(components["release"])
 	groupId = "dev.oom-wg.purejoy.ccc"
 	artifactId = moduleId
@@ -43,5 +45,14 @@ fun Project.configurePublishConfig( moduleId: String, nameExt: String = ""): Mav
 			developerConnection.set("scm:git:https://github.com/OOM-WG/PureJoy-CCC.git")
 			url.set("https://github.com/OOM-WG/PureJoy-CCC.git")
 		}
+	}
+
+	when (name) {
+		"androidRelease" -> "releaseRuntimeClasspath"
+		else             -> listOf(
+			"${name}RuntimeClasspath", "${name}CompileKlibraries"
+		).firstOrNull { project.configurations.findByName(it) != null }
+	}?.let {
+		versionMapping { allVariants { fromResolutionOf(it) } }
 	}
 }
