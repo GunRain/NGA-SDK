@@ -1,8 +1,3 @@
-import Admonition from '@theme/Admonition'
-import CodeBlock from '@theme/CodeBlock'
-import TabItem from '@theme/TabItem'
-import Tabs from '@theme/Tabs'
-
 # FYTxt 多语言框架
 
 FYTxt 是支持 **Kotlin MultiPlatform** 以及 **Compose MultiPlatform** 的多语言框架
