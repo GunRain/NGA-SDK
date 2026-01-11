@@ -11,11 +11,11 @@ kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_17
 
 android {
 	namespace = "dev.oom_wg.purejoy.ccc.futago"
-	compileSdk = gropify.config.compileSdk
-	buildToolsVersion = gropify.config.buildToolsVersion
+	compileSdk = 36
+	buildToolsVersion = "36.1.0"
 
 	defaultConfig {
-		minSdk = gropify.config.minSdk
+		minSdk = 1
 		consumerProguardFiles("consumer-rules.pro")
 	}
 	buildTypes {

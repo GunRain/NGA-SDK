@@ -13,7 +13,6 @@ plugins {
 	id 'com.android.library' version '8.12.0' apply false
 	id 'org.jetbrains.kotlin.android' version '+' apply false
 	id 'com.palantir.git-version' version '+' apply false
-	id 'com.highcapable.gropify' version '+'
 }
 
 dependencyResolutionManagement {
@@ -26,10 +25,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'PureJoy CCC'
-
-gropify {
-	enabled true
-	debugMode false
-}
 
 include ':gendoki', ':moesa', ':futago'
