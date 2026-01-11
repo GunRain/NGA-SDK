@@ -1,5 +1,3 @@
-import com.palantir.gradle.gitversion.VersionDetails
-import groovy.lang.Closure
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -13,11 +11,11 @@ kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_17
 
 android {
 	namespace = "dev.oom_wg.purejoy.ccc.futago"
-	compileSdk = 36
-	buildToolsVersion = "36.1.0"
+	compileSdk = gropify.config.compileSdk
+	buildToolsVersion = gropify.config.buildToolsVersion
 
 	defaultConfig {
-		minSdk = 1
+		minSdk = gropify.config.minSdk
 		consumerProguardFiles("consumer-rules.pro")
 	}
 	buildTypes {
@@ -50,14 +48,8 @@ dependencies {
 afterEvaluate {
 	publishing {
 		publications {
-			val versionDetails: Closure<VersionDetails> by extra
-			create<MavenPublication>(
-				"release",
-				configurePublishConfig(versionDetails().lastTag, "futago", "Futago")
-			)
+			create<MavenPublication>("release", configurePublishConfig("futago", "Futago"))
 		}
-		repositories {
-			mavenLocal()
-		}
+		repositories { mavenLocal() }
 	}
 }

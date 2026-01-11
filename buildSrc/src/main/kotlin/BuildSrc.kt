@@ -1,14 +1,15 @@
+import com.palantir.gradle.gitversion.VersionDetails
+import groovy.lang.Closure
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.*
 
-fun Project.configurePublishConfig(
-	moduleVersion: String?, moduleId: String, nameExt: String = ""
-): MavenPublication.() -> Unit = {
+fun Project.configurePublishConfig( moduleId: String, nameExt: String = ""): MavenPublication.() -> Unit = {
 	from(components["release"])
 	groupId = "dev.oom-wg.purejoy.ccc"
 	artifactId = moduleId
-	version = moduleVersion ?: "0.1"
+	val versionDetails: Closure<VersionDetails> by extra
+	version = versionDetails().lastTag ?: "0.0"
 
 	pom {
 		name.set("PureJoy CCC${if (nameExt.isNotEmpty()) " $nameExt" else ""}")
