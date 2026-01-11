@@ -1,8 +1,3 @@
-import Admonition from '@theme/Admonition'
-import CodeBlock from '@theme/CodeBlock'
-import TabItem from '@theme/TabItem'
-import Tabs from '@theme/Tabs'
-
 # 代码乐园
 
 代码乐园是为了提供一些小功能而建立的项目
