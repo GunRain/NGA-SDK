@@ -196,10 +196,10 @@ else -> null}
 :::warning
 仅 _Android JVM_/_JVM_ 支持格式化，其他平台仅有简单的 `%s` 替换
 
-_Android JVM_ 输出后的文本默认经过 **Pangu Text** 处理
+_Android Jetpack Compose_ 输出后的文本默认经过 **Pangu Text** 处理
 :::
 
-当 _Android JVM_ 使用 Compose 方式时，语言列表会自动更新，但常规方式需手动调用 `FYTxtConfig.updateTags()` 以更新
+当 _Android JVM_ 使用常规方式需手动调用 `FYTxtConfig.updateTags()` 以更新
 
 ```kotlin title="示例"
 import dev.oom_wg.purejoy.fyl.fytxt.FYTxtConfig
@@ -209,6 +209,8 @@ class AppActivity : Activity() {
         super.onConfigurationChanged(newConfig).also { FYTxtConfig.updateTags() }
 }
 ```
+
+当 _Compose_ 使用时，需要在 UI 外层使用 `FYTxtProvider` 以监听语言变化
 
 ### 详细功能说明
 
