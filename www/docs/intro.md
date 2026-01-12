@@ -28,9 +28,4 @@ NGA 文档 主要提供由 [尚彩白彩恋](https://shiror.ren) 开发的项目
 - [GitHub](https://github.com/OOM-WG/PureJoy-MultiLang)
 - [文档](purejoy/fytxt)
 
-### 代码乐园
-
-- [GitHub](https://github.com/OOM-WG/PureJoy-CCC)
-- [文档](purejoy/ccc)
-
 ## 杂项
