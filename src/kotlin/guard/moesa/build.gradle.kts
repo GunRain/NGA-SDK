@@ -10,7 +10,7 @@ plugins {
 kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_1_8
 
 android {
-	namespace = "dev.oom_wg.purejoy.ccc.gendoki"
+	namespace = "work.niggergo.app.e_war.sandbox.moesa"
 	compileSdk = 36
 	buildToolsVersion = "36.1.0"
 
@@ -40,10 +40,19 @@ android {
 	}
 }
 
+// noinspection GradleDynamicVersion
+dependencies {
+	implementation(project(":utils:gendoki"))
+}
+
 afterEvaluate {
 	publishing {
 		publications {
-			create<MavenPublication>("release", configurePublishConfig("gendoki", "GenDoki"))
+			create<MavenPublication>(
+				"release", configurePublishConfig(
+					"MoeSa", "EWar Sandbox MoeSa", "work.niggergo.app.e_war.sandbox.moesa"
+				)
+			)
 		}
 		repositories { mavenLocal() }
 	}

@@ -1,6 +1,6 @@
 @file:Suppress("PackageDirectoryMismatch", "unused")
 
-package dev.oom_wg.purejoy.ccc.gendoki
+package work.niggergo.app.gendoki
 
 import android.app.Application
 import android.content.ContentProvider

@@ -5,18 +5,17 @@ import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.*
 
 fun Project.configurePublishConfig(
-	moduleId: String, nameExt: String = ""
+	modName: String = "", desc: String = "", group: String = "work.niggergo.app",
 ): MavenPublication.() -> Unit = {
 	from(components["release"])
-	groupId = "dev.oom-wg.purejoy.ccc"
-	artifactId = moduleId
+	groupId = group
 	val versionDetails: Closure<VersionDetails> by extra
 	version = versionDetails().lastTag ?: "0.0"
 
 	pom {
-		name.set("PureJoy CCC${if (nameExt.isNotEmpty()) " $nameExt" else ""}")
-		description.set("Android Utils${if (nameExt.isNotEmpty()) " $nameExt" else ""}")
-		url.set("https://github.com/OOM-WG/PureJoy-CCC")
+		name.set("NGA SDK${if (modName.isNotEmpty()) " $modName" else ""}")
+		description.set(desc)
+		url.set("https://app.niggergo.work")
 
 		licenses {
 			license {
@@ -28,10 +27,10 @@ fun Project.configurePublishConfig(
 
 		developers {
 			developer {
-				id.set("oom-wg")
-				name.set("OOM WG")
-				email.set("oom@200ok.work")
-				url.set("https://oom-wg.dev")
+				id = "shirorren"
+				name = "ShIroRRen"
+				email = "shiro@oom-wg.dev"
+				url = "https://shiror.ren"
 			}
 		}
 
@@ -41,9 +40,9 @@ fun Project.configurePublishConfig(
 		}
 
 		scm {
-			connection.set("scm:git:https://github.com/OOM-WG/PureJoy-CCC.git")
-			developerConnection.set("scm:git:https://github.com/OOM-WG/PureJoy-CCC.git")
-			url.set("https://github.com/OOM-WG/PureJoy-CCC.git")
+			connection.set("scm:git:https://github.com/ShIroRRen/NGA-SDK.git")
+			developerConnection.set("scm:git:https://github.com/ShIroRRen/NGA-SDK.git")
+			url.set("https://github.com/ShIroRRen/NGA-SDK.git")
 		}
 	}
 

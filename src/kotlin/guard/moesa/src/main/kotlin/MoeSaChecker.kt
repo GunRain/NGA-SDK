@@ -1,6 +1,6 @@
 @file:Suppress("PackageDirectoryMismatch", "unused")
 
-package dev.oom_wg.purejoy.ccc.moesa
+package work.niggergo.app.e_war.sandbox.moesa
 
 import android.app.Application
 import android.os.Process.killProcess
@@ -8,7 +8,7 @@ import android.os.Process.myPid
 import android.system.Os.stat
 import android.system.OsConstants.*
 import android.system.StructStat
-import dev.oom_wg.purejoy.ccc.gendoki.GenDokiInitializer
+import work.niggergo.app.gendoki.GenDokiInitializer
 import kotlin.system.exitProcess
 
 class MoeSaChecker : GenDokiInitializer() {

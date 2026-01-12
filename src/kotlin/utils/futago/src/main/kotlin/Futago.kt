@@ -1,6 +1,6 @@
 @file:Suppress("PackageDirectoryMismatch", "unused")
 
-package dev.oom_wg.purejoy.ccc.futago
+package work.niggergo.app.futago
 
 import android.app.Application
 import android.content.Context

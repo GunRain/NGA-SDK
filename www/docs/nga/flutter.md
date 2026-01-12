@@ -1,6 +1,6 @@
-# Flutter
+# Flutter SDK
 
-Flutter 部分主要提供一些 UI 组件
+Flutter SDK 部分主要提供一些 UI 组件
 
 > [Flutter Pub 发布页面](https://pub-web.flutter-io.cn/packages/nga_sdk)
 >

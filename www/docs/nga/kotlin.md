@@ -1,6 +1,6 @@
-# 代码乐园
+# Kotlin SDK
 
-代码乐园是为了提供一些小功能而建立的项目
+Kotlin SDK 提供了一些小功能
 
 ## 引入依赖
 
@@ -10,9 +10,9 @@
 
 ```groovy
 dependencies {
-    implementation("dev.oom-wg.purejoy.ccc:gendoki:+") // GenDoki
-    implementation("dev.oom-wg.purejoy.ccc:moesa:+") // MoeSa
-    implementation("dev.oom-wg.purejoy.ccc:futago:+") // Futago
+    implementation("work.niggergo.app:gendoki:+") // GenDoki
+    implementation("work.niggergo.app.e_war.sandbox:moesa:+") // MoeSa
+    implementation("work.niggergo.app:futago:+") // Futago
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 
 ```kotlin title="示例"
 import android.app.Application
-import dev.oom_wg.purejoy.ccc.gendoki.GenDokiInitializer
+import work.niggergo.app.gendoki.GenDokiInitializer
 
 class AppInitializer : GenDokiInitializer() {
     override fun Application.onInit() {
@@ -84,8 +84,8 @@ class AppInitializer : GenDokiInitializer() {
 import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
-import dev.oom_wg.purejoy.ccc.futago.FutagoAppsDelegate
-import dev.oom_wg.purejoy.ccc.futago.FutagoAppsLoader
+import work.niggergo.app.futago.FutagoAppsDelegate
+import work.niggergo.app.futago.FutagoAppsLoader
 
 class AppApplication : Application(), FutagoAppsLoader<AppApplication> {
     override val futagoDelegate by lazy {

@@ -10,7 +10,7 @@ plugins {
 kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_17
 
 android {
-	namespace = "dev.oom_wg.purejoy.ccc.futago"
+	namespace = "work.niggergo.app.futago"
 	compileSdk = 36
 	buildToolsVersion = "36.1.0"
 
@@ -48,7 +48,7 @@ dependencies {
 afterEvaluate {
 	publishing {
 		publications {
-			create<MavenPublication>("release", configurePublishConfig("futago", "Futago"))
+			create<MavenPublication>("release", configurePublishConfig("Futago", "Application Delegate"))
 		}
 		repositories { mavenLocal() }
 	}
