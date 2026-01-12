@@ -1,0 +1,29 @@
+pluginManagement {
+	repositories {
+		mavenLocal()
+		google()
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+// noinspection GradleDynamicVersion
+plugins {
+	// noinspection AndroidGradlePluginVersion
+	id 'com.android.library' version '8.12.0' apply false
+	id 'org.jetbrains.kotlin.android' version '+' apply false
+	id 'com.palantir.git-version' version '+' apply false
+}
+
+dependencyResolutionManagement {
+	repositories {
+		mavenLocal()
+		google()
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+rootProject.name = 'PureJoy CCC'
+
+include ':gendoki', ':moesa', ':futago'
