@@ -1,6 +1,6 @@
 # [NGA SDK](https://app.niggergo.work/docs/nga)
 
-## [LICENSE](LICENSE.txt)
+## [LICENSE](../LICENSE.txt)
 
 > [!TIP]
 > 请注意许可证内容，使用 NGA SDK 的代码应当注明来源
