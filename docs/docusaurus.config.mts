@@ -8,7 +8,10 @@ export default {
 	tagline: '快速入门各个项目！',
 	favicon: 'img/logo.ico',
 
-	future: {v4: true},
+	future: {
+		v4: true,
+		experimental_faster: true
+	},
 
 	url: 'https://app.niggergo.work',
 	baseUrl: '/',
