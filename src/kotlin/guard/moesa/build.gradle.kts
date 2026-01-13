@@ -50,7 +50,7 @@ afterEvaluate {
 		publications {
 			create<MavenPublication>(
 				"release", configurePublishConfig(
-					"MoeSa", "EWar Sandbox MoeSa", "work.niggergo.app.e_war.sandbox.moesa"
+					"MoeSa", "EWar Sandbox MoeSa", "work.niggergo.app.e_war.sandbox"
 				)
 			)
 		}
