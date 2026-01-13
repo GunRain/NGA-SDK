@@ -12,12 +12,13 @@ import Tabs from '@theme/Tabs'
 	<TabItem value='groovy' label='Groovy'>
 		<CodeBlock language='groovy'>
 			{`
-buildscript {
+pluginManagement {
     repositories {
         maven {
             url 'https://oom-maven.sawahara.host'
             content {
                 includeGroupAndSubgroups 'ren.shiror'
+                includeGroupAndSubgroups 'work.niggergo'
                 includeGroupAndSubgroups 'dev.oom-wg'
             }
         }
@@ -29,6 +30,7 @@ dependencyResolutionManagement {
             url 'https://oom-maven.sawahara.host'
             content {
                 includeGroupAndSubgroups 'ren.shiror'
+                includeGroupAndSubgroups 'work.niggergo'
                 includeGroupAndSubgroups 'dev.oom-wg'
             }
         }
@@ -40,12 +42,26 @@ dependencyResolutionManagement {
 	<TabItem value='kotlin' label='Kotlin'>
 		<CodeBlock language='kotlin'>
 			{`
+pluginManagement {
+    repositories {
+        maven("https://oom-maven.sawahara.host") {
+            content {
+                includeGroupAndSubgroups("ren.shiror")
+                includeGroupAndSubgroups("work.niggergo")
+                includeGroupAndSubgroups("dev.oom-wg")
+            }
+        }
+    }
+}
 dependencyResolutionManagement {
-    maven("https://oom-maven.sawahara.host") {
-      content {
-          includeGroupByRegex("ren\\.shiror.*")
-          includeGroupByRegex("dev\\.oom-wg.*")
-      }
+    repositories {
+        maven("https://oom-maven.sawahara.host") {
+            content {
+                includeGroupAndSubgroups("ren.shiror")
+                includeGroupAndSubgroups("work.niggergo")
+                includeGroupAndSubgroups("dev.oom-wg")
+            }
+        }
     }
 }
 `.trim()}
