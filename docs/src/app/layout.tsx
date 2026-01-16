@@ -23,7 +23,7 @@ export default ({children}: LayoutProps<'/'>) => (
 						search: '搜索一下',
 						searchNoResult: '没搜到喵...',
 						toc: '在此页面...',
-						lastUpdate:'最后喵喵于: '
+						lastUpdate:'最后喵喵于：'
 					}
 				}}>
 				<DocsLayout tree={source.getPageTree()} {...docsOptions}>
