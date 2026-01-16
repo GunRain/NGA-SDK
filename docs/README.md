@@ -1,4 +1,4 @@
-# [NGA SDK](https://app.niggergo.work/docs/nga)
+# [NGA SDK](https://app.niggergo.work/nga)
 
 ## [LICENSE](../LICENSE.txt)
 
