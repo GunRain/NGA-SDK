@@ -5,6 +5,7 @@ import {GithubInfo} from 'fumadocs-ui/components/github-info'
 import type {BaseLayoutProps} from 'fumadocs-ui/layouts/shared'
 import {Author} from 'next/dist/lib/metadata/types/metadata-types'
 import Link from 'next/link'
+import {JSX} from 'react'
 
 export const docsConfig = {
 	title: 'NGA 开发文档',
@@ -13,6 +14,9 @@ export const docsConfig = {
 	icon: {
 		url: new URL('./logo.webp', import.meta.url),
 		size: 32
+	} satisfies {
+		url: URL
+		size: number | {width: number; height: number}
 	},
 	footer: {
 		links: [
@@ -43,12 +47,26 @@ export const docsConfig = {
 				，版权所有，保留一切权利。
 			</span>
 		)
+	} satisfies {
+		links: {
+			title: string
+			items: {
+				label: string
+				href: string
+			}[]
+		}[]
+		copyright: string | JSX.Element
 	},
 	git: {
 		user: 'ShIroRRen',
 		repo: 'NGA-SDK',
 		branch: 'nga',
 		dir: 'docs'
+	} satisfies {
+		user: string
+		repo: string
+		branch: string
+		dir: string | undefined
 	}
 }
 
