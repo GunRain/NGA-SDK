@@ -1,0 +1,112 @@
+---
+title: Kotlin SDK
+description: NGA SDK - Kotlin SDK
+---
+
+Kotlin SDK 提供了一些小功能
+
+## 引入依赖
+
+先依赖源中有 [PkgPub](/purejoy/pkgpub/use) 的依赖源
+
+然后添加对应的依赖:
+
+```groovy
+dependencies {
+    implementation("work.niggergo.app:gendoki:+") // GenDoki
+    implementation("work.niggergo.app.e_war.sandbox:moesa:+") // MoeSa
+    implementation("work.niggergo.app:futago:+") // Futago
+}
+```
+
+**功能列表**:
+
+- `GenDoki`: 用于非常简单地配置用于初始化内容的内容提供器
+- `MoeSa`: 用于在不传入任何参数的情况下通过 `GenDoki` 在软件启动时校验软件真实性
+- `Futago`: 用于在不继承任何 **`Application` 子类** 的情况下通过 [`KavaRef`](https://highcapable.github.io/KavaRef/zh-cn/) 在 `Application` 中创建多个 **`Application` 子类** 的实例
+
+## 使用方法
+
+### GenDoki
+
+首先编写一个继承自 `GenDokiInitializer` 的内容提供器，
+重写 `Application.onInit` 函数即可执行初始化操作
+
+```kotlin title='示例'
+import android.app.Application
+import work.niggergo.app.gendoki.GenDokiInitializer
+
+class AppInitializer : GenDokiInitializer() {
+    override fun Application.onInit() {
+        // 干些什么事情...
+    }
+}
+```
+
+<Callout type='idea'>
+	`GenDokiInitializer` 在运行 `Application.onInit` 函数时，会在 `runCatching` 中执行，
+	所以一般来说不需要自己再加一层 `runCatching` 或 `try`
+</Callout>
+
+然后在 `AndroidManifest.xml` 中注册内容提供器即可实现在软件启动时执行内容
+
+```xml title='示例'
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <provider
+            android:name="<包名>"
+            android:authorities="${applicationId}.<自定义名称>"
+            android:exported="false"/>
+    </application>
+</manifest>
+```
+
+### MoeSa
+
+使用 MoeSa 直接引入依赖即可，无需任何额外操作
+
+引入 MoeSa，会自动判断 `applicationInfo.sourceDir` 是否与 `pm path <包名>` 返回的 `base.apk` 路径相同，
+并且判断路径是否以 `/data/app/` 开头，以 `/base.apk` 结尾，并且其中包含包名
+
+还会判断 `base.apk` 的 `uid` 与 `gid` 是否都为 `1000`(即 `system`)
+
+并且判断文件权限是否为 `644`(常规情况下) 或 `555`(**`V4` 签名** 安装情况下)
+（实际的判断方式是判断文件权限是否在 `544`~`655` 范围之内）
+
+<Callout>如果校验失败，会调用 `killProcess(myPid())` 和 `exitProcess(-1)` 强制停止软件运行</Callout>
+
+### Futago
+
+在自己的 `Application` 中实现 `FutagoAppsLoader` 然后再在 `attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory` 函数中调用即可
+
+```kotlin title='示例'
+import android.app.Application
+import android.content.Context
+import android.content.res.Configuration
+import work.niggergo.app.futago.FutagoAppsDelegate
+import work.niggergo.app.futago.FutagoAppsLoader
+
+class AppApplication : Application(), FutagoAppsLoader<AppApplication> {
+    override val futagoDelegate by lazy {
+        FutagoAppsDelegate(
+            listOf(TargetApplication::class)
+        )
+    }
+
+    override fun attachBaseContext(base: Context) =
+        super.attachBaseContext(base).also { appsAttachBaseContext() }
+    override fun onCreate() = super.onCreate().also { appsCreate() }
+    override fun onTerminate() = super.onTerminate().also { appsTerminate() }
+    override fun onConfigurationChanged(newConfig: Configuration) =
+        super.onConfigurationChanged(newConfig).also { appsConfigurationChanged(newConfig) }
+    override fun onLowMemory() = super.onLowMemory().also { appsLowMemory() }
+    override fun onTrimMemory(level: Int) = super.onTrimMemory(level).also { appsTrimMemory(level) }
+}
+```
+
+<Callout>
+	为确保在 R8 的发力下运行正常，已在 **使用者 ProGuard 规则** 中添加了对所有 **`Application` 子类** 的
+	`keepclassmembers` 规则，将会保留
+	_构造函数_、`attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory`
+	以确保反射运行正常
+</Callout>
