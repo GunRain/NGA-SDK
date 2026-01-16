@@ -1,1 +1,1 @@
-# [README](https://app.niggergo.work/docs/nga)
+# [README](https://app.niggergo.work/nga)

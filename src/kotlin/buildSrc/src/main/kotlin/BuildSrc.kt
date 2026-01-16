@@ -15,7 +15,7 @@ fun Project.configurePublishConfig(
 	pom {
 		name.set("NGA SDK${if (modName.isNotEmpty()) " $modName" else ""}")
 		description.set(desc)
-		url.set("https://app.niggergo.work")
+		url.set("https://app.niggergo.work/nga/")
 
 		licenses {
 			license {
