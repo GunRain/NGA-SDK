@@ -1,0 +1,72 @@
+import {loader} from 'fumadocs-core/source'
+import {lucideIconsPlugin} from 'fumadocs-core/source/lucide-icons'
+import {docs} from 'fumadocs-mdx:collections/server'
+import {GithubInfo} from 'fumadocs-ui/components/github-info'
+import type {BaseLayoutProps} from 'fumadocs-ui/layouts/shared'
+import {Author} from 'next/dist/lib/metadata/types/metadata-types'
+import Link from 'next/link'
+
+export const docsConfig = {
+	title: 'NGA 开发文档',
+	baseUrl: 'https://app.niggergo.work',
+	authors: [{name: 'ShIroRRen', url: 'https://shiror.ren'}] satisfies Author[],
+	icon: {
+		url: new URL('./logo.webp', import.meta.url),
+		size: 32
+	},
+	footer: {
+		links: [
+			{
+				title: '友链',
+				items: [
+					{
+						label: 'Latest File',
+						href: 'https://latestfile.zip'
+					},
+					{
+						label: '世界之外工作组',
+						href: 'https://oom-wg.dev'
+					}
+				]
+			}
+		],
+		copyright: (
+			<span>
+				根据{' '}
+				<Link href='https://license.fileto.download/' target='_blank'>
+					F2DLPR 许可证
+				</Link>
+				授权许可。©️ 2016-{new Date().getFullYear()}{' '}
+				<Link href='https://shiror.ren/' target='_blank'>
+					白彩恋
+				</Link>
+				，版权所有，保留一切权利。
+			</span>
+		)
+	},
+	git: {
+		user: 'ShIroRRen',
+		repo: 'NGA-SDK',
+		branch: 'nga',
+		dir: 'docs'
+	}
+}
+
+export const docsOptions = {
+	nav: {
+		title: docsConfig.title
+	},
+	links: [
+		{
+			type: 'custom',
+			children: <GithubInfo owner={docsConfig.git.user} repo={docsConfig.git.repo} />
+		}
+	],
+	githubUrl: `https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}`
+} satisfies BaseLayoutProps
+
+export const source = loader({
+	baseUrl: '/',
+	source: docs.toFumadocsSource(),
+	plugins: [lucideIconsPlugin()]
+})

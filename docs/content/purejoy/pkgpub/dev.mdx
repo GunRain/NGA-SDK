@@ -1,0 +1,22 @@
+---
+title: 开发 PkgPub
+---
+
+PkgPub 旨在快速、便利地建立自己的 Maven 仓库来发布依赖
+
+PkgPub 构建使用 **GitHub Actions**（_手动 & 定时构建_），版本基于 **标签**
+
+通过 Git 仓库远程获取标签，与已构建的标签列表对比，
+筛选出**未在配置文件忽略的**并且是**不存在的**或**哈希不对应的**标签
+
+将构建后的仓库部署至独立分支，以便于 Pages 直接部署至自己的域名
+
+## 配置
+
+在 `maven.fvv` 中可配置以下内容:
+
+- `Domain`(`string`): 自定义域名，用于写入至根目录的 `CNAME`
+- `Repos`(`FVVV` `list`): Git 仓库列表
+  - `Url`(`string`): Git 仓库链接
+  - `Dir`(`string`): 可选配置，Gradle 项目所处的子目录
+  - `Ignore`(`string` `list`): 要忽略的标签列表 (支持 _正则表达式_)
