@@ -95,7 +95,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 					<LLMCopyButton markdownUrl={`${page.url === '/' ? '/index' : page.url}.md`} />
 					<ViewOptions
 						markdownUrl={`${page.url === '/' ? '/index' : page.url}.md`}
-						githubUrl={`https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}/blob/${docsConfig.git.branch}/${docsConfig.git.dir}/content/${page.path}`}
+						githubUrl={`https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}/blob/${docsConfig.git.branch}/${docsConfig.git.dir ? `${docsConfig.git.dir}/` : ''}content/${page.path}`}
 					/>
 				</div>
 			)}

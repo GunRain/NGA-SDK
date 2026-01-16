@@ -15,6 +15,15 @@ export const GET = async () =>
 						`- [**${page.data.title}**](${docsConfig.baseUrl}${page.url === '/' ? '/index' : page.url}.md)${page.data.description ? `: ${page.data.description}` : ''}`
 				)
 				.join('\n') +
+			(docsConfig.footer.links.length > 0 &&
+				`\n\n## Links\n\n` +
+					docsConfig.footer.links
+						.map(
+							group =>
+								`- **${group.title}**\n` +
+								group.items.map(item => `  - [${item.label}](${item.href})`).join('\n')
+						)
+						.join('\n')) +
 			`\n\n---\n\n> [**Full Content**](${docsConfig.baseUrl}/llms-full.txt): All pages in single file`,
 		{headers: {'Content-Type': 'text/markdown; charset=utf-8'}}
 	)
