@@ -59,7 +59,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 							].map(group => (
 								<div
 									key={group.title}
-									className='flex-1 min-w-[150px] flex flex-col gap-3'>
+									className='flex-1 min-w-37.5 flex flex-col gap-3'>
 									<h4 className='font-semibold text-fd-foreground'>{group.title}</h4>
 									<ul className='space-y-2'>
 										{group.items.map(item => (
