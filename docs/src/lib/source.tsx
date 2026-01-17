@@ -4,6 +4,7 @@ import {docs} from 'fumadocs-mdx:collections/server'
 import {GithubInfo} from 'fumadocs-ui/components/github-info'
 import type {BaseLayoutProps} from 'fumadocs-ui/layouts/shared'
 import {Author} from 'next/dist/lib/metadata/types/metadata-types'
+import Image from 'next/image'
 import Link from 'next/link'
 import {JSX} from 'react'
 
@@ -77,7 +78,18 @@ export const docsConfig = {
 
 export const docsOptions = {
 	nav: {
-		title: docsConfig.title
+		title: (
+			<div className='flex items-center gap-2'>
+				<Image
+					alt='Logo'
+					src={docsConfig.icon.url.href}
+					width={32}
+					height={32}
+					className='rounded-md'
+				/>
+				<span className='font-semibold'>{docsConfig.title}</span>
+			</div>
+		)
 	},
 	links: [
 		{
