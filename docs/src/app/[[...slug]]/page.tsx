@@ -15,7 +15,7 @@ import {getPageImage} from '@/lib/gen/img'
 import {docsConfig, source} from '@/lib/source'
 import {getMDXComponents} from '@/mdx-components'
 
-const BUILD_TIME = new Date().toLocaleString('zh-CN', {
+const BUILD_TIME = new Date().toLocaleString('zh-Hant', {
 	timeZone: 'Asia/Shanghai',
 	year: 'numeric',
 	month: '2-digit',
