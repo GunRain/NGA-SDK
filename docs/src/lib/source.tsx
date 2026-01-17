@@ -86,7 +86,7 @@ export const docsOptions = {
 		}
 	],
 	githubUrl: `https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}`
-} satisfies BaseLayoutProps
+} satisfies BaseLayoutProps as BaseLayoutProps
 
 export const source = loader({
 	baseUrl: '/',
