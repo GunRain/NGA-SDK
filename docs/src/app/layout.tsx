@@ -11,12 +11,12 @@ import './global.css'
 const ubuntu = Ubuntu({weight: ['300', '400', '500', '700'] as const})
 
 export default ({children}: LayoutProps<'/'>) => (
-	<html lang='zh' className={ubuntu.className} suppressHydrationWarning>
+	<html lang='zh-Hans' className={ubuntu.className} suppressHydrationWarning>
 		<body className='flex flex-col min-h-screen'>
 			<RootProvider
 				search={{SearchDialog}}
 				i18n={{
-					locale: 'zh',
+					locale: 'zh-Hans',
 					translations: {
 						search: '搜索一下',
 						searchNoResult: '没搜到喵...',
