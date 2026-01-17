@@ -23,9 +23,7 @@ const BUILD_TIME = new Date().toLocaleString('zh-CN', {
 })
 
 export default async function Page(props: PageProps<'/[[...slug]]'>) {
-	const {slug} = await props.params
-	const page = source.getPage(slug)
-	if (!page) notFound()
+	const page = source.getPage((await props.params).slug) ?? notFound()
 
 	const MDX = page.data.body
 
@@ -109,9 +107,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 export const generateStaticParams = async () => source.generateParams()
 
 export async function generateMetadata(props: PageProps<'/[[...slug]]'>) {
-	const {slug} = await props.params
-	const page = source.getPage(slug)
-	if (!page) notFound()
+	const page = source.getPage((await props.params).slug) ?? notFound()
 
 	const isGoPkg = page.data['go-import'] || page.data['go-source']
 	const isIndex = page.url === '/'

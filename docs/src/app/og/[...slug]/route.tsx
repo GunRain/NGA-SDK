@@ -9,9 +9,7 @@ import {docsConfig, source} from '@/lib/source'
 export const revalidate = false
 
 export async function GET(_req: NextRequest, {params}: RouteContext<'/og/[...slug]'>) {
-	const {slug} = await params
-	const page = source.getPage(slug.slice(0, -1))
-	if (!page) notFound()
+	const page = source.getPage((await params).slug.slice(0, -1)) ?? notFound()
 
 	return new ImageResponse(
 		<DefaultImage
@@ -19,10 +17,7 @@ export async function GET(_req: NextRequest, {params}: RouteContext<'/og/[...slu
 			description={page.data.description}
 			site={docsConfig.title}
 		/>,
-		{
-			width: 1200,
-			height: 630
-		}
+		{width: 1200, height: 630}
 	)
 }
 

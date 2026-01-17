@@ -9,4 +9,4 @@ export const size =
 		: docsConfig.icon.size
 export const contentType = 'image/png'
 
-export default () => getIconImage(docsConfig.icon.url, docsConfig.icon.size)
+export default () => getIconImage(docsConfig.icon.url, size)
