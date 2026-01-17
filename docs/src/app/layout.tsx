@@ -8,9 +8,7 @@ import {docsConfig, docsOptions, source} from '@/lib/source'
 
 import './global.css'
 
-const ubuntu = Ubuntu({
-	weight: ['300', '400', '500', '700']
-})
+const ubuntu = Ubuntu({weight: ['300', '400', '500', '700'] as const})
 
 export default ({children}: LayoutProps<'/'>) => (
 	<html lang='zh' className={ubuntu.className} suppressHydrationWarning>
@@ -23,7 +21,7 @@ export default ({children}: LayoutProps<'/'>) => (
 						search: '搜索一下',
 						searchNoResult: '没搜到喵...',
 						toc: '在此页面...',
-						lastUpdate:'最后喵喵于：'
+						lastUpdate: '最后喵喵于：'
 					}
 				}}>
 				<DocsLayout tree={source.getPageTree()} {...docsOptions}>
@@ -50,14 +48,14 @@ export const metadata = {
 			default: docsConfig.title
 		},
 		siteName: docsConfig.title,
-		type: 'website'
+		type: 'website' as const
 	},
 	twitter: {
 		title: {
 			template: `%s | ${docsConfig.title}`,
 			default: docsConfig.title
 		},
-		card: 'summary_large_image'
+		card: 'summary_large_image' as const
 	},
 	robots: {
 		index: true,
