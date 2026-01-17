@@ -2,3 +2,9 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/shadcn.css';
 @import 'fumadocs-ui/css/preset.css';
+
+@layer base {
+	footer a {
+		@apply text-fd-primary underline underline-offset-4 decoration-fd-primary/40 hover:decoration-fd-primary transition-colors;
+	}
+}
