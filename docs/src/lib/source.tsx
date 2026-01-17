@@ -8,6 +8,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {JSX} from 'react'
 
+export const revalidate = false
+
 export const docsConfig = {
 	title: 'NGA 开发文档',
 	baseUrl: 'https://app.niggergo.work',
