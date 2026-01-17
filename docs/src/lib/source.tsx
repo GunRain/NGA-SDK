@@ -66,7 +66,12 @@ export const docsConfig = {
 		user: string
 		repo: string
 		branch: string
-		dir: string | undefined
+		dir?: string
+	} as {
+		user: string
+		repo: string
+		branch: string
+		dir?: string
 	}
 }
 
