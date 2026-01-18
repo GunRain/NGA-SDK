@@ -25,8 +25,6 @@ const BUILD_TIME = new Date().toLocaleString('zh-Hant', {
 export default async function Page(props: PageProps<'/[[...slug]]'>) {
 	const page = source.getPage((await props.params).slug) ?? notFound()
 
-	const MDX = page.data.body
-
 	return (
 		<DocsPage
 			toc={page.data.toc}
@@ -57,9 +55,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 									]
 								}
 							].map(group => (
-								<div
-									key={group.title}
-									className='flex-1 min-w-37.5 flex flex-col gap-3'>
+								<div key={group.title} className='flex-1 min-w-37.5 flex flex-col gap-3'>
 									<h4 className='font-semibold text-fd-foreground'>{group.title}</h4>
 									<ul className='space-y-2'>
 										{group.items.map(item => (
@@ -98,7 +94,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 				</div>
 			)}
 			<DocsBody>
-				<MDX components={getMDXComponents({a: createRelativeLink(source, page)})} />
+				<page.data.body components={getMDXComponents({a: createRelativeLink(source, page)})} />
 			</DocsBody>
 		</DocsPage>
 	)
