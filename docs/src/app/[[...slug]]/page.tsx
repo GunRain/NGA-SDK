@@ -87,9 +87,9 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 			<DocsDescription className='mb-0'>{page.data.description}</DocsDescription>
 			{!page.data['go-import'] && !page.data['go-source'] && (
 				<div className='flex flex-row gap-2 items-center border-b pb-6'>
-					<LLMCopyButton markdownUrl={`${page.url === '/' ? '/index' : page.url}.mdx`} />
+					<LLMCopyButton markdownUrl={`${page.url === '/' ? '/index' : page.url}.md`} />
 					<ViewOptions
-						markdownUrl={`${page.url === '/' ? '/index' : page.url}.mdx`}
+						markdownUrl={`${page.url === '/' ? '/index' : page.url}.md`}
 						githubUrl={`https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}/blob/${docsConfig.git.branch}/${docsConfig.git.dir ? `${docsConfig.git.dir}/` : ''}content/${page.path}`}
 					/>
 				</div>
