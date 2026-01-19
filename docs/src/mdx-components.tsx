@@ -13,6 +13,7 @@ import {CodeBlock, Pre} from 'fumadocs-ui/components/codeblock'
 import {ImageZoom} from 'fumadocs-ui/components/image-zoom'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import type {MDXComponents} from 'mdx/types'
+import Link from 'next/link'
 
 export const getMDXComponents = (components?: MDXComponents) =>
 	({
@@ -31,6 +32,7 @@ export const getMDXComponents = (components?: MDXComponents) =>
 		...ImageZoomComponents,
 		img: props => <ImageZoom {...props} />,
 		// ...InlineTOCComponents,
+		Link,
 		...StepsComponents,
 		...TabsComponents,
 		...TypeTableComponents,
