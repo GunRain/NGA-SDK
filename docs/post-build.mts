@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'path'
 
 ;(async () => {
-	const srcDir = path.join(process.cwd(), 'out/llms.md/')
+	const srcDir = path.join(process.cwd(), 'out/llms.mdx/')
 	const dstDir = path.join(process.cwd(), 'out/')
 
 	if (await fs.pathExists(srcDir)) {

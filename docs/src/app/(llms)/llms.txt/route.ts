@@ -47,7 +47,7 @@ export async function GET() {
 				.filter(page => !page.data['go-import'] && !page.data['go-source'])
 				.map(
 					page =>
-						`- [**${page.data.title}**](${docsConfig.baseUrl}${page.url === '/' ? '/index' : page.url}.md)${page.data.description ? `: ${page.data.description}` : ''}`
+						`- [**${page.data.title}**](${docsConfig.baseUrl}${page.url === '/' ? '/index' : page.url}.mdx)${page.data.description ? `: ${page.data.description}` : ''}`
 				)
 				.join('\n') +
 			(docsConfig.footer.links.length > 0
