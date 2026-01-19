@@ -6,11 +6,11 @@ import {docsConfig, source} from '@/lib/source'
 
 export const revalidate = false
 
-export async function GET(_req: NextRequest, {params}: RouteContext<'/llms.md/[[...slug]]'>) {
+export async function GET(_req: NextRequest, {params}: RouteContext<'/llms.mdx/[[...slug]]'>) {
 	let {slug} = await params
 	if (!slug || slug.length === 0) notFound()
-	slug.length !== 1 || slug[0] !== 'index.md'
-		? (slug[slug.length - 1] = slug[slug.length - 1].replace(/\.md$/, ''))
+	slug.length !== 1 || slug[0] !== 'index.mdx'
+		? (slug[slug.length - 1] = slug[slug.length - 1].replace(/\.mdx$/, ''))
 		: (slug = [])
 
 	const page = source.getPage(slug)
@@ -27,7 +27,7 @@ export const generateStaticParams = () =>
 	source.getPages().map(page => ({
 		slug: [
 			...(page.slugs.length === 0
-				? ['index.md']
-				: [...page.slugs.slice(0, -1), `${page.slugs[page.slugs.length - 1]}.md`])
+				? ['index.mdx']
+				: [...page.slugs.slice(0, -1), `${page.slugs[page.slugs.length - 1]}.mdx`])
 		]
 	}))

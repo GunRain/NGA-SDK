@@ -8,8 +8,8 @@ const config = {
 	reactStrictMode: true,
 	rewrites: async () => [
 		{
-			source: '/:slug*.md',
-			destination: '/llms.md/:slug*.md'
+			source: '/:slug*.mdx',
+			destination: '/llms.mdx/:slug*.mdx'
 		}
 	],
 	images: {
