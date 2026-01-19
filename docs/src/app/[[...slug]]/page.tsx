@@ -32,7 +32,8 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 			footer={{
 				enabled: true,
 				component: (
-					<footer className='mt-16 border-t text-fd-muted-foreground'>
+					<footer className='mt-16 text-fd-muted-foreground'>
+						<hr />
 						{page.data.lastModified && (
 							<div className='px-6 pt-8 text-xs italic border-b-0'>
 								<PageLastUpdate date={page.data.lastModified} />
@@ -72,7 +73,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 								</div>
 							))}
 						</div>
-						<div className='border-t' />
+						<hr />
 						<div className='px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs'>
 							<p>{docsConfig.footer.copyright}</p>
 							<p className='opacity-70'>
