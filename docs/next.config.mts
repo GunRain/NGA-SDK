@@ -11,7 +11,10 @@ const config = {
 			source: '/:slug*.md',
 			destination: '/llms.md/:slug*.md'
 		}
-	]
+	],
+	images: {
+		unoptimized: true
+	}
 } satisfies import('next').NextConfig
 
 export default withMDX(config)
