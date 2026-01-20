@@ -39,8 +39,8 @@ export const docsConfig = {
 			<span>
 				根据{' '}
 				<Link href='https://license.fileto.download/' target='_blank'>
-					F2DLPR 许可证
-				</Link>
+					F2DLPR License
+				</Link>{' '}
 				授权许可。©️ 2016-{new Date().getFullYear()}{' '}
 				<Link href='https://shiror.ren/' target='_blank'>
 					白彩恋
