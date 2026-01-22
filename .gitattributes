@@ -23,3 +23,5 @@
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
 *.vbs text eol=crlf
+
+docs/src/** linguist-documentation=false
