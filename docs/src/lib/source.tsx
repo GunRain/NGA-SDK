@@ -80,7 +80,15 @@ export const docsOptions = {
 	nav: {
 		title: (
 			<div className='flex items-center gap-2'>
-				<Image alt='Logo' src='/icon' width={32} height={32} className='rounded-md' unoptimized />
+				<Image
+					alt='Logo'
+					src='/icon'
+					width={32}
+					height={32}
+					className='rounded-md'
+					priority
+					unoptimized
+				/>
 				<span className='font-semibold'>{docsConfig.title}</span>
 			</div>
 		)
