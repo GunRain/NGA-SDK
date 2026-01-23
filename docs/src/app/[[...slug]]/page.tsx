@@ -64,6 +64,11 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 												<Link
 													href={item.href}
 													target='_blank'
+													prefetch={
+														/^\/llms(-full)?\.txt$/.test(item.href)
+															? false
+															: ('auto' as const)
+													}
 													className='hover:text-fd-primary transition-colors'>
 													{item.label}
 												</Link>
