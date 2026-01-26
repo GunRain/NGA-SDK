@@ -5,6 +5,6 @@
 
 @layer base {
 	footer a {
-		@apply text-fd-primary underline underline-offset-4 decoration-fd-primary/40 hover:decoration-fd-primary transition-colors;
+		@apply text-fd-primary underline underline-offset-4 decoration-1 decoration-fd-primary/44 hover:decoration-fd-primary transition-colors;
 	}
 }
