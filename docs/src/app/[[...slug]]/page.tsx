@@ -6,6 +6,7 @@ import {
 	PageLastUpdate
 } from 'fumadocs-ui/layouts/docs/page'
 import {createRelativeLink} from 'fumadocs-ui/mdx'
+import {Bot, ExternalLink} from 'lucide-react'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {notFound} from 'next/navigation'
@@ -59,21 +60,34 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 								<div key={group.title} className='flex-1 min-w-37.5 flex flex-col gap-3'>
 									<h4 className='font-semibold text-fd-foreground'>{group.title}</h4>
 									<ul className='space-y-2'>
-										{group.items.map(item => (
-											<li key={item.label}>
-												<Link
-													href={item.href}
-													target='_blank'
-													prefetch={
-														/^\/llms(-full)?\.txt$/.test(item.href)
-															? false
-															: ('auto' as const)
-													}
-													className='hover:text-fd-primary transition-colors'>
-													{item.label}
-												</Link>
-											</li>
-										))}
+										{group.items.map(item => {
+											const llmsLink = /^\/llms(-full)?\.txt$/.test(item.href)
+											const extLink =
+												/^https?:\/\//.test(item.href) ||
+												item.href.startsWith('//')
+											return (
+												<li key={item.label}>
+													<Link
+														href={item.href}
+														target={
+															extLink || llmsLink ? '_blank' : undefined
+														}
+														prefetch={llmsLink ? false : 'auto'}
+														className='group wrap-break-word text-sm leading-snug hover:text-fd-primary transition-colors'>
+														{item.label}
+														{(extLink || llmsLink) && (
+															<span className='inline-block ml-1 opacity-66 group-hover:opacity-100 transition-opacity'>
+																{extLink ? (
+																	<ExternalLink className='size-3.5 align-text-bottom' />
+																) : (
+																	<Bot className='size-3.5 align-text-bottom' />
+																)}
+															</span>
+														)}
+													</Link>
+												</li>
+											)
+										})}
 									</ul>
 								</div>
 							))}
