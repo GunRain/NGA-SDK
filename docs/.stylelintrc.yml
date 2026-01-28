@@ -1,5 +1,6 @@
 extends:
   - stylelint-config-standard
+  - stylelint-config-tailwindcss
 plugins:
   - stylelint-plugin-logical-css
   - stylelint-plugin-defensive-css

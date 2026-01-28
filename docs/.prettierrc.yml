@@ -15,5 +15,4 @@ importOrderSortSpecifiers: true
 importOrderGroupNamespaceSpecifiers: true
 
 plugins:
-  - prettier-plugin-lint-md
   - '@trivago/prettier-plugin-sort-imports'
