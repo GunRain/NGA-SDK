@@ -3,8 +3,8 @@ import {RootProvider} from 'fumadocs-ui/provider/next'
 import {Metadata} from 'next'
 import {Ubuntu} from 'next/font/google'
 
-import SearchDialog from '@/components/search'
 import {docsConfig, docsOptions, source} from '@/lib/source'
+import SearchDialog from '@/widgets/ui/search'
 
 import './global.css'
 

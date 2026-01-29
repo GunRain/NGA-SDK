@@ -8,7 +8,7 @@ import {twMerge as cn} from 'tailwind-merge'
 
 const cache = new Map<string, string>()
 
-export function LLMCopyButton({markdownUrl}: {markdownUrl: string}) {
+export const LLMCopyButton = ({markdownUrl}: {markdownUrl: string}) => {
 	const [isLoading, setLoading] = useState(false)
 	const [checked, onClick] = useCopyButton(async () => {
 		const cached = cache.get(markdownUrl)
@@ -49,7 +49,7 @@ export function LLMCopyButton({markdownUrl}: {markdownUrl: string}) {
 	)
 }
 
-export function ViewOptions({markdownUrl, githubUrl}: {markdownUrl: string; githubUrl: string}) {
+export const ViewOptions = ({markdownUrl, githubUrl}: {markdownUrl: string; githubUrl: string}) => {
 	const items = useMemo(() => {
 		const fullMarkdownUrl =
 			typeof window !== 'undefined' ? new URL(markdownUrl, window.location.origin) : 'loading'

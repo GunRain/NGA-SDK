@@ -5,7 +5,7 @@ import {docsConfig, docsOptions, source} from '@/lib/source'
 
 export const revalidate = false
 
-export async function GET() {
+export const GET = () => {
 	const links =
 		docsOptions.links &&
 		(docsOptions.links.filter(

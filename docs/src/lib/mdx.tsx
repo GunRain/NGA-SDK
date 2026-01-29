@@ -15,7 +15,7 @@ import defaultMdxComponents from 'fumadocs-ui/mdx'
 import type {MDXComponents} from 'mdx/types'
 import Link from 'next/link'
 
-export const getMDXComponents = (components?: MDXComponents) =>
+export const getMDXWidgets = (components?: MDXComponents) =>
 	({
 		...defaultMdxComponents,
 		...AccordionComponents,

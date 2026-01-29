@@ -28,7 +28,7 @@ const initOrama = (_loc?: string) =>
 		}
 	})
 
-export default function DefaultSearchDialog(props: SharedProps) {
+export default (props: SharedProps) => {
 	const {search, setSearch, query} = useDocsSearch({
 		type: 'static' as const,
 		initOrama,

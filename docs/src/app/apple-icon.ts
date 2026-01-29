@@ -1,5 +1,5 @@
-import {getIconImage} from '@/lib/gen/icon'
 import {docsConfig} from '@/lib/source'
+import {getIconImage} from '@/utils/icon'
 
 export const revalidate = false
 

@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server'
 
-import {getLLMText} from '@/lib/gen/llms'
 import {source} from '@/lib/source'
+import {getLLMText} from '@/utils/llms'
 
 export const revalidate = false
 

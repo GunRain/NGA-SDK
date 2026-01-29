@@ -1,12 +1,12 @@
 import {notFound} from 'next/navigation'
 import {NextRequest, NextResponse} from 'next/server'
 
-import {getLLMText} from '@/lib/gen/llms'
 import {docsConfig, source} from '@/lib/source'
+import {getLLMText} from '@/utils/llms'
 
 export const revalidate = false
 
-export async function GET(_req: NextRequest, {params}: RouteContext<'/llms.md/[[...slug]]'>) {
+export const GET = async (_req: NextRequest, {params}: RouteContext<'/llms.md/[[...slug]]'>) => {
 	let {slug} = await params
 	if (!slug || slug.length === 0) notFound()
 	slug.length !== 1 || slug[0] !== 'index.md'

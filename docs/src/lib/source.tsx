@@ -6,14 +6,14 @@ import type {BaseLayoutProps} from 'fumadocs-ui/layouts/shared'
 import {Author} from 'next/dist/lib/metadata/types/metadata-types'
 import Image from 'next/image'
 import Link from 'next/link'
-import {JSX} from 'react'
+import {ReactNode} from 'react'
 
 export const docsConfig = {
 	title: 'NGA 开发文档',
 	baseUrl: 'https://app.niggergo.work',
 	authors: [{name: 'ShIroRRen', url: 'https://shiror.ren'}] satisfies Author[],
 	icon: {
-		url: new URL('./logo.webp', import.meta.url),
+		url: new URL('../assets/logo.webp', import.meta.url),
 		size: 32
 	} satisfies {
 		url: URL
@@ -56,7 +56,7 @@ export const docsConfig = {
 				href: string
 			}[]
 		}[]
-		copyright: string | JSX.Element
+		copyright: ReactNode
 	},
 	git: {
 		user: 'ShIroRRen',
