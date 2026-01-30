@@ -1,8 +1,6 @@
 import {createMDX} from 'fumadocs-mdx/next'
 
-const withMDX = createMDX()
-
-const config = {
+export default createMDX()({
 	output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
 	trailingSlash: true,
 	reactStrictMode: true,
@@ -12,9 +10,5 @@ const config = {
 			destination: '/llms.md/:slug*.md'
 		}
 	],
-	images: {
-		unoptimized: true
-	}
-} satisfies import('next').NextConfig
-
-export default withMDX(config)
+	images: {unoptimized: true}
+})

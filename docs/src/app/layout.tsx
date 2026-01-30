@@ -1,6 +1,6 @@
 import {DocsLayout} from 'fumadocs-ui/layouts/docs'
 import {RootProvider} from 'fumadocs-ui/provider/next'
-import {Metadata} from 'next'
+import {type Metadata} from 'next'
 import {Ubuntu} from 'next/font/google'
 
 import {docsConfig, docsOptions, source} from '@/lib/source'
@@ -40,8 +40,8 @@ export const metadata = {
 		default: docsConfig.title
 	},
 	authors: docsConfig.authors,
-	creator: docsConfig.authors[0].name,
-	publisher: docsConfig.authors[0].name,
+	creator: docsConfig.authors[0]!.name,
+	publisher: docsConfig.authors[0]!.name,
 	openGraph: {
 		title: {
 			template: `%s | ${docsConfig.title}`,

@@ -14,6 +14,7 @@ import {ImageZoom} from 'fumadocs-ui/components/image-zoom'
 import defaultMdxComponents from 'fumadocs-ui/mdx'
 import type {MDXComponents} from 'mdx/types'
 import Link from 'next/link'
+import {type ComponentPropsWithoutRef} from 'react'
 
 export const getMDXWidgets = (components?: MDXComponents) =>
 	({
@@ -21,9 +22,9 @@ export const getMDXWidgets = (components?: MDXComponents) =>
 		...AccordionComponents,
 		// ...BannerComponents,
 		...CodeBlockComponents,
-		pre: ({ref: _ref, ...props}) => (
+		pre: ({children, ...props}: ComponentPropsWithoutRef<'pre'>) => (
 			<CodeBlock {...props}>
-				<Pre>{props.children}</Pre>
+				<Pre>{children}</Pre>
 			</CodeBlock>
 		),
 		// ...DynamicCodeBlockComponents,

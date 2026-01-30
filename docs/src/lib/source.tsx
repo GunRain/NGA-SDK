@@ -3,10 +3,10 @@ import {lucideIconsPlugin} from 'fumadocs-core/source/lucide-icons'
 import {docs} from 'fumadocs-mdx:collections/server'
 import {GithubInfo} from 'fumadocs-ui/components/github-info'
 import type {BaseLayoutProps} from 'fumadocs-ui/layouts/shared'
-import {Author} from 'next/dist/lib/metadata/types/metadata-types'
+import type {Author} from 'next/dist/lib/metadata/types/metadata-types'
 import Image from 'next/image'
 import Link from 'next/link'
-import {ReactNode} from 'react'
+import {type ReactNode} from 'react'
 
 export const docsConfig = {
 	title: 'NGA 开发文档',

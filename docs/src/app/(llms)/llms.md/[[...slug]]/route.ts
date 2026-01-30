@@ -10,7 +10,7 @@ export const GET = async (_req: NextRequest, {params}: RouteContext<'/llms.md/[[
 	let {slug} = await params
 	if (!slug || slug.length === 0) notFound()
 	slug.length !== 1 || slug[0] !== 'index.md'
-		? (slug[slug.length - 1] = slug[slug.length - 1].replace(/\.md$/, ''))
+		? (slug[slug.length - 1] = slug[slug.length - 1]!.replace(/\.md$/, ''))
 		: (slug = [])
 
 	const page = source.getPage(slug)

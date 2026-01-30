@@ -1,4 +1,9 @@
-import {ButtonItemType, IconItemType, MainItemType, MenuItemType} from 'fumadocs-ui/layouts/shared'
+import {
+	type ButtonItemType,
+	type IconItemType,
+	type MainItemType,
+	type MenuItemType
+} from 'fumadocs-ui/layouts/shared'
 import {NextResponse} from 'next/server'
 
 import {docsConfig, docsOptions, source} from '@/lib/source'

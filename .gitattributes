@@ -1,5 +1,8 @@
 * text=auto
 
+*.config.*js linguist-vendored
+*.config.*ts linguist-vendored
+
 *.fvv text eol=lf linguist-language=FVV linguist-detectable
 *.fw text eol=lf linguist-language=FVV linguist-detectable
 *.fww text eol=lf linguist-language=FWW linguist-detectable
