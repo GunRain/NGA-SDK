@@ -2,6 +2,7 @@
 
 *.config.*js linguist-vendored
 *.config.*ts linguist-vendored
+source.ts* linguist-vendored
 
 *.fvv text eol=lf linguist-language=FVV linguist-detectable
 *.fw text eol=lf linguist-language=FVV linguist-detectable
