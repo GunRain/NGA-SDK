@@ -23,7 +23,8 @@ const initOrama = (_loc?: string) =>
 		components: {
 			tokenizer: createTokenizer({
 				language: 'mandarin' as const,
-				stopWords: [...mandarinStopwords, ...englishStopwords]
+				stopWords: [...mandarinStopwords, ...englishStopwords],
+				stemmer: word => word.toLowerCase()
 			})
 		}
 	})
