@@ -25,6 +25,10 @@ export const docsConfig = {
 				title: '友链',
 				items: [
 					{
+						label: '广告',
+						href: 'https://ja7.top/ad'
+					},
+					{
 						label: 'Latest File',
 						href: 'https://latestfile.zip'
 					},
