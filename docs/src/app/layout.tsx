@@ -64,5 +64,8 @@ export const metadata = {
 			index: true,
 			follow: true
 		}
+	},
+	verification: {
+		other: {'baidu-site-verification': 'codeva-Lhik4iESbv'}
 	}
 } satisfies Metadata
