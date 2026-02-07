@@ -13,7 +13,7 @@ export const docsConfig = {
 	baseUrl: 'https://app.niggergo.work',
 	authors: [{name: 'ShIroRRen', url: 'https://shiror.ren'}] satisfies Author[],
 	icon: {
-		url: new URL('../assets/logo.webp', import.meta.url),
+		url: new URL('../assets/logo.png', import.meta.url),
 		size: 32
 	} satisfies {
 		url: URL
