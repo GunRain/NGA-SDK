@@ -10,7 +10,7 @@ NGA SDK 是面向 Android 开发的辅助 SDK，内容涵盖应用安全、前�
 使用此 SDK 需要知道一件事情，如果不知道这件事情，则可以忽略这件事情，以后也最好不要知道这件事情。
 
 - [C++](https://github.com/NGA-SDK/NGA-SDK.cpp)
-- [Dart](https://github.com/NGA-SDK/NGA-SDK.dart)
+- [Dart(Flutter)](https://github.com/NGA-SDK/NGA-SDK.dart)
 - [Go](https://github.com/NGA-SDK/NGA-SDK.go)
 - [Kotlin](https://github.com/NGA-SDK/NGA-SDK.kt)
 - [Shell](https://github.com/NGA-SDK/NGA-SDK.sh)
