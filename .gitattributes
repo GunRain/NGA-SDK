@@ -1,17 +1,5 @@
 * text=auto
 
-*.config.*js linguist-vendored
-*.config.*ts linguist-vendored
-source.ts* linguist-vendored
-
-*.fvv text eol=lf linguist-language=FVV linguist-detectable
-*.fw text eol=lf linguist-language=FVV linguist-detectable
-*.fww text eol=lf linguist-language=FWW linguist-detectable
-*.rpp text eol=lf linguist-language=FVV linguist-detectable
-*.rxx text eol=lf linguist-language=FVV linguist-detectable
-*.r++ text eol=lf linguist-language=FVV linguist-detectable
-*.rr text eol=lf linguist-language=FVV linguist-detectable
-
 *.md text eol=lf linguist-documentation
 *.mkd text eol=lf linguist-documentation
 *.mdx text eol=lf linguist-documentation
@@ -27,5 +15,3 @@ source.ts* linguist-vendored
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
 *.vbs text eol=crlf
-
-docs/src/** linguist-documentation=false
