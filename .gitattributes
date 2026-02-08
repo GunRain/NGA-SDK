@@ -1,5 +1,13 @@
 * text=auto
 
+*.fvv text eol=lf linguist-language=FVV linguist-detectable
+*.fw text eol=lf linguist-language=FVV linguist-detectable
+*.fww text eol=lf linguist-language=FWW linguist-detectable
+*.rpp text eol=lf linguist-language=FVV linguist-detectable
+*.rxx text eol=lf linguist-language=FVV linguist-detectable
+*.r++ text eol=lf linguist-language=FVV linguist-detectable
+*.rr text eol=lf linguist-language=FVV linguist-detectable
+
 *.md text eol=lf linguist-documentation
 *.mkd text eol=lf linguist-documentation
 *.mdx text eol=lf linguist-documentation

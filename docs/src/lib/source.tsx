@@ -63,7 +63,7 @@ export const docsConfig = {
 		copyright: ReactNode
 	},
 	git: {
-		user: 'ShIroRRen',
+		user: 'NGA-SDK',
 		repo: 'NGA-SDK',
 		branch: 'nga',
 		dir: 'docs'

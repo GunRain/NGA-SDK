@@ -20,14 +20,13 @@ Go SDK 部分主要提供一些功能与辅助函数
 在 `go.mod` 中通过 `replace` 指向本地路径，并通过 `require` 添加依赖
 
 ```plaintext title='示例'
-replace app.niggergo.work/sdk/nga => path/nga/src/go
+replace app.niggergo.work/sdk/nga => path/nga-go
 
 require app.niggergo.work/sdk/nga v0.0.0
 ```
 
 </Tab>
 <Tab>
-<Callout type='warn'>远程依赖仅可在 Go `1.25`+ 可用！</Callout>
 
 通过命令行添加依赖:
 

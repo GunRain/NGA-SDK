@@ -13,6 +13,9 @@ on:
       - '.github/**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: docs-deployer
   cancel-in-progress: true
