@@ -47,8 +47,7 @@ run22null eval 'echo "这句话会消失" 1>&2'
 `until_key`: 获取按下的按键
 
 <Callout type='idea'>
-	大部分人写的按键监听都有问题，没有考虑到按键事件的 `EV_KEY` 有 `DOWN` 和 `UP` 两个状态（即 **按下** 和
-	**松开**）
+	大部分人写的按键监听都有问题，没有考虑到按键事件的 `EV_KEY` 有 `DOWN` 和 `UP` 两个状态（即 **按下** 和 **松开**）
 	<></>
 	这会导致如果按键时松开过快，会**连续两次监听到相同事件**，从而导致错按问题
 	<></>
@@ -164,9 +163,7 @@ newline 3 # 传入内容，打印指定行数的空行
 
 `print_lines`: 打印每一个传入内容为一行
 
-<Callout>
-	此功能为 `run_install_list` 的辅助功能，并非为直接打印所写，故使用 `echo` 而非 `pure_print`
-</Callout>
+<Callout>此功能为 `run_install_list` 的辅助功能，并非为直接打印所写，故使用 `echo` 而非 `pure_print`</Callout>
 
 ```shell title='示例'
 print_lines "这是第一行" "这是第二行"
@@ -489,10 +486,6 @@ AW 加密 有以下优点:
 bash nga-enc.sh path/script1.sh path/script2.sh
 ```
 
-<Callout type='warn'>
-	AW 加密 本身基于 `ksh` 语法编写，不兼容 `POSIX` 语法，切勿使用 `dash` 等解释器执行！
-</Callout>
+<Callout type='warn'>AW 加密 本身基于 `ksh` 语法编写，不兼容 `POSIX` 语法，切勿使用 `dash` 等解释器执行！</Callout>
 
-<Callout type='idea'>
-	如果对 Shell 的安全防护感兴趣，可见[此篇文章](https://oom-wg.dev/posts/shell-obf-enc)
-</Callout>
+<Callout type='idea'>如果对 Shell 的安全防护感兴趣，可见[此篇文章](https://oom-wg.dev/posts/shell-obf-enc)</Callout>

@@ -47,8 +47,7 @@ plugins {
 ```
 
 <Callout>
-	FYTxt 可在 KMP(`org.jetbrains.kotlin.multiplatform`) 或
-	Android(`com.android.application`/`com.android.library`) 中使用
+	FYTxt 可在 KMP(`org.jetbrains.kotlin.multiplatform`) 或 Android(`com.android.application`/`com.android.library`) 中使用
 </Callout>
 
 在项目中引入并配置内容:
@@ -123,9 +122,7 @@ FYTxt 将所有平台的语言标签均转为了**下划线连接**的**全大�
 
 默认语言也会在运行时自动转为全大写，它将作为 `KDoc` 生成时的默认语言与所有语言的回退文本使用
 
-<Callout>
-	如果将默认语言设为 _中文_，且软件仅支持 _中文_、_英文_，那么当系统语言为其他语言时，将显示 **中文**
-</Callout>
+<Callout>如果将默认语言设为 _中文_，且软件仅支持 _中文_、_英文_，那么当系统语言为其他语言时，将显示 **中文**</Callout>
 
 由于部分语言可能难以匹配，所以支持配置语言与其对应的正则表达式，依此优化语言匹配效果
 
@@ -209,8 +206,7 @@ else -> null}
 ### 在代码中使用
 
 <Callout>
-	由于要兼顾常规方式与 Compose 方式两个场景，以 **`getter` 调用**为**常规方式**，**函数调用** 为 **Compose
-	方式**
+	由于要兼顾常规方式与 Compose 方式两个场景，以 **`getter` 调用**为**常规方式**，**函数调用** 为 **Compose 方式**
 </Callout>
 
 如果要调用文本，只需要调用 `FYTxt.Hello`(常规方式) 或 `FYTxt.Home.Welcome()`(Compose 方式) 即可
