@@ -1,4 +1,4 @@
-import {createMDX} from 'fumadocs-mdx/next'
+import { createMDX } from 'fumadocs-mdx/next'
 
 export default createMDX()({
 	output: process.env.NODE_ENV === 'production' ? 'export' : undefined,
@@ -7,8 +7,8 @@ export default createMDX()({
 	rewrites: async () => [
 		{
 			source: '/:slug*.md',
-			destination: '/llms.md/:slug*.md'
-		}
+			destination: '/llms.md/:slug*.md',
+		},
 	],
-	images: {unoptimized: true}
+	images: { unoptimized: true },
 })

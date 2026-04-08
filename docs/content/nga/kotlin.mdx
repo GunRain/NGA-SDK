@@ -44,8 +44,8 @@ class AppInitializer : GenDokiInitializer() {
 ```
 
 <Callout type='idea'>
-	`GenDokiInitializer` 在运行 `Application.onInit` 函数时，会在 `runCatching` 中执行， 所以一般来说不需要自己再加一层
-	`runCatching` 或 `try`
+  `GenDokiInitializer` 在运行 `Application.onInit` 函数时，会在 `runCatching` 中执行， 所以一般来说不需要自己再加一层
+  `runCatching` 或 `try`
 </Callout>
 
 然后在 `AndroidManifest.xml` 中注册内容提供器即可实现在软件启动时执行内容
@@ -105,8 +105,8 @@ class AppApplication : Application(), FutagoAppsLoader<AppApplication> {
 ```
 
 <Callout>
-	为确保在 R8 的发力下运行正常，已在 **使用者 ProGuard 规则** 中添加了对所有 **`Application` 子类** 的 `keepclassmembers`
-	规则，将会保留
-	_构造函数_、`attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory`
-	以确保反射运行正常
+  为确保在 R8 的发力下运行正常，已在 **使用者 ProGuard 规则** 中添加了对所有 **`Application` 子类** 的 `keepclassmembers`
+  规则，将会保留
+  _构造函数_、`attachBaseContext`、`onCreate`、`onTerminate`、`onConfigurationChanged`、`onLowMemory`、`onTrimMemory`
+  以确保反射运行正常
 </Callout>

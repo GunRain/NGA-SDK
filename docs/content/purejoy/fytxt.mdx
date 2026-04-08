@@ -47,7 +47,7 @@ plugins {
 ```
 
 <Callout>
-	FYTxt 可在 KMP(`org.jetbrains.kotlin.multiplatform`) 或 Android(`com.android.application`/`com.android.library`) 中使用
+  FYTxt 可在 KMP(`org.jetbrains.kotlin.multiplatform`) 或 Android(`com.android.application`/`com.android.library`) 中使用
 </Callout>
 
 在项目中引入并配置内容:
@@ -65,46 +65,46 @@ fytxt {
 支持的配置内容如下:
 
 <TypeTable
-	type={{
-		packageName: {
-			required: false,
-			description: '生成代码的包名',
-			type: 'String',
-			default: 'dev.oom_wg.purejoy.fyl.fytxt'
-		},
-		objectName: {
-			required: false,
-			description: '生成语言的根类名',
-			type: 'String',
-			default: 'FYTxt'
-		},
-		langSrcs: {
-			required: true,
-			description: '语言组与存放 FVV 文本的目录',
-			type: 'Map<String, Directory>'
-		},
-		langAliases: {
-			required: false,
-			description: '语言与其对应的正则表达式',
-			type: 'Map<String, String>'
-		},
-		defaultLang: {
-			required: true,
-			description: '默认语言',
-			type: 'String'
-		},
-		composeGen: {
-			required: true,
-			description: '为 Compose MultiPlatform/Jetpack Compose 生成代码',
-			type: 'Boolean'
-		},
-		internalClass: {
-			required: true,
-			description: '生成的代码使用 internal 修饰符',
-			type: 'Boolean',
-			default: 'true'
-		}
-	}}
+  type={{
+    packageName: {
+      required: false,
+      description: '生成代码的包名',
+      type: 'String',
+      default: 'dev.oom_wg.purejoy.fyl.fytxt',
+    },
+    objectName: {
+      required: false,
+      description: '生成语言的根类名',
+      type: 'String',
+      default: 'FYTxt',
+    },
+    langSrcs: {
+      required: true,
+      description: '语言组与存放 FVV 文本的目录',
+      type: 'Map<String, Directory>',
+    },
+    langAliases: {
+      required: false,
+      description: '语言与其对应的正则表达式',
+      type: 'Map<String, String>',
+    },
+    defaultLang: {
+      required: true,
+      description: '默认语言',
+      type: 'String',
+    },
+    composeGen: {
+      required: true,
+      description: '为 Compose MultiPlatform/Jetpack Compose 生成代码',
+      type: 'Boolean',
+    },
+    internalClass: {
+      required: true,
+      description: '生成的代码使用 internal 修饰符',
+      type: 'Boolean',
+      default: 'true',
+    },
+  }}
 />
 
 ## 使用方法
@@ -206,7 +206,7 @@ else -> null}
 ### 在代码中使用
 
 <Callout>
-	由于要兼顾常规方式与 Compose 方式两个场景，以 **`getter` 调用**为**常规方式**，**函数调用** 为 **Compose 方式**
+  由于要兼顾常规方式与 Compose 方式两个场景，以 **`getter` 调用**为**常规方式**，**函数调用** 为 **Compose 方式**
 </Callout>
 
 如果要调用文本，只需要调用 `FYTxt.Hello`(常规方式) 或 `FYTxt.Home.Welcome()`(Compose 方式) 即可
@@ -214,9 +214,9 @@ else -> null}
 调用 Compose 方式时，可以直接传入内容来实现格式化文本
 
 <Callout type='warn'>
-	仅 _Android JVM_/_JVM_ 支持格式化，其他平台仅有简单的 `%s` 替换
-	<></>
-	_Android Jetpack Compose_ 输出后的文本默认经过 **Pangu Text** 处理
+  仅 _Android JVM_/_JVM_ 支持格式化，其他平台仅有简单的 `%s` 替换
+  <></>
+  _Android Jetpack Compose_ 输出后的文本默认经过 **Pangu Text** 处理
 </Callout>
 
 当 _Android JVM_ 使用常规方式需手动调用 `FYTxtConfig.updateTags()` 以更新

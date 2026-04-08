@@ -94,7 +94,7 @@ Dart 的每个 **Isolate** 都是内存隔离的，无法直接交互，调用�
 </Callout>
 
 <Callout type='idea'>
-	非常建议学习 Flutter 时通关一遍 [Codelab](https://codelabs.developers.google.cn/codelabs/flutter-codelab-first)
+  非常建议学习 Flutter 时通关一遍 [Codelab](https://codelabs.developers.google.cn/codelabs/flutter-codelab-first)
 </Callout>
 
 ## 版本选择
@@ -166,8 +166,8 @@ runApp(
 但是为了尽可能优化性能，**绝大部分情况下都不建议使用 `StatefulWidget`**
 
 <Callout>
-	实际上还有一种组件的创建方式，那就是通过函数返回一个 `Widget`，这种方式实际上和直接定义继承 `StatelessWidget`
-	的类是一样的，按需使用即可
+  实际上还有一种组件的创建方式，那就是通过函数返回一个 `Widget`，这种方式实际上和直接定义继承 `StatelessWidget`
+  的类是一样的，按需使用即可
 </Callout>
 
 很多时候，可能会通过 `StatefulWidget` 然后通过 `setState` 更新状态，
@@ -246,9 +246,9 @@ Dart 有一个懒加载机制，`import` 时加上一个 `deferred as` 就可以
 调用它的 `loadLibrary` 即可加载
 
 <Callout>
-	虽然它仅生效于网页与 Android（并且 Android 的作用有限，基本用不到），但是 Flutter 作为跨平台框架，好好利用特性的相当必要的
-	<></>
-	尤其是在写跨平台软件或包时，更应当使用（_虽然不知道写包在什么情况下能用_）
+  虽然它仅生效于网页与 Android（并且 Android 的作用有限，基本用不到），但是 Flutter 作为跨平台框架，好好利用特性的相当必要的
+  <></>
+  尤其是在写跨平台软件或包时，更应当使用（_虽然不知道写包在什么情况下能用_）
 </Callout>
 
 虽然并不是很必要，但是还是建议从 `main` 开始就使用懒加载
@@ -262,8 +262,8 @@ void main() async => await xxx.loadLibrary().then((_) => xxx.xxx());
 这样做能在网页平台减少 `main.dart.js` 的大小，虽然其他平台用不到，但是这样写也不会对其他平台有什么影响
 
 <Callout>
-	虽然只是把代码从 `main.dart.js` 转移到其他
-	`main.dart.js_X.part.js`，并不会减少整体大小，但是基于多方面因素嘛，这样做总归是好的
+  虽然只是把代码从 `main.dart.js` 转移到其他
+  `main.dart.js_X.part.js`，并不会减少整体大小，但是基于多方面因素嘛，这样做总归是好的
 </Callout>
 
 以此类推，在 `runApp` 之前，以及它运行的页面，都可以懒加载一下

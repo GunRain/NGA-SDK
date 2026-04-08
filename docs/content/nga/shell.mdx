@@ -47,11 +47,11 @@ run22null eval 'echo "这句话会消失" 1>&2'
 `until_key`: 获取按下的按键
 
 <Callout type='idea'>
-	大部分人写的按键监听都有问题，没有考虑到按键事件的 `EV_KEY` 有 `DOWN` 和 `UP` 两个状态（即 **按下** 和 **松开**）
-	<></>
-	这会导致如果按键时松开过快，会**连续两次监听到相同事件**，从而导致错按问题
-	<></>
-	NGA SDK 则完全没有该问题，在函数中已经判断了具体的按压状态
+  大部分人写的按键监听都有问题，没有考虑到按键事件的 `EV_KEY` 有 `DOWN` 和 `UP` 两个状态（即 **按下** 和 **松开**）
+  <></>
+  这会导致如果按键时松开过快，会**连续两次监听到相同事件**，从而导致错按问题
+  <></>
+  NGA SDK 则完全没有该问题，在函数中已经判断了具体的按压状态
 </Callout>
 
 ```shell title='示例'
@@ -227,9 +227,9 @@ echo $(get_arch)
 `get_app_lib`: 获取指定包名软件的指定共享库路径
 
 <Callout type='warn'>
-	获取到的架构优先使用 `get_arch` 获取到的（即当前设备架构）
-	<></>
-	若当前架构的共享库文件不存在，会获取 `lib` 目录内第一个架构的，若还是不存在，则不会继续查找
+  获取到的架构优先使用 `get_arch` 获取到的（即当前设备架构）
+  <></>
+  若当前架构的共享库文件不存在，会获取 `lib` 目录内第一个架构的，若还是不存在，则不会继续查找
 </Callout>
 
 ```shell title='示例'
@@ -299,9 +299,9 @@ is_magisk && echo "是 Magisk 哦"
 `nga_install_module`: 安装单个模块
 
 <Callout>
-	为了兼容多种 root 实现，检测顺序是 `Magisk`、`APatch`、`KernelSU`
-	<></>
-	这个顺序是基于各种 root 实现的策略与易安装程度而决定的
+  为了兼容多种 root 实现，检测顺序是 `Magisk`、`APatch`、`KernelSU`
+  <></>
+  这个顺序是基于各种 root 实现的策略与易安装程度而决定的
 </Callout>
 
 ```shell title='示例'
@@ -319,7 +319,7 @@ nga_install_modules path/mod1.zip path/mod2.zip
 `magisk_run_completed`: 是 [Magisk](https://topjohnwu.github.io/Magisk/) 的情况下运行 `boot-completed.sh`
 
 <Callout type='warn'>
-	通常不建议编写 `boot-completed.sh` 而是在 `service.sh` 中使用 `until_boot`，除非完全不考虑适配 Magisk
+  通常不建议编写 `boot-completed.sh` 而是在 `service.sh` 中使用 `until_boot`，除非完全不考虑适配 Magisk
 </Callout>
 
 ```shell title='示例'
@@ -405,9 +405,9 @@ run_install_list inst_ 2 # 传入 功能函数头 与 个数，调用安装
 `nga_install_init`: 初始化由 ShiroSU 模块构建工具 构建的模块
 
 <Callout type='warn'>
-	此功能应当在安装脚本的开头就调用！
-	<></>
-	调用时会校验文件哈希值，如有需要忽略的文件，可传入文件的**相对路径**
+  此功能应当在安装脚本的开头就调用！
+  <></>
+  调用时会校验文件哈希值，如有需要忽略的文件，可传入文件的**相对路径**
 </Callout>
 
 ```shell title='示例'
