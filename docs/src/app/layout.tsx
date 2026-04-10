@@ -21,8 +21,8 @@ export default ({ children }: LayoutProps<'/'>) => (
 						search: '搜索一下',
 						searchNoResult: '没搜到喵...',
 						toc: '在此页面...',
-						lastUpdate: '最后喵喵于：',
-					},
+						lastUpdate: '最后喵喵于：'
+					}
 				}}>
 				<DocsLayout tree={source.getPageTree()} {...docsOptions}>
 					{children}
@@ -37,7 +37,7 @@ export const metadata = {
 	applicationName: docsConfig.title,
 	title: {
 		template: `%s | ${docsConfig.title}`,
-		default: docsConfig.title,
+		default: docsConfig.title
 	},
 	authors: docsConfig.authors,
 	creator: docsConfig.authors[0]!.name,
@@ -45,27 +45,27 @@ export const metadata = {
 	openGraph: {
 		title: {
 			template: `%s | ${docsConfig.title}`,
-			default: docsConfig.title,
+			default: docsConfig.title
 		},
 		siteName: docsConfig.title,
-		type: 'website',
+		type: 'website'
 	},
 	twitter: {
 		title: {
 			template: `%s | ${docsConfig.title}`,
-			default: docsConfig.title,
+			default: docsConfig.title
 		},
-		card: 'summary_large_image',
+		card: 'summary_large_image'
 	},
 	robots: {
 		index: true,
 		follow: true,
 		googleBot: {
 			index: true,
-			follow: true,
-		},
+			follow: true
+		}
 	},
 	verification: {
-		other: { 'baidu-site-verification': 'codeva-Lhik4iESbv' },
-	},
+		other: { 'baidu-site-verification': 'codeva-Lhik4iESbv' }
+	}
 } satisfies Metadata

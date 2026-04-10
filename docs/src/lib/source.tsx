@@ -14,7 +14,7 @@ export const docsConfig = {
 	authors: [{ name: 'ShIroRRen', url: 'https://shiror.ren' }] satisfies Author[],
 	icon: {
 		url: new URL('../assets/logo.png', import.meta.url),
-		size: 32,
+		size: 32
 	} satisfies {
 		url: URL
 		size: number | { width: number; height: number }
@@ -26,18 +26,18 @@ export const docsConfig = {
 				items: [
 					{
 						label: '广告',
-						href: 'https://ja7.top/ad',
+						href: 'https://ja7.top/ad'
 					},
 					{
 						label: 'Latest File',
-						href: 'https://latestfile.zip',
+						href: 'https://latestfile.zip'
 					},
 					{
 						label: '世界之外工作组',
-						href: 'https://oom-wg.dev',
-					},
-				],
-			},
+						href: 'https://oom-wg.dev'
+					}
+				]
+			}
 		],
 		copyright: (
 			<span>
@@ -51,7 +51,7 @@ export const docsConfig = {
 				</Link>
 				，版权所有，保留一切权利。
 			</span>
-		),
+		)
 	} satisfies {
 		links: {
 			title: string
@@ -66,7 +66,7 @@ export const docsConfig = {
 		user: 'NGA-SDK',
 		repo: 'NGA-SDK',
 		branch: 'nga',
-		dir: 'docs',
+		dir: 'docs'
 	} satisfies {
 		user: string
 		repo: string
@@ -77,7 +77,7 @@ export const docsConfig = {
 		repo: string
 		branch: string
 		dir?: string
-	},
+	}
 }
 
 export const docsOptions = {
@@ -87,20 +87,20 @@ export const docsOptions = {
 				<Image alt='Logo' src='/icon' width={32} height={32} className='rounded-md' priority unoptimized />
 				<span className='font-semibold'>{docsConfig.title}</span>
 			</div>
-		),
+		)
 	},
 	links: [
 		{
 			type: 'custom',
-			children: <GithubInfo owner={docsConfig.git.user} repo={docsConfig.git.repo} />,
-		},
+			children: <GithubInfo owner={docsConfig.git.user} repo={docsConfig.git.repo} />
+		}
 	],
 	githubUrl: `https://github.com/${docsConfig.git.user}/${docsConfig.git.repo}`,
-	themeSwitch: { mode: 'light-dark-system' },
+	themeSwitch: { mode: 'light-dark-system' }
 } satisfies BaseLayoutProps as BaseLayoutProps
 
 export const source = loader({
 	baseUrl: '/',
 	source: docs.toFumadocsSource(),
-	plugins: [lucideIconsPlugin()],
+	plugins: [lucideIconsPlugin()]
 })

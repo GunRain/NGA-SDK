@@ -7,8 +7,8 @@ export default createMDX()({
 	rewrites: async () => [
 		{
 			source: '/:slug*.md',
-			destination: '/llms.md/:slug*.md',
-		},
+			destination: '/llms.md/:slug*.md'
+		}
 	],
-	images: { unoptimized: true },
+	images: { unoptimized: true }
 })

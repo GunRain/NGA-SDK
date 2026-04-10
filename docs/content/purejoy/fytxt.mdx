@@ -70,40 +70,40 @@ fytxt {
       required: false,
       description: '生成代码的包名',
       type: 'String',
-      default: 'dev.oom_wg.purejoy.fyl.fytxt',
+      default: 'dev.oom_wg.purejoy.fyl.fytxt'
     },
     objectName: {
       required: false,
       description: '生成语言的根类名',
       type: 'String',
-      default: 'FYTxt',
+      default: 'FYTxt'
     },
     langSrcs: {
       required: true,
       description: '语言组与存放 FVV 文本的目录',
-      type: 'Map<String, Directory>',
+      type: 'Map<String, Directory>'
     },
     langAliases: {
       required: false,
       description: '语言与其对应的正则表达式',
-      type: 'Map<String, String>',
+      type: 'Map<String, String>'
     },
     defaultLang: {
       required: true,
       description: '默认语言',
-      type: 'String',
+      type: 'String'
     },
     composeGen: {
       required: true,
       description: '为 Compose MultiPlatform/Jetpack Compose 生成代码',
-      type: 'Boolean',
+      type: 'Boolean'
     },
     internalClass: {
       required: true,
       description: '生成的代码使用 internal 修饰符',
       type: 'Boolean',
-      default: 'true',
-    },
+      default: 'true'
+    }
   }}
 />
 
