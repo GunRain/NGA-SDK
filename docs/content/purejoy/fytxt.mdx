@@ -167,31 +167,83 @@ Hello = "Hello"
 ```
 
 以上内容会自动生成如下 kotlin 代码
-(若以 `common` 目录作为语言组 _Common_，且其他可选选项均为默认配置):
+(若以 `common` 目录作为语言组 _Common_，开启了 Compose 生成，且其他可选选项均为默认配置):
 
 ```kotlin
-internal object`FYTxt`{init{`FYTxtGroups`}
-internal enum class`FYTxtGroups`:FYTxtGroup{`Common`{override val stats=mapOf(`FYTxtTags`.EN to 0.5,`FYTxtTags`.ZH to 1.0)};companion object{init{FYTxtConfig.init(`Common`,`FYTxtTags`.entries)}}}
-internal enum class`FYTxtTags`:FYTxtTag{EN{override val pattern=null},ZH{override val pattern="""^ZH_(?!.*(HANS|CN|SG)).*""".toRegex()}}
+internal enum class FYTxtGroups : FYTxtGroup {
+	Common {
+		override val stats: Map<FYTxtTag, Double> = mapOf(
+					FYTxtTags.EN to 0.5,
+					FYTxtTags.ZH_CN to 1.0,
+				)
+	},
+	;
 
-/**你好
-*/
-val`Hello`get()=FYTxtConfig.activeTags.value.firstNotNullOfOrNull{it as`FYTxtTags`
-when(it){
-`FYTxtTags`.EN->"""Hello"""
-`FYTxtTags`.ZH->"""你好"""
-else -> null}
-}?:"""你好"""
-object`Home`{init{`FYTxtGroups`}
-/**欢迎%s
-*@suppress Common: EN
-*/
-val`Welcome`get()=FYTxtConfig.activeTags.value.firstNotNullOfOrNull{it as`FYTxtTags`
-when(it){
-`FYTxtTags`.ZH->"""欢迎%s"""
-else -> null}
-}?:"""欢迎%s"""
+	public companion object {
+		init {
+			FYTxtConfig.init(FYTxtGroups.Common, FYTxtTags.entries)
+		}
+	}
 }
+
+internal enum class FYTxtTags : FYTxtTag {
+	EN {
+		override val pattern: Regex? = null
+	},
+	ZH_CN {
+		override val pattern: Regex? = "^ZH_.*(HANS|CN|SG)".toRegex()
+	},
+}
+
+internal object FYTxt {
+	init {
+		FYTxtGroups
+	}
+
+	/**
+	 * 你好
+	 */
+	public val Hello: String
+		get() = FYTxtConfig.activeTags.value.firstNotNullOfOrNull {
+			it as FYTxtTags
+			when (it) {
+				FYTxtTags.EN -> "Hello"
+				FYTxtTags.ZH_CN -> "你好"
+				else -> null
+			}
+		} ?: "你好"
+
+	/**
+	 * 你好
+	 */
+	@Composable
+	public fun Hello(vararg args: Any?): String = FYTxtConfig.observe { Hello.fmt(args) }
+
+	public object Home {
+		init {
+			FYTxtGroups
+		}
+
+		/**
+		 * 欢迎%s
+		 * @suppress Common: EN
+		 */
+		public val Welcome: String
+			get() = FYTxtConfig.activeTags.value.firstNotNullOfOrNull {
+				it as FYTxtTags
+				when (it) {
+					FYTxtTags.ZH_CN -> "欢迎%s"
+					else -> null
+				}
+			} ?: "欢迎%s"
+
+		/**
+		 * 欢迎%s
+		 * @suppress Common: EN
+		 */
+		@Composable
+		public fun Welcome(vararg args: Any?): String = FYTxtConfig.observe { Welcome.fmt(args) }
+	}
 }
 ```
 
