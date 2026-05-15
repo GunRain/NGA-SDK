@@ -24,33 +24,21 @@ jobs:
   deploy-docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - run: |
+          git config --global core.quotePath false
+          git config --global core.ignorecase false
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
-      - name: Git Config
-        run: |
-          git config --global core.quotePath false
-          git config --global core.autocrlf false
-          git config --global core.safecrlf true
-          git config --global core.ignorecase false
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          version: latest
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: latest
-      - name: Install Dependencies
-        run: pnpm i --no-frozen-lockfile
+          bun-version: latest
+      - run: |
+          bun ci
+          bun run build
         working-directory: docs
-      - name: Build
-        run: pnpm build
-        working-directory: docs
-      - name: Deploy Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: docs-dist
           folder: docs/out
