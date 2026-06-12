@@ -2,7 +2,7 @@
 	"name": "nga-docs",
 	"private": true,
 	"description": "NGA Docs",
-	"license": "F2DLPRL",
+	"license": "File-to-Downloader",
 	"author": "ShIroRRen",
 	"type": "module",
 	"scripts": {
