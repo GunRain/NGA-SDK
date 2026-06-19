@@ -31,12 +31,15 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - uses: oven-sh/setup-bun@v2
+      - uses: pnpm/action-setup@v6
         with:
-          bun-version: latest
+          version: latest
+      - uses: actions/setup-node@v6
+        with:
+          node-version: latest
       - run: |
-          bun ci
-          bun run build
+          pnpm i --no-frozen-lockfile
+          pnpm build
         working-directory: docs
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
