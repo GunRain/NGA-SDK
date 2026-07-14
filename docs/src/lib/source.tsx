@@ -26,7 +26,7 @@ export const docsConfig = {
 				items: [
 					{
 						label: '广告',
-						href: 'https://ja7.top/ad'
+						href: 'https://ja7.gal.tf/ad'
 					},
 					{
 						label: 'Latest File',
