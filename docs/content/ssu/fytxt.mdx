@@ -24,7 +24,7 @@ FYTxt 基于 [`FVV`](/fw/) 而不是传统的 xml 存放文本，
 | **Android** | **JVM**       | Java API         | **支持**         | Compose 可自动重绘；常规使用需要手动在 `Activity` 添加监听 |
 | **Android** | **Native**    | `getprop` 命令行 | **不支持**       |                                                            |
 | **Desktop** | **JVM**       | Java API         | **不支持**       |                                                            |
-| **iOS**     | **Native**    | Native API       | **不支持**       | iOS 在切换语言后会重启，故无需监听。                       |
+| **iOS**     | **Native**    | Native API       | **不支持**       | iOS 在切换语言后会重启，故无需监听                         |
 | **Linux**   | **Native**    | `LANG` 环境变量  | **不支持**       |                                                            |
 | **Windows** | **Native**    | Win32 API        | **不支持**       |                                                            |
 | **Web**     | **JS / Wasm** | JS API           | **支持**         |                                                            |
@@ -43,7 +43,7 @@ FYTxt 基于 [`FVV`](/fw/) 而不是传统的 xml 存放文本，
 
 ```groovy
 plugins {
-    id("dev.oom-wg.purejoy.fyl.fytxt") version "+" apply false
+    id("ren.shiror.fyl.fytxt") version "+" apply false
 }
 ```
 
@@ -55,7 +55,7 @@ plugins {
 
 ```groovy
 plugins {
-    id("dev.oom-wg.purejoy.fyl.fytxt")
+    id("ren.shiror.fyl.fytxt")
 }
 
 fytxt {
@@ -71,7 +71,7 @@ fytxt {
       required: false,
       description: '生成代码的包名',
       type: 'String',
-      default: 'dev.oom_wg.purejoy.fyl.fytxt'
+      default: 'ren.shiror.fyl.fytxt'
     },
     objectName: {
       required: false,
@@ -275,7 +275,7 @@ internal object FYTxt {
 当 _Android JVM_ 使用常规方式需手动调用 `FYTxtConfig.updateTags()` 以更新
 
 ```kotlin title='示例'
-import dev.oom_wg.purejoy.fyl.fytxt.FYTxtConfig
+import tf.gal.shirosu.fyl.fytxt.FYTxtConfig
 
 class AppActivity : Activity() {
     override fun onConfigurationChanged(newConfig: Configuration) =
