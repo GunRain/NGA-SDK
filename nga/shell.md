@@ -1,0 +1,550 @@
+# [Shell SDK](https://app.niggergo.work/nga/shell)
+
+> NGA SDK - Shell SDK
+
+Shell SDK 部分主要提供一些辅助函数与混淆加密工具
+
+主要分为如下功能:
+
+* 实用代码: `nga-utils.sh` (基于 `POSIX` 语法编写)
+* AW 加密: `nga-enc.sh` (基于 `ksh` 语法编写，生成代码基于 `POSIX` 语法)
+
+## 引入依赖 [#引入依赖]
+
+### 引入实用代码 [#引入实用代码]
+
+<Callout type="idea">
+  ShiroSU 模块构建工具 会
+
+  **默认添加**
+
+   实用代码，建议通过它来构建模块
+</Callout>
+
+在项目中添加文件后，推荐使用如下方法引入:
+
+```shell
+baseDir="$(dirname "$(readlink -f "$0")")"
+[ -f "$baseDir/nga-utils.sh" ] && . "$baseDir/nga-utils.sh" || exit
+```
+
+## 使用方法 [#使用方法]
+
+### 实用代码 [#实用代码]
+
+#### 重定向 [#重定向]
+
+`run2null`: 将 `标准输出` 和 `标准错误` 重定向到 `/dev/null`
+
+```shell title='示例'
+run2null echo "这句话将消失"
+```
+
+`run22null`: 将 `标准错误` 重定向到 `/dev/null`
+
+```shell title='示例'
+run22null echo "这句话不会消失"
+run22null eval 'echo "这句话会消失" 1>&2'
+```
+
+#### 按键 [#按键]
+
+`until_key`: 获取按下的按键
+
+<Callout type="idea">
+  大部分人写的按键监听都有问题，没有考虑到按键事件的 `EV_KEY` 有 `DOWN` 和 `UP` 两个状态（即 **按下** 和 **松开**）
+
+  <>  </>
+
+  这会导致如果按键时松开过快，会**连续两次监听到相同事件**，从而导致错按问题
+
+  <>  </>
+
+  NGA SDK 则完全没有该问题，在函数中已经判断了具体的按压状态
+</Callout>
+
+```shell title='示例'
+echo $(until_key) # 输出按下的按键
+```
+
+| 按键名称    | 代码              | `until_key` 输出名称 |
+| ------- | --------------- | ---------------- |
+| 音量+     | KEY\_VOLUMEUP   | up               |
+| 音量-     | KEY\_VOLUMEDOWN | down             |
+| 电源键     | KEY\_POWER      | power            |
+| 静音键     | KEY\_MUTE       | mute             |
+| 肩键等额外按键 | KEY\_F`X`       | f`X`             |
+
+<Callout>
+  由于大部分情况下，不需要再监听更多按键，所以目前仅监听这些常用按键
+</Callout>
+
+`until_key_any`: 按下任意键
+
+```shell title='示例'
+echo "按下任意键后继续..."
+until_key_any
+# 按下任意按键后继续执行
+```
+
+`until_key_up_down`: 仅获取 `音量+键` 或 `音量-键` 按下
+
+```shell title='示例'
+echo $(until_key_up_down) # 输出按下的按键，只能为 up 或 down
+```
+
+`until_key_up_down_power`: 仅获取 `音量+键` 或 `音量-键` 或 `电源键` 按下
+
+```shell title='示例'
+echo $(until_key_up_down_power) # 输出按下的按键，只能为 up 或 down 或 power
+```
+
+`until_key_up`: 仅获取 `音量+键` 按下
+
+```shell title='示例'
+echo $(until_key_up) # 输出按下的按键，只能为 up
+```
+
+`until_key_down`: 仅获取 `音量-键` 按下
+
+```shell title='示例'
+echo $(until_key_down) # 输出按下的按键，只能为 down
+```
+
+`until_key_power`: 仅获取 `电源键` 按下
+
+```shell title='示例'
+echo $(until_key_power) # 输出按下的按键，只能为 power
+```
+
+#### 跳转 [#跳转]
+
+`goto_url`: 跳转链接
+
+```shell title='示例'
+goto_url "https://app.niggergo.work" # 跳转 NGA 文档
+```
+
+`goto_app`: 跳转软件活动
+
+```shell title='示例'
+goto_app "ren.shiror.su/dev.oom_wg.ssu.SSUUI" # 跳转 SSU
+```
+
+#### 字符串 [#字符串]
+
+`str_eq`: 判断传入的第一个字符串与其他字符串中是否有相等的
+
+```shell title='示例'
+str_eq "oom" "oow" "ssu" "suu" && \
+  echo "'oom' 与其他有相等的！" || \
+  echo "'oom' 与其他没有相等的！"
+# 由于通常认为 echo 不可能出错，所以这里直接使用了 ||
+```
+
+#### 打印 [#打印]
+
+<Callout>
+  因为实用代码面对的环境有 直接执行、模块安装/执行 等，所以会有一些封装函数
+</Callout>
+
+`pure_print`: 打印文字
+
+```shell title='示例'
+pure_print "无论是在系统还是 Recovery，这句话都能正常显示"
+```
+
+`nga_abort`: 报错退出
+
+```shell title='示例'
+nga_abort "我不行了..." # 输出后将会是 “⚠️ 我不行了...” 并在尝试删除缓存后退出
+```
+
+`nga_print`: 带一个 `>` 地打印文字
+
+```shell title='示例'
+nga_print "有 '>' 君在我身边，我真的会很安心呢" # 输出后将会是 “> 有 '>' 君在我身边，我真的会很安心呢”
+```
+
+`newline`: 打印空行
+
+```shell title='示例'
+newline # 不传入内容，默认打印一行空行
+
+newline 3 # 传入内容，打印指定行数的空行
+```
+
+`print_lines`: 打印每一个传入内容为一行
+
+<Callout>
+  此功能为 
+
+  `run_install_list`
+
+   的辅助功能，并非为直接打印所写，故使用 
+
+  `echo`
+
+   而非 
+
+  `pure_print`
+</Callout>
+
+```shell title='示例'
+print_lines "这是第一行" "这是第二行"
+```
+
+#### 文件 [#文件]
+
+`get_work_dir`: 获取父目录
+
+```shell title='示例'
+echo "我现在在 '$(get_work_dir .)' 正好好待着呢" # 输出后将会是 “我现在在 '<当前目录的父目录路径>' 正好好待着呢”
+```
+
+`set_dir_perm`: 将传入的目录递归设置正确权限
+
+<Callout type="warn">
+  当使用 OverlayFS 实现 Systemless 时，正确设置目录的权限变得尤其重要
+</Callout>
+
+```shell title='示例'
+set_dir_perm path/dir1 path/dir2
+```
+
+`set_system_file`: 将传入的目录递归设置正确 SELinux 上下文
+
+<Callout type="warn">
+  当使用 OverlayFS 实现 Systemless 时，正确设置目录的权限变得尤其重要
+</Callout>
+
+```shell title='示例'
+set_system_file path/dir1 path/dir2
+```
+
+`pre_bin`: 将单个可执行文件设置执行权限
+
+```shell title='示例'
+pre_bin path/exe
+```
+
+`pre_bins`: 将多个可执行文件设置执行权限
+
+```shell title='示例'
+pre_bins path/exe1 path/exe2
+```
+
+`run_bin`: 运行单个可执行文件 (执行前会通过 `pre_bin` 设置权限)
+
+```shell title='示例'
+run_bin path/exe arg
+```
+
+`nohup_bin`: 后台运行单个可执行文件 (执行前会通过 `pre_bin` 设置权限)
+
+```shell title='示例'
+nohup_bin path/exe arg
+```
+
+`get_arch`: 获取当前设备会在 `lib` 目录使用的架构名称
+（仅可能为 `arm64`/`arm`/`x86_64`/`x86`/`riscv64`/`mips64`/`mips` 之一）
+
+```shell title='示例'
+echo $(get_arch)
+```
+
+`get_app_lib`: 获取指定包名软件的指定共享库路径
+
+<Callout type="warn">
+  获取到的架构优先使用 `get_arch` 获取到的（即当前设备架构）
+
+  <>  </>
+
+  若当前架构的共享库文件不存在，会获取 `lib` 目录内第一个架构的，若还是不存在，则不会继续查找
+</Callout>
+
+```shell title='示例'
+echo $(get_app_lib ren.shiror.su ssuus) # 输出后将会是 “<APK 存储路径>/lib/<当前设备架构>/lib<指定共享库名称>.so”
+```
+
+#### 等待 [#等待]
+
+`until_boot`: 等待开机完毕 (即退出第二屏)
+
+> 此功能通过 `resetprop` 实现
+
+```shell title='示例'
+until_boot # 不传入内容，默认在开机完毕后立即继续执行
+
+until_boot 30 # 传入内容，在开机完毕并等待指定秒数后继续执行
+```
+
+`until_unlock`: 等待设备解锁 (会通过 `until_boot` 确保开机完毕)
+
+<Callout type="warn">
+  如果设备的数据分区未加密，此功能可能无法正常运行（仅能确保开机完毕）
+</Callout>
+
+```shell title='示例'
+until_unlock # 不传入内容，默认在设备解锁后立即继续执行
+
+until_unlock 30 # 传入内容，在设备解锁并等待指定秒数后继续执行
+```
+
+#### root [#root]
+
+`is_ssu`/`is_shirosu`: 判断是否是 [ShiroSU NT](https://shirosu.gal.tf/newtech)
+
+```shell title='示例'
+is_ssu && echo "是 ShiroSU 哦" # 简写函数
+
+is_shirosu && echo "是 ShiroSU 哦" # 全称函数
+```
+
+`is_ksu`/`is_kernelsu`: 判断是否是 [KernelSU](https://kernelsu.org/zh_CN/)
+
+```shell title='示例'
+is_ksu && echo "是 KernelSU 哦" # 简写函数
+
+is_kernelsu && echo "是 KernelSU 哦" # 全称函数
+```
+
+`is_ap`/`is_apatch`: 判断是否是 [APatch](https://apatch.dev/zh_CN/)
+
+```shell title='示例'
+is_ap && echo "是 APatch 哦" # 简写函数
+
+is_apatch && echo "是 APatch 哦" # 全称函数
+```
+
+`not_magisk`: 判断是否不是 [Magisk](https://topjohnwu.github.io/Magisk/)
+
+```shell title='示例'
+not_magisk && echo "不是 Magisk 哦"
+```
+
+`is_magisk`: 判断是否是 [Magisk](https://topjohnwu.github.io/Magisk/)
+
+```shell title='示例'
+is_magisk && echo "是 Magisk 哦"
+```
+
+`nga_install_module`: 安装单个模块
+
+<Callout>
+  为了兼容多种 root 实现，检测顺序是 `Magisk`、`APatch`、`KernelSU`
+
+  <>  </>
+
+  这个顺序是基于各种 root 实现的策略与易安装程度而决定的
+</Callout>
+
+```shell title='示例'
+nga_install_module path/mod.zip
+```
+
+`nga_install_modules`: 通过 `nga_install_module` 安装多个模块
+
+```shell title='示例'
+nga_install_modules path/mod1.zip path/mod2.zip
+```
+
+#### 模块 [#模块]
+
+`magisk_run_completed`: 是 [Magisk](https://topjohnwu.github.io/Magisk/) 的情况下运行 `boot-completed.sh`
+
+<Callout type="warn">
+  通常不建议编写 `boot-completed.sh` 而是在 `service.sh` 中使用 `until_boot`，除非完全不考虑适配 Magisk
+</Callout>
+
+```shell title='示例'
+magisk_run_completed "$(get_work_dir "$0")"
+```
+
+`get_target_bin`: 在 **模块安装时** 获取当前架构的指定名称可执行文件，移动至模块目录
+
+<Callout type="warn">
+  仅支持获取以 ShiroSU 模块构建工具 格式放置的可执行文件
+</Callout>
+
+```shell title='示例'
+get_target_bin exe
+```
+
+`get_target_bins`: 通过 `get_target_bin` 获取多个可执行文件
+
+```shell title='示例'
+get_target_bins exe1 exe2
+```
+
+`run_install_list`: 通过音量键选择安装多种功能
+
+```shell title='示例'
+inst_1() {
+  local func_head="method_" # 函数头
+  local opt_name="功能一" # 功能名称
+  local opt_num=2 # 选项个数
+  local cancel=true # 是否可取消
+  local opt_names="选项一 选项二" # 各选项名称
+  print_lines "$func_head" "$opt_name" "$opt_num" "$cancel" $opt_names # 输出功能信息
+}
+
+method_1() {
+  echo "这个是功能一的选项一哦"
+}
+
+method_2() {
+  echo "这个是功能一的选项二哦"
+}
+
+inst_2() {
+  local func_head="method2_" # 函数头
+  local opt_name="功能二" # 功能名称
+  local opt_num=2 # 选项个数
+  local cancel=false # 是否可取消
+  local opt_names="选项一 选项二" # 各选项名称
+  print_lines "$func_head" "$opt_name" "$opt_num" "$cancel" $opt_names # 输出功能信息
+}
+
+method2_1() {
+  echo "这个是功能二的选项一哦"
+}
+
+method2_2() {
+  echo "这个是功能二的选项二哦"
+}
+
+run_install_list inst_ 2 # 传入 功能函数头 与 个数，调用安装
+```
+
+<Callout>
+  `run_install_list` 传入的内容:
+
+  1. 功能函数头
+  2. 功能函数的个数
+
+  故在编写各个功能的函数时必须以 `函数头`+`次序` 的形式定义，**次序以 `1` 开始**
+
+  每个功能函数应当输出的内容（以行排序）:
+
+  1. 选项函数头
+  2. 功能名称
+  3. 选项个数
+  4. 是否可取消安装该功能（开启则会多一个用于取消安装的选项零）
+  5. 选项名称（一行一个）
+
+  故在编写各个选项的函数时必须以 `函数头`+`次序` 的形式定义，**次序以 `1` 开始**
+
+  安装时通过 ***`音量+` 键* 切换选项*&#x2A;，***`音量-` 键* 确认选项**
+</Callout>
+
+`nga_install_init`: 初始化由 ShiroSU 模块构建工具 构建的模块
+
+<Callout type="warn">
+  此功能应当在安装脚本的开头就调用！
+
+  <>  </>
+
+  调用时会校验文件哈希值，如有需要忽略的文件，可传入文件的**相对路径**
+</Callout>
+
+```shell title='示例'
+[ -f "$MODPATH/nga-utils.sh" ] && . "$MODPATH/nga-utils.sh" || abort '! File "nga-utils.sh" does not exist!'
+
+nga_install_init path/ignore1 path/ignore2 # 传入需要忽略校验的文件相对路径
+```
+
+`nga_install_done`: 收尾由 ShiroSU 模块构建工具 构建的模块
+
+<Callout type="warn">
+  此功能应当在安装脚本的结尾调用！
+
+  具体工序:
+
+  * 清理 `bin` 目录（即多余架构的可执行文件）
+  * 递归设置 `system` 目录的 `权限` 与 `SELinux 上下文`，并将可能存在的 `system/vendor/odm` 目录移动至 `system/odm`
+  * 清理多余架构的 [Zygisk](https://topjohnwu.github.io/Magisk/guides.html#zygisk) 共享库文件
+  * 清理可能存在的多余文件（自述文件、更新日志等）
+</Callout>
+
+```shell title='示例'
+nga_install_done
+```
+
+#### 导出变量 [#导出变量]
+
+实用代码还会在调用后导出如下变量:
+
+* `BOOTMODE`: 是否为开机模式（即是否有 `zygote` 进程在运行）
+* `ARCH`、`ABI`、`ABI32`、`IS64BIT`: 当前设备的 架构、ABI、32 位 ABI、是否是 64 位
+
+<Callout type="warn">
+  如果当前 root 实现是 Magisk 并且**版本低于 27008**（即不支持 `操作`），
+  则会显示一个检测到低版本 Magisk 的警告，
+  因为 Magisk 分支 Kitsune Mask（即原来的 Magisk Delta）的用户较多，但已经停止更新
+
+  如果当前 root 实现是 KernelSU 分支 **SukiSU Ultra**，
+  则会显示一个检测到 SukiSU Ultra 的警告，
+  因为在综合考究之下，其项目质量差、稳定性低、可用性低、开发者维护能力不足，不具备任何可靠性
+
+  警告**不会影响任何行为**，仅作为提醒而存在
+</Callout>
+
+### AW 加密 [#aw-加密]
+
+<Callout>
+  AW 加密 的目的并不是高强度的 Shell 混淆加密
+  （虽然里面添加了强度较高的防破解手段，只不过是能防一些通解手段而已）
+
+  AW 加密 的目的是实现可以防低技术人群的同时还具有一定的艺术性
+
+  故 AW 加密 的艺术性是其重要的组成部分，
+  恳请各路开发者在参考时不要参考其艺术性部分，其他部分大可拿去用，
+  只不过还是要遵守许可证规定
+</Callout>
+
+<Callout>
+  AW 加密 的开发目的是为了适配 ShiroSU 模块构建工具，故采取的是覆写策略
+</Callout>
+
+AW 加密 有以下优点:
+
+* 雑魚ですね♡
+* 可读性差
+* 较为美观的外层壳
+* 自带简单防破解
+* 无残留函数/变量，干净执行
+* 基于 `POSIX` 语法解密执行，兼容性极佳
+* 各方面功能兼容性好，在 `set -e` 情况下也可正常执行
+
+使用 AW 加密 很简单，只需要传入脚本路径，即可混淆加密指定的脚本
+
+```shell title='示例'
+bash nga-enc.sh path/script1.sh path/script2.sh
+```
+
+<Callout type="warn">
+  AW 加密 本身基于 
+
+  `ksh`
+
+   语法编写，不兼容 
+
+  `POSIX`
+
+   语法，切勿使用 
+
+  `dash`
+
+   等解释器执行！
+</Callout>
+
+<Callout type="idea">
+  如果对 Shell 的安全防护感兴趣，可见
+
+  [此篇文章](https://oom-wg.dev/posts/shell-obf-enc)
+</Callout>
+
+---
+
+> [**Page Index**] <https://app.niggergo.work/llms.txt> | [**Full Content**] <https://app.niggergo.work/llms-full.txt>

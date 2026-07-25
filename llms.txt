@@ -1,0 +1,34 @@
+# [NGA 开发文档](https://app.niggergo.work)
+
+## Pages
+
+- [**FVV**](https://app.niggergo.work/fw.md): FVV 语言
+- [**项目汇总**](https://app.niggergo.work/index.md): NGA 系列、FVV 系列、PureJoy 欢律遗愉 系列 —— 开发文档
+- [**C++ SDK**](https://app.niggergo.work/nga/cpp.md): NGA SDK - C++ SDK
+- [**Flutter SDK**](https://app.niggergo.work/nga/flutter.md): NGA SDK - Flutter(Dart) SDK
+- [**Go SDK**](https://app.niggergo.work/nga/go.md): NGA SDK - Go SDK
+- [**NGA SDK**](https://app.niggergo.work/nga.md): NGA 系列的主线项目
+- [**Kotlin SDK**](https://app.niggergo.work/nga/kotlin.md): NGA SDK - Kotlin SDK
+- [**Rust SDK**](https://app.niggergo.work/nga/rust.md): NGA SDK - Rust SDK
+- [**Shell SDK**](https://app.niggergo.work/nga/shell.md): NGA SDK - Shell SDK
+- [**PureJoy 欢律遗愉**](https://app.niggergo.work/purejoy.md): 回忆溢出工作组的主线系列
+- [**Re:Next - Flutter**](https://app.niggergo.work/ren/flutter.md): 非零基础的 Flutter 教程
+- [**Re:Next - 从非零开始的代码生活**](https://app.niggergo.work/ren.md): 非零基础的代码教程
+- [**FYTxt 多语言框架**](https://app.niggergo.work/ssu/fytxt.md): 基于 FVV 实现的支持 KMP/CMP 的多语言框架
+- [**ShiroSU 系列**](https://app.niggergo.work/ssu.md): 回忆溢出工作组的系列项目
+- [**YumeStarUI**](https://app.niggergo.work/yesui.md): 简称 YesUI，是为 Flutter/CMP 设计的 UI 库
+- [**开发 PkgPub**](https://app.niggergo.work/purejoy/pkgpub/dev.md): PkgPub 的相关配置
+- [**PkgPub**](https://app.niggergo.work/purejoy/pkgpub.md): 通过 GitHub Actions 部署的包发布系统
+- [**使用 PkgPub**](https://app.niggergo.work/purejoy/pkgpub/use.md): 使用通过 PkgPub 部署的依赖
+
+## Links
+
+- **友链**
+  - [广告](https://ja7.gal.tf/ad)
+  - [Latest File](https://latestfile.zip)
+  - [世界之外工作组](https://oom-wg.dev)
+  - [200OK Working](https://200ok.work)
+
+---
+
+> [**Full Content**](https://app.niggergo.work/llms-full.txt): All pages in single file

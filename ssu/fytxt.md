@@ -1,0 +1,341 @@
+# [FYTxt 多语言框架](https://app.niggergo.work/ssu/fytxt)
+
+> 基于 FVV 实现的支持 KMP/CMP 的多语言框架
+
+FYTxt 是支持 **Kotlin MultiPlatform** 以及 **Compose MultiPlatform** 的多语言框架
+
+完全做到了 *方便易用*、*高性能*、*全平台支持*，可以监听系统语言变化，还支持锁定语言列表以便于自定义语言列表，
+并且有翻译率统计与语言组设定
+
+FYTxt 基于 [`FVV`](/fw/) 而不是传统的 xml 存放文本，
+原理是通过 Gradle 插件自动生成 Kotlin 文件，
+可以通过配置来让指定语言的文本以 `KDoc` 形式为文本注释，通过 IDE 即可快速查看文本具体内容
+
+并且 Android 平台的 **Compose** 方式实现了默认使用
+[**Pangu Text**](https://betterandroid.github.io/PanguText/zh-cn/) 来达成优化中英文字符间距
+
+## 支持范围 [#支持范围]
+
+对于各平台的支持度如下:
+
+| 平台          | 运行环境          | 获取方式          | 自动更新语言列表 | 备注                                      |
+| :---------- | :------------ | :------------ | :------- | :-------------------------------------- |
+| **Android** | **JVM**       | Java API      | **支持**   | Compose 可自动重绘；常规使用需要手动在 `Activity` 添加监听 |
+| **Android** | **Native**    | `getprop` 命令行 | **不支持**  |                                         |
+| **Desktop** | **JVM**       | Java API      | **不支持**  |                                         |
+| **iOS**     | **Native**    | Native API    | **不支持**  | iOS 在切换语言后会重启，故无需监听                     |
+| **Linux**   | **Native**    | `LANG` 环境变量   | **不支持**  |                                         |
+| **Windows** | **Native**    | Win32 API     | **不支持**  |                                         |
+| **Web**     | **JS / Wasm** | JS API        | **支持**   |                                         |
+
+> 对于部分不支持自动更新语言列表的平台，如有需要请自行循环更新
+
+也就是说，FYTxt 完全可在 *常规 UI*、*Compose UI* 以至于 *共享库*、*可执行* 均可实现多语言
+
+<Callout>
+  [Compose 与 CLI 多语言示例](https://github.com/OOM-WG/OOM-Demos/tree/oom/fytxt)
+</Callout>
+
+## 引入依赖 [#引入依赖]
+
+先依赖源中有 [PkgPub](/purejoy/pkgpub/use) 的依赖源
+
+然后添加 FYTxt 的 Gradle 插件:
+
+```groovy
+plugins {
+    id("ren.shiror.fyl.fytxt") version "+" apply false
+}
+```
+
+<Callout>
+  FYTxt 可在 KMP(`org.jetbrains.kotlin.multiplatform`) 或 Android(`com.android.application`/`com.android.library`) 中使用
+</Callout>
+
+在项目中引入并配置内容:
+
+```groovy
+plugins {
+    id("ren.shiror.fyl.fytxt")
+}
+
+fytxt {
+    // 配置内容...
+}
+```
+
+支持的配置内容如下:
+
+<TypeTable
+  type="{
+  packageName: {
+    required: false,
+    description: '生成代码的包名',
+    type: 'String',
+    default: 'ren.shiror.fyl.fytxt'
+  },
+  objectName: {
+    required: false,
+    description: '生成语言的根类名',
+    type: 'String',
+    default: 'FYTxt'
+  },
+  langSrcs: {
+    required: true,
+    description: '语言组与存放 FVV 文本的目录',
+    type: 'Map<String, Directory>'
+  },
+  langAliases: {
+    required: false,
+    description: '语言与其对应的正则表达式',
+    type: 'Map<String, String>'
+  },
+  defaultLang: {
+    required: true,
+    description: '默认语言',
+    type: 'String'
+  },
+  composeGen: {
+    required: true,
+    description: '为 Compose MultiPlatform/Jetpack Compose 生成代码',
+    type: 'Boolean'
+  },
+  internalClass: {
+    required: true,
+    description: '生成的代码使用 internal 修饰符',
+    type: 'Boolean',
+    default: 'true'
+  }
+}"
+/>
+
+## 使用方法 [#使用方法]
+
+### 配置概念 [#配置概念]
+
+FYTxt 采用了 *语言组* 概念来存放各个语言变种（例如 *常规语言* 与 *喵言喵语*），
+**第一个语言组**将被视为**默认语言组**，其他语言组的语言支持范围需**小于等于**默认语言组，
+当其他语言组出现**文本缺失**时，将**优先采用默认语言组的同语言文本**
+
+FYTxt 将所有平台的语言标签均转为了**下划线连接**的**全大写**文本（例如 `ZH_HANS_CN`、`EN_GB`）
+
+不过当 Gradle 插件在搜索时，会自动将目录名称转为全大写，所以目录名称依旧可以命名为 `zh_CN` 等内容，但**不可使用连字符连接**
+
+默认语言也会在运行时自动转为全大写，它将作为 `KDoc` 生成时的默认语言与所有语言的回退文本使用
+
+<Callout>
+  如果将默认语言设为 
+
+  *中文*
+
+  ，且软件仅支持 
+
+  *中文*
+
+  、
+
+  *英文*
+
+  ，那么当系统语言为其他语言时，将显示 
+
+  **中文**
+</Callout>
+
+由于部分语言可能难以匹配，所以支持配置语言与其对应的正则表达式，依此优化语言匹配效果
+
+<Callout>
+  虽然 Android 已经支持了很多年的脚本标签（例如 `zh-Hans`），但是其匹配顺序难以推测，并且格式难写
+
+  大部分系统也只会返回 `zh-CN` 这样的语言与地区的标签，而不是 `zh-Hans-CN` 这样的完整标签
+
+  并且由于中文的体系复杂，*中国大陆地区* 与 *新加坡* 使用**简体中文**，中国的大陆以外的 *其他地区* 使用**繁体中文**，
+  使用单纯的前缀匹配很难完整覆盖，故推出正则匹配
+
+  当该语言有正则规则时，只匹配其正则规则，若无，则使用前缀匹配，
+  如下规则可仅 *中国大陆* 与 *新加坡* 使用**简体中文**，其他中文地区均使用**繁体中文**:
+
+  ```kotlin
+  langAliases = mapOf(
+      "zh_Hans" to "^zh_.*(Hans|CN|SG)",
+      "zh_Hant" to "^zh_(?!.*(Hans|CN|SG)).*"
+  )
+  ```
+
+  正则表达式在使用时会忽略大小写，其对应的语言标签也会自动转大写
+</Callout>
+
+### 编写多语言文件 [#编写多语言文件]
+
+Gradle 插件会遍历传入的目录，以传入的目录的子目录作为语言标签，子目录内所有 FVV 文件作为语言数据
+
+在目录下创建例如:
+
+<CodeBlockTabs defaultValue="common/zh/lang.fvv">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="common/zh/lang.fvv">
+      common/zh/lang.fvv
+    </CodeBlockTabsTrigger>
+
+    <CodeBlockTabsTrigger value="common/en/lang.fvv">
+      common/en/lang.fvv
+    </CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+
+  <CodeBlockTab value="common/zh/lang.fvv">
+    ```plaintext
+    Hello = "你好"
+    Home = {
+        Welcome = "欢迎%s"
+    }
+    ```
+  </CodeBlockTab>
+
+  <CodeBlockTab value="common/en/lang.fvv">
+    ```plaintext
+    Hello = "Hello"
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+以上内容会自动生成如下 kotlin 代码
+(若以 `common` 目录作为语言组 *Common*，开启了 Compose 生成，且其他可选选项均为默认配置):
+
+```kotlin
+internal enum class FYTxtGroups : FYTxtGroup {
+	Common {
+		override val stats: Map<FYTxtTag, Double> = mapOf(
+					FYTxtTags.EN to 0.5,
+					FYTxtTags.ZH_CN to 1.0,
+				)
+	},
+	;
+
+	public companion object {
+		init {
+			FYTxtConfig.init(FYTxtGroups.Common, FYTxtTags.entries)
+		}
+	}
+}
+
+internal enum class FYTxtTags : FYTxtTag {
+	EN {
+		override val pattern: Regex? = null
+	},
+	ZH_CN {
+		override val pattern: Regex? = "^ZH_.*(HANS|CN|SG)".toRegex()
+	},
+}
+
+internal object FYTxt {
+	init {
+		FYTxtGroups
+	}
+
+	/**
+	 * 你好
+	 */
+	public val Hello: String
+		get() = FYTxtConfig.activeTags.value.firstNotNullOfOrNull {
+			it as FYTxtTags
+			when (it) {
+				FYTxtTags.EN -> "Hello"
+				FYTxtTags.ZH_CN -> "你好"
+				else -> null
+			}
+		} ?: "你好"
+
+	/**
+	 * 你好
+	 */
+	@Composable
+	public fun Hello(vararg args: Any?): String = FYTxtConfig.observe { Hello.fmt(args) }
+
+	public object Home {
+		init {
+			FYTxtGroups
+		}
+
+		/**
+		 * 欢迎%s
+		 * @suppress Common: EN
+		 */
+		public val Welcome: String
+			get() = FYTxtConfig.activeTags.value.firstNotNullOfOrNull {
+				it as FYTxtTags
+				when (it) {
+					FYTxtTags.ZH_CN -> "欢迎%s"
+					else -> null
+				}
+			} ?: "欢迎%s"
+
+		/**
+		 * 欢迎%s
+		 * @suppress Common: EN
+		 */
+		@Composable
+		public fun Welcome(vararg args: Any?): String = FYTxtConfig.observe { Welcome.fmt(args) }
+	}
+}
+```
+
+对如上代码的解释:
+
+* `FYTxt` 为自动生成的根类
+* `FYTxtGroups` 为语言组 `enum`，其中包含了各个语言的翻译率
+* `FYTxtTags` 为各个语言标签
+
+具体的语言文本采用 `firstNotNullOfOrNull` 遍历 `when` 匹配 `enum`，性能好，
+在经过 *ProGuard*/*R8* 优化后会变成性能更好的判断匹配
+
+### 在代码中使用 [#在代码中使用]
+
+<Callout>
+  由于要兼顾常规方式与 Compose 方式两个场景，以 **`getter` 调用**为**常规方式**，**函数调用** 为 **Compose 方式**
+</Callout>
+
+如果要调用文本，只需要调用 `FYTxt.Hello`(常规方式) 或 `FYTxt.Home.Welcome()`(Compose 方式) 即可
+
+调用 Compose 方式时，可以直接传入内容来实现格式化文本
+
+<Callout type="warn">
+  仅 *Android JVM*/*JVM* 支持格式化，其他平台仅有简单的 `%s` 替换
+
+  <>  </>
+
+  *Android Jetpack Compose* 输出后的文本默认经过 **Pangu Text** 处理
+</Callout>
+
+当 *Android JVM* 使用常规方式需手动调用 `FYTxtConfig.updateTags()` 以更新
+
+```kotlin title='示例'
+import tf.gal.shirosu.fyl.fytxt.FYTxtConfig
+
+class AppActivity : Activity() {
+    override fun onConfigurationChanged(newConfig: Configuration) =
+        super.onConfigurationChanged(newConfig).also { FYTxtConfig.updateTags() }
+}
+```
+
+当 *Compose* 使用时，需要在 UI 外层使用 `FYTxtProvider` 以监听语言变化
+
+### 详细功能说明 [#详细功能说明]
+
+#### 自定义语言列表 [#自定义语言列表]
+
+若需要自定义语言列表，而不是一直跟随系统，可使用 `FYTxtConfig.updateTags()`:
+
+* `tags`: 自定义的语言列表，需要**全大写**且**下划线连接**
+* `lock`: 锁定语言列表，锁定后将不会自动更新语言列表，仅可通过传入 `tags` 更新
+  （*锁定*/*解锁* 均执行一次即可，无需每次调用时都传入）
+
+#### 切换语言组 [#切换语言组]
+
+可使用 `FYTxtConfig.updateGroup()` 传入由插件自动生成的语言组 `enum` 以实现切换
+
+#### 获取翻译率 [#获取翻译率]
+
+由插件自动生成的语言组 `enum` 中的每个语言组均已记录每个语言组中的每个语言的翻译率
+
+---
+
+> [**Page Index**] <https://app.niggergo.work/llms.txt> | [**Full Content**] <https://app.niggergo.work/llms-full.txt>

@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: app.niggergo.work
+Sitemap: https://app.niggergo.work/sitemap.xml
